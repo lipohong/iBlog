@@ -1,0 +1,20 @@
+
+// day mode theme
+$THEME-DAY-BACKGROUND-COLOR: #eee;
+$THEME-DAY-TEXT-COLOR: #000;
+
+// night mode theme
+$THEME-NIGHT-BACKGROUND-COLOR: #111;
+$THEME-NIGHT-TEXT-COLOR: #fff;
+
+
+body {
+  font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica',
+    'Arial', sans-serif;
+  margin: 0 auto;
+  background-color: $THEME-NIGHT-BACKGROUND-COLOR;
+  color: $THEME-NIGHT-TEXT-COLOR;
+}
+a {
+  color: $THEME-NIGHT-TEXT-COLOR;
+}
