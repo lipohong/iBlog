@@ -12,9 +12,17 @@ body {
   font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica',
     'Arial', sans-serif;
   margin: 0 auto;
+}
+
+.day {
+  color: $THEME-DAY-TEXT-COLOR;
+  background-color: $THEME-DAY-BACKGROUND-COLOR;
+}
+
+.night {
+  color: $THEME-NIGHT-TEXT-COLOR;
   background-color: $THEME-NIGHT-BACKGROUND-COLOR;
-  color: $THEME-NIGHT-TEXT-COLOR;
 }
-a {
-  color: $THEME-NIGHT-TEXT-COLOR;
-}
+
+
+@import './test.scss';

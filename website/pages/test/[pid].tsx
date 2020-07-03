@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 // components
 import { TestComponent } from '../../components/TestComponent';
-
+import Layout from '../../components/layout';
 
 function TestId() {
   const [ id, setId ] = useState(null);
@@ -16,13 +16,13 @@ function TestId() {
   }, [])
 
   return (
-    <div>
+    <Layout>
       <h3>{ pid }</h3>
       <h4 style={{ color: 'red' }}>{ id }</h4>
       <div>
         <TestComponent />
       </div>
-    </div>
+    </Layout>
   )
 }
 

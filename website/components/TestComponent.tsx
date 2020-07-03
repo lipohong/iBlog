@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import Button from '@material-ui/core/Button';
 
 const style = {
   value: {
@@ -40,11 +41,13 @@ export class TestComponent extends Component<{ props: object }, { value: string,
     const test = this.state.test;
 
     return (
-      <div>
+      <div className={'test'}>
         <div style={style.value}>{value}</div>
         <div style={style.test}>{test}</div>
         <div style={{marginTop: 10}}>
-          <button onClick={this.onButtonClick}>Test</button>
+          <Button variant="contained" color="primary" onClick={this.onButtonClick}>
+            Change Value
+          </Button>
         </div>
       </div>
     )

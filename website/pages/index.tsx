@@ -1,6 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Head from 'next/head'
 import Link from 'next/link';
 import Router from 'next/router';
+
+// components
+import Layout from '../components/layout';
 
 function HomePage({envTest}) {
 
@@ -13,11 +17,17 @@ function HomePage({envTest}) {
   }, []);
 
   return (
-    <div>
-      <Link href="test/abcdefg"><a>Test</a></Link> | 
-      <Link href="/about"><a>About</a></Link> | 
-      <a onClick={ () => { Router.push('/about') } }>About</a>
-    </div>
+    <Layout>
+      <Head>
+        <title>iBlog HomePage</title>
+      </Head>
+      <div>Home</div>
+      {/* <div>
+        <Link href="test/abcdefg"><a>Test</a></Link> | 
+        <Link href="/about"><a>About</a></Link> | 
+        <a onClick={ () => { Router.push('/about') } }>About</a>
+      </div> */}
+    </Layout>
   )
 }
 
