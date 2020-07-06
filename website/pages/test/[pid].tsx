@@ -20,7 +20,7 @@ function TestId() {
       <h3>{ pid }</h3>
       <h4 style={{ color: 'red' }}>{ id }</h4>
       <div>
-        <TestComponent />
+        <TestComponent props={{}} />
       </div>
     </Layout>
   )

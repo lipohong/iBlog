@@ -9,7 +9,7 @@ import Layout from '../components/layout';
 function HomePage({envTest}) {
 
   const init = async () => {
-    console.log(envTest);
+    // console.log(envTest);
   }
 
   useEffect(() => {
