@@ -1,16 +1,15 @@
-import '../assets/scss/global.scss'
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../assets/theme/theme';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+import { CookiesProvider } from 'react-cookie';
 
 import reducer from '../store/reducers';
+import '../assets/scss/global.scss';
 
 const middleware = [ thunk ];
 
@@ -32,14 +31,14 @@ export default function MyApp(props) {
 
   return (
     <React.Fragment>
-      <Head>
-      </Head>
+      <CookiesProvider>
         <Provider store={store}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Component {...pageProps} />
           </ThemeProvider>
         </Provider>
+      </CookiesProvider>
     </React.Fragment>
   );
 }

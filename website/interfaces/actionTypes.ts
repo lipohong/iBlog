@@ -1,5 +1,5 @@
-import { SET_MODE } from '../constants/actionTypes'
-export interface setModeAction {
-  type: typeof SET_MODE,
-  mode: string
+import { SET_PALETTETYPE } from '../constants/actionTypes'
+export interface setPaletteTypeAction {
+  type: typeof SET_PALETTETYPE,
+  paletteType: string
 }

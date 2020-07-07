@@ -1,17 +1,17 @@
-import { SET_MODE } from '../../constants/actionTypes';
-import { setModeAction } from '../../interfaces/actionTypes';
+import { SET_PALETTETYPE } from '../../constants/actionTypes';
+import { setPaletteTypeAction } from '../../interfaces/actionTypes';
 
 const initialState = {
-  mode: 'day'
+  paletteType: 'light'
 }
 
-const globalReducer = (state = initialState, action: setModeAction) => {
+const globalReducer = (state = initialState, action: setPaletteTypeAction) => {
   switch (action.type) {
-    case SET_MODE:
+    case SET_PALETTETYPE:
       
       return {
         ...state,
-        mode: action.mode
+        paletteType: action.paletteType
       }
     default:
       return state;

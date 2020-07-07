@@ -8,18 +8,28 @@ $THEME-NIGHT-BACKGROUND-COLOR: #111;
 $THEME-NIGHT-TEXT-COLOR: #fff;
 
 
+html, body, #__next, .layout {
+  height: 100%;
+  width: 100%;
+}
+
 body {
   font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica',
     'Arial', sans-serif;
   margin: 0 auto;
 }
 
-.day {
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.light {
   color: $THEME-DAY-TEXT-COLOR;
   background-color: $THEME-DAY-BACKGROUND-COLOR;
 }
 
-.night {
+.dark {
   color: $THEME-NIGHT-TEXT-COLOR;
   background-color: $THEME-NIGHT-BACKGROUND-COLOR;
 }

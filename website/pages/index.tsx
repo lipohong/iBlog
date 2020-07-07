@@ -22,11 +22,6 @@ function HomePage({envTest}) {
         <title>iBlog HomePage</title>
       </Head>
       <div>Home</div>
-      {/* <div>
-        <Link href="test/abcdefg"><a>Test</a></Link> | 
-        <Link href="/about"><a>About</a></Link> | 
-        <a onClick={ () => { Router.push('/about') } }>About</a>
-      </div> */}
     </Layout>
   )
 }

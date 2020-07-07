@@ -1,6 +1,6 @@
-import { SET_MODE } from '../../constants/actionTypes';
+import { SET_PALETTETYPE } from '../../constants/actionTypes';
 
-export const setMode = (mode: string)=> ({
-  type: SET_MODE,
-  mode
+export const setPaletteType = (paletteType: string)=> ({
+  type: SET_PALETTETYPE,
+  paletteType
 })
