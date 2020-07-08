@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { compose } from 'redux';
 
 // components
 import { TestComponent } from '../../components/TestComponent';
 import Layout from '../../components/layout';
 
 function Test() {
-
-  const router = useRouter();
 
   useEffect(() => {
   }, [])
@@ -21,4 +19,8 @@ function Test() {
   )
 }
 
-export default Test
+Test.getInitialProps = async () => ({
+  namespacesRequired: ['common'],
+})
+
+export default compose<any>()(Test)

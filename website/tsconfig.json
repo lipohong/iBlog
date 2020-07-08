@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "es6"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -25,6 +25,10 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", "pages/index.tsx", "pages/_app.tsx"
+    "**/*.tsx",
+    "pages/index.tsx",
+    "pages/_app.tsx",
+    "server.js",
+    "index.js"
   ]
 }

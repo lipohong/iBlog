@@ -1,14 +1,18 @@
-import Link from 'next/link';
+// import Link from 'next/link';
 import Router from 'next/router';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
 
 import { SET_PALETTETYPE } from '../constants/actionTypes';
 
+import defaultNextI18Next from '../plugins/i18n';
+const { i18n, Link, withTranslation } = defaultNextI18Next;
+
 
 function Layout(props) {
-  const { children, paletteType, dispatch } = props;
+  const { children, paletteType, dispatch, t } = props;
 
   const [cookies, setCookie] = useCookies(['iBlog']);
 
@@ -18,16 +22,15 @@ function Layout(props) {
     } else {
       setCookie('paletteType', 'light', { path: '/' });
     }
-    
   }, [])
   
   return (
     <div className={`layout ${paletteType}`}>
       <div>
-        <Link href="/"><a>Home</a></Link> | 
-        <Link href="/test/abcdefg" scroll={false}><a>Test</a></Link> | 
-        <Link href="/about"><a>About</a></Link> | 
-        <a onClick={ () => { Router.push('/test') } }>Test Home</a>
+        <Link href="/"><a>{t('Home')}</a></Link> | 
+        <Link href="/test/abcdefg" scroll={false}><a>{t('Test')}</a></Link> | 
+        <Link href="/about"><a>{t('About')}</a></Link> | 
+        <a onClick={ () => { Router.push('/test') } }>{t('TestHome')}</a>
       </div>
       {children}
     </div>
@@ -35,10 +38,17 @@ function Layout(props) {
 }
 
 const mapStateToProps = (state) => {
-  const { global } = state
+  const { global } = state;
   return {
     paletteType: global && global.paletteType || 'light'
   }
 }
 
-export default connect(mapStateToProps)(Layout)
+Layout.getInitialProps = async () => ({
+  namespacesRequired: ['common'],
+})
+
+export default compose<any>(
+  connect(mapStateToProps),
+  withTranslation('common')
+)(Layout)

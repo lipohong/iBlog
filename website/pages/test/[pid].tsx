@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { compose } from 'redux';
 
 // components
 import { TestComponent } from '../../components/TestComponent';
 import Layout from '../../components/layout';
+
+import defaultNextI18Next from '../../plugins/i18n';
+const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 function TestId() {
   const [ id, setId ] = useState(null);
@@ -26,4 +30,8 @@ function TestId() {
   )
 }
 
-export default TestId
+TestId.getInitialProps = async () => ({
+  namespacesRequired: ['common'],
+})
+
+export default compose<any>()(TestId)

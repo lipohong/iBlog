@@ -1,3 +1,4 @@
+import App from 'next/app'
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -10,6 +11,7 @@ import { CookiesProvider } from 'react-cookie';
 
 import reducer from '../store/reducers';
 import '../assets/scss/global.scss';
+import defaultNextI18Next from '../plugins/i18n';
 
 const middleware = [ thunk ];
 
@@ -18,7 +20,9 @@ const store = createStore(
   applyMiddleware(...middleware)
 )
 
-export default function MyApp(props) {
+const appWithTranslation = defaultNextI18Next.appWithTranslation;
+
+function MyApp(props) {
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
@@ -47,3 +51,10 @@ MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
   pageProps: PropTypes.object.isRequired,
 };
+
+MyApp.getInitialProps = async (appContext) => {
+  const appProps = await App.getInitialProps(appContext)
+  return { ...appProps }
+}
+
+export default appWithTranslation(MyApp);
