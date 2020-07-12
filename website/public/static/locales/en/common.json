@@ -2,5 +2,7 @@
   "Home": "Home",
   "Test": "Test",
   "About": "About",
-  "TestHome": "Test Home"
+  "TestHome": "Test Home",
+  "Login": "Log In",
+  "loginViaFacebook": "Login via Facebook"
 }

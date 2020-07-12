@@ -30,7 +30,7 @@ function Layout(props) {
         <Link href="/"><a>{t('Home')}</a></Link> | 
         <Link href="/test/abcdefg" scroll={false}><a>{t('Test')}</a></Link> | 
         <Link href="/about"><a>{t('About')}</a></Link> | 
-        <a onClick={ () => { Router.push('/test') } }>{t('TestHome')}</a>
+        <Link href="/login"><a>{t('Login')}</a></Link>
       </div>
       {children}
     </div>

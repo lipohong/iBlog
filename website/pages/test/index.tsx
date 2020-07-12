@@ -5,6 +5,9 @@ import { compose } from 'redux';
 import { TestComponent } from '../../components/TestComponent';
 import Layout from '../../components/layout';
 
+import defaultNextI18Next from '../../plugins/i18n';
+const { i18n, Link, withTranslation } = defaultNextI18Next;
+
 function Test() {
 
   useEffect(() => {
@@ -23,4 +26,6 @@ Test.getInitialProps = async () => ({
   namespacesRequired: ['common'],
 })
 
-export default compose<any>()(Test)
+export default compose<any>(
+  withTranslation('common')
+)(Test)
