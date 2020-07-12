@@ -17,6 +17,7 @@ export class userRoute {
     let router = express.Router();
 
     router.post('/', login);
+    router.post('/facebook', this.userController.loginThroughFacebook);
     router.get('/', auth, this.userController.getMyInfo);
     router.get('/:userId', this.userController.getUserById);
 

@@ -11,7 +11,7 @@ export default class UserInfoModel {
 
   @Expose({ groups: ['get', 'fetch', 'put', 'post'] })
   @IsString({ message: 'ex_input_accept_string_only' })
-  @ValidateIf(o => o.avatar && o.avatar !== null)
+  @ValidateIf(o => o.description && o.description !== null)
   public description: string;
 
   constructor(data: Partial<UserInfoModel>, group: string) { 

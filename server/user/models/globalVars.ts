@@ -9,6 +9,8 @@ interface IGlobVars {
   jwtBcryptSaltRounds: number;
   aesSecret: string;
   logLevel: string;
+  facebookAppId: string;
+  facebookAppSecret: string;
 }
 
 class GlobalVars {
@@ -22,7 +24,9 @@ class GlobalVars {
       jwtIssuer: process.env.JWT_ISSUER,
       jwtBcryptSaltRounds: Number.parseInt(process.env.JWT_BCRYPT_SALT_ROUNDS),
       aesSecret: process.env.AES_SECRET,
-      logLevel: process.env.LOG_LEVEL
+      logLevel: process.env.LOG_LEVEL,
+      facebookAppId: process.env.FACEBOOK_APP_ID,
+      facebookAppSecret: process.env.FACEBOOK_APP_SECRET
     } as IGlobVars;
   }
 
