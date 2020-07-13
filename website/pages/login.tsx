@@ -3,35 +3,20 @@ import { connect } from 'react-redux';
 import { FacebookProvider, LoginButton } from 'react-facebook';
 import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
-import PaletteTypeEnum from '../enum/PaletteTypeEnum';
+import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
 
 // mui
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import Brightness5Icon from '@material-ui/icons/Brightness5';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
 
 import { SET_PALETTETYPE } from '../constants/actionTypes';
 import defaultNextI18Next from '../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 // components
+import Layout from '../components/layout';
 
 function Login({ paletteType, dispatch, t }) {
   const [cookies, setCookie] = useCookies(['iBlog']);
-
-  const swithPaletteType = () => {
-    if (paletteType === PaletteTypeEnum.light) {
-      setCookie('paletteType', PaletteTypeEnum.dark, { path: '/' });
-      dispatch({ type: SET_PALETTETYPE, paletteType: PaletteTypeEnum.dark});
-    } else {
-      setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
-      dispatch({ type: SET_PALETTETYPE, paletteType: PaletteTypeEnum.light});
-    }
-  }
 
   const handleResponse = (res) => {
     console.log(res);
@@ -51,36 +36,24 @@ function Login({ paletteType, dispatch, t }) {
   }, [])
 
   return (
-    <div className={`login layout ${paletteType}`}>
-      <AppBar position='fixed'>
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            iBlog
-          </Typography>
-          <div>
-            <IconButton
-              onClick={swithPaletteType}
-            >
-              { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <div className={'paperContainer'}>
-        <Paper className='paperStyle'>
-          <FacebookProvider appId="614470885873864">
-            <LoginButton
-              scope="email"
-              onCompleted={handleResponse}
-              onError={handleError}
-              className="facebookButton"
-            >
-              <span>{ t('loginViaFacebook') }</span>
-            </LoginButton>
-          </FacebookProvider>
-        </Paper>
+    <Layout>
+      <div className={`login layout ${paletteType}`}>
+        <div className={'paperContainer'}>
+          <Paper className='paperStyle'>
+            <FacebookProvider appId="614470885873864">
+              <LoginButton
+                scope="email"
+                onCompleted={handleResponse}
+                onError={handleError}
+                className="facebookButton"
+              >
+                <span>{ t('loginViaFacebook') }</span>
+              </LoginButton>
+            </FacebookProvider>
+          </Paper>
+        </div>
       </div>
-    </div>
+    </Layout>
   )
 }
 
