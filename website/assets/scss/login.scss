@@ -1,12 +1,22 @@
 .login {
-  .facebookButton {
-    border: 0 solid;
-    border-radius: 15px;
-    height: 30px;
-    width: 150px;
-    font-weight: 900;
-    color: #fff;
-    background-color: #2e76f2;
-    cursor: pointer;
+  display: flex;
+  justify-content: center;
+  .paperContainer {
+    margin-top: 100px;
+    width: 80%;
+    max-width: 500px;
+    .paperStyle {
+      height: 400px;
+    }
+    .facebookButton {
+      border: 0 solid;
+      border-radius: 15px;
+      height: 30px;
+      width: 180px;
+      font-weight: 900;
+      color: #fff;
+      background-color: #2e76f2;
+      cursor: pointer;
+    }
   }
 }
