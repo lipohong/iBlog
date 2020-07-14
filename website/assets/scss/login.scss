@@ -3,10 +3,10 @@
   justify-content: center;
   .paperContainer {
     margin-top: 100px;
-    width: 80%;
+    width: 90%;
     max-width: 500px;
     .paperStyle {
-      height: 400px;
+      min-height: 400px;
     }
     .facebookButton {
       border: 0 solid;

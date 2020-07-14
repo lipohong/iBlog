@@ -45,7 +45,7 @@ export class TestComponent extends Component<{ props: object }, { value: string,
         <div style={style.value}>{value}</div>
         <div style={style.test}>{test}</div>
         <div style={{marginTop: 10}}>
-          <Button variant="contained" color="primary" onClick={this.onButtonClick}>
+          <Button variant="contained" onClick={this.onButtonClick}>
             Change Value
           </Button>
         </div>

@@ -7,6 +7,7 @@ import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
 
 // mui
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 
 import { SET_PALETTETYPE } from '../constants/actionTypes';
 import defaultNextI18Next from '../plugins/i18n';
@@ -50,6 +51,7 @@ function Login({ paletteType, dispatch, t }) {
                 <span>{ t('loginViaFacebook') }</span>
               </LoginButton>
             </FacebookProvider>
+            <Button variant="contained" color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }>test</Button>
           </Paper>
         </div>
       </div>

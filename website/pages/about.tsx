@@ -15,7 +15,6 @@ function About(props) {
   const [cookies, setCookie] = useCookies(['iBlog']);
 
   useEffect(() => {
-    i18n.changeLanguage('en');
   }, [])
 
   return (

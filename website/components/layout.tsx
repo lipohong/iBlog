@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
+import TranslateIcon from '@material-ui/icons/Translate';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import { SET_PALETTETYPE } from '../constants/actionTypes';
 import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
@@ -27,7 +29,7 @@ function Layout(props) {
 
   const [cookies, setCookie] = useCookies(['iBlog']);
 
-  const swithPaletteType = () => {
+  const switchPaletteType = () => {
     if (paletteType === PaletteTypeEnum.light) {
       setCookie('paletteType', PaletteTypeEnum.dark, { path: '/' });
       dispatch({ type: SET_PALETTETYPE, paletteType: PaletteTypeEnum.dark});
@@ -37,23 +39,25 @@ function Layout(props) {
     }
   }
 
-  let themeConfig = paletteType === PaletteTypeEnum.dark ? {
-    palette: {
-      type: PaletteTypeEnum.dark
-    }
-  } : {
-    type: PaletteTypeEnum.light,
-    primary: {
-      main: '#03a9f4',
-    },
-    secondary: {
-      main: '#00e5ff',
-    },
-    background: {
-      default: '#ffffff',
-    }
+  const switchLanguage = () => {
+    i18n.changeLanguage(i18n.language ==='en' ? 'zh' : 'en');
   }
-  let theme = createMuiTheme(themeConfig);
+
+  let theme = createMuiTheme({
+    palette: {
+      type: paletteType,
+      primary: {
+        light: '#03a9f4',
+        main: '#03a9f4',
+        contrastText: '#fff',
+      },
+      secondary: {
+        light: '#00e5ff',
+        main: '#00e5ff',
+        contrastText: '#fff',
+      }
+    }
+  });
 
   useEffect(() => {
     if (!!cookies.paletteType) {
@@ -66,24 +70,31 @@ function Layout(props) {
   return (
     <ThemeProvider theme={theme}>
       <div className={`layout ${paletteType}`}>
-        <AppBar position='fixed'>
+        <AppBar position='relative' color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }>
           <Toolbar>
-            <Typography variant="h6" noWrap>
-              iBlog
-            </Typography>
-            <div>
-              <IconButton
-                onClick={swithPaletteType}
-              >
-                { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
+            <Link href="/">
+              <Typography variant="h6" noWrap style={{ cursor: 'pointer' }}>
+                iBlog
+              </Typography>
+            </Link>
+            <IconButton
+              style={{ marginLeft: 'auto'}}
+              onClick={switchPaletteType}
+              color="inherit"
+            >
+              { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
+            </IconButton>
+            <IconButton
+              onClick={switchLanguage}
+              color="inherit"
+            >
+              <TranslateIcon />
+            </IconButton>
+            <Link href="/login">
+              <IconButton color="inherit">
+                <AccountCircleIcon />
               </IconButton>
-            </div>
-            <div>
-              <Link href="/"><a>{t('Home')}</a></Link> | 
-              <Link href="/test/abcdefg" scroll={false}><a>{t('Test')}</a></Link> | 
-              <Link href="/about"><a>{t('About')}</a></Link> | 
-              <Link href="/login"><a>{t('Login')}</a></Link>
-            </div>
+            </Link>
           </Toolbar>
         </AppBar>
         {children}
