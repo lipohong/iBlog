@@ -1,6 +1,6 @@
 // import Link from 'next/link';
 import Router from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
@@ -16,6 +16,8 @@ import Brightness5Icon from '@material-ui/icons/Brightness5';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import TranslateIcon from '@material-ui/icons/Translate';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 
 import { SET_PALETTETYPE } from '../constants/actionTypes';
 import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
@@ -28,6 +30,8 @@ function Layout(props) {
   const { children, paletteType, dispatch, t } = props;
 
   const [cookies, setCookie] = useCookies(['iBlog']);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isLanguageMenuOpen = Boolean(anchorEl);
 
   const switchPaletteType = () => {
     if (paletteType === PaletteTypeEnum.light) {
@@ -39,8 +43,14 @@ function Layout(props) {
     }
   }
 
-  const switchLanguage = () => {
-    i18n.changeLanguage(i18n.language ==='en' ? 'zh' : 'en');
+  const switchToEn = () => {
+    i18n.changeLanguage('en');
+    handleLanguageMenuClose();
+  }
+
+  const switchToZh = () => {
+    i18n.changeLanguage('zh');
+    handleLanguageMenuClose();
   }
 
   let theme = createMuiTheme({
@@ -58,6 +68,14 @@ function Layout(props) {
       }
     }
   });
+
+  const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleLanguageMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if (!!cookies.paletteType) {
@@ -85,7 +103,7 @@ function Layout(props) {
               { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
             </IconButton>
             <IconButton
-              onClick={switchLanguage}
+              onClick={handleLanguageMenuOpen}
               color="inherit"
             >
               <TranslateIcon />
@@ -97,6 +115,15 @@ function Layout(props) {
             </Link>
           </Toolbar>
         </AppBar>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={isLanguageMenuOpen}
+          onClose={handleLanguageMenuClose}
+        >
+          <MenuItem onClick={switchToZh}>繁</MenuItem>
+          <MenuItem onClick={switchToEn}>EN</MenuItem>
+        </Menu>
         {children}
       </div>
     </ThemeProvider>

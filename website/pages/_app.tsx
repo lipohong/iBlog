@@ -3,10 +3,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import thunk from 'redux-thunk';
+import { compose } from 'redux';
 import { CookiesProvider } from 'react-cookie';
 
+import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
 import reducer from '../store/reducers';
 import '../assets/scss/global.scss';
 import defaultNextI18Next from '../plugins/i18n';
@@ -29,6 +31,7 @@ function MyApp(props) {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
+    
   }, []);
 
   return (
@@ -52,5 +55,9 @@ MyApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext)
   return { ...appProps }
 }
+
+// export default compose<any>(
+//   appWithTranslation
+// )(MyApp)
 
 export default appWithTranslation(MyApp);
