@@ -38,7 +38,7 @@ function Login({ paletteType, dispatch, t }) {
 
   return (
     <Layout>
-      <div className={`login layout ${paletteType}`}>
+      <div className='login'>
         <div className={'paperContainer'}>
           <Paper className='paperStyle'>
             <FacebookProvider appId="614470885873864">

@@ -1,13 +1,4 @@
 
-// day mode theme
-$THEME-DAY-BACKGROUND-COLOR: #eee;
-$THEME-DAY-TEXT-COLOR: #000;
-
-// night mode theme
-$THEME-NIGHT-BACKGROUND-COLOR: #111;
-$THEME-NIGHT-TEXT-COLOR: #fff;
-
-
 html, body, #__next {
   height: 100%;
   width: 100%;
@@ -21,16 +12,6 @@ body {
 a {
   cursor: pointer;
   text-decoration: none;
-}
-
-.light {
-  color: $THEME-DAY-TEXT-COLOR;
-  background-color: $THEME-DAY-BACKGROUND-COLOR;
-}
-
-.dark {
-  color: $THEME-NIGHT-TEXT-COLOR;
-  background-color: $THEME-NIGHT-BACKGROUND-COLOR;
 }
 
 

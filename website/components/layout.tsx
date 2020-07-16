@@ -6,8 +6,7 @@ import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
 
 // mui
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -16,10 +15,11 @@ import Brightness5Icon from '@material-ui/icons/Brightness5';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import TranslateIcon from '@material-ui/icons/Translate';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import InvertColorsIcon from '@material-ui/icons/InvertColors';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
-import { SET_PALETTETYPE } from '../constants/actionTypes';
+import { SET_PALETTETYPE, SET_THEME } from '../constants/actionTypes';
 import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
 
 import defaultNextI18Next from '../plugins/i18n';
@@ -77,18 +77,36 @@ function Layout(props) {
     setAnchorEl(null);
   };
 
+  const handleThemeMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleThemeMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const switchTheme = (number: Number) => {
+    dispatch({ type: SET_THEME, theme: number});
+    handleThemeMenuClose()
+  }
+
   useEffect(() => {
     if (!!cookies.paletteType) {
       dispatch({ type: SET_PALETTETYPE, paletteType: cookies.paletteType});
     } else {
       setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
     }
+    if (!!cookies.theme) {
+      dispatch({ type: SET_THEME, theme: cookies.theme});
+    } else {
+      setCookie('theme', 0, { path: '/' });
+    }
   }, [])
   
   return (
     <ThemeProvider theme={theme}>
-      <div className={`layout ${paletteType}`}>
-        <AppBar position='relative' color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }>
+      <div>
+        <AppBar position='relative' color='default'>
           <Toolbar>
             <Link href="/">
               <Typography variant="h6" noWrap style={{ cursor: 'pointer' }}>
@@ -104,6 +122,12 @@ function Layout(props) {
             </IconButton>
             <IconButton
               onClick={handleLanguageMenuOpen}
+              color="inherit"
+            >
+              <InvertColorsIcon />
+            </IconButton>
+            <IconButton
+              onClick={handleThemeMenuOpen}
               color="inherit"
             >
               <TranslateIcon />
@@ -124,8 +148,24 @@ function Layout(props) {
           <MenuItem onClick={switchToZh}>繁</MenuItem>
           <MenuItem onClick={switchToEn}>EN</MenuItem>
         </Menu>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={isLanguageMenuOpen}
+          onClose={handleThemeMenuClose}
+        >
+          {/* { [1, 2, 3].map(number => {
+            <MenuItem onClick={switchTheme(number)}>Theme {number}</MenuItem>
+          }) } */}
+        </Menu>
         {children}
       </div>
+      <style global jsx>{`
+        body {
+          color: ${ paletteType === PaletteTypeEnum.light ? '#000' : '#fff'};
+          background-color:  ${ paletteType === PaletteTypeEnum.light ? '#eee' : '#000'};
+        }
+      `}</style>
     </ThemeProvider>
   )
 }
