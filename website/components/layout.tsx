@@ -16,8 +16,13 @@ import Brightness4Icon from '@material-ui/icons/Brightness4';
 import TranslateIcon from '@material-ui/icons/Translate';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import InvertColorsIcon from '@material-ui/icons/InvertColors';
+import MenuIcon from '@material-ui/icons/Menu';
+import GitHubIcon from '@material-ui/icons/GitHub';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Hidden from '@material-ui/core/Hidden';
+
+import themeOptions from '../assets/theme';
 
 import { SET_PALETTETYPE, SET_THEME } from '../constants/actionTypes';
 import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
@@ -27,11 +32,15 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 
 function Layout(props) {
-  const { children, paletteType, dispatch, t } = props;
+  const { children, paletteType, theme, dispatch, t } = props;
 
   const [cookies, setCookie] = useCookies(['iBlog']);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isLanguageMenuOpen = Boolean(anchorEl);
+  const [anchorElLanguage, setAnchorElLanguage] = useState<null | HTMLElement>(null);
+  const [anchorElTheme, setAnchorElTheme] = useState<null | HTMLElement>(null);
+  const [anchorElMenu, setAnchorElMenu] = useState<null | HTMLElement>(null);
+  const isLanguageMenuOpen = Boolean(anchorElLanguage);
+  const isThemeMenuOpen = Boolean(anchorElTheme);
+  const isMenuOpen = Boolean(anchorElMenu);
 
   const switchPaletteType = () => {
     if (paletteType === PaletteTypeEnum.light) {
@@ -53,42 +62,43 @@ function Layout(props) {
     handleLanguageMenuClose();
   }
 
-  let theme = createMuiTheme({
+  let themeConfig = createMuiTheme({
     palette: {
       type: paletteType,
-      primary: {
-        light: '#03a9f4',
-        main: '#03a9f4',
-        contrastText: '#fff',
-      },
-      secondary: {
-        light: '#00e5ff',
-        main: '#00e5ff',
-        contrastText: '#fff',
-      }
+      ...themeOptions[theme]
     }
   });
 
   const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorElLanguage(event.currentTarget);
   };
 
   const handleLanguageMenuClose = () => {
-    setAnchorEl(null);
+    setAnchorElLanguage(null);
   };
 
   const handleThemeMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorElTheme(event.currentTarget);
   };
 
   const handleThemeMenuClose = () => {
-    setAnchorEl(null);
+    setAnchorElTheme(null);
   };
 
-  const switchTheme = (number: Number) => {
-    dispatch({ type: SET_THEME, theme: number});
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElMenu(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorElMenu(null);
+  };
+
+  const switchTheme = (event: React.MouseEvent<HTMLElement>) => {
+    const themeIndex = event.currentTarget.dataset.themeIndex;
+    dispatch({ type: SET_THEME, theme: themeIndex});
+    setCookie('theme', themeIndex, { path: '/' });
     handleThemeMenuClose()
-  }
+  };
 
   useEffect(() => {
     if (!!cookies.paletteType) {
@@ -101,46 +111,72 @@ function Layout(props) {
     } else {
       setCookie('theme', 0, { path: '/' });
     }
-  }, [])
+  }, []);
   
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={themeConfig}>
       <div>
-        <AppBar position='relative' color='default'>
+        <AppBar position='relative' color={ paletteType === PaletteTypeEnum.dark ? 'default' : 'primary' }>
           <Toolbar>
             <Link href="/">
               <Typography variant="h6" noWrap style={{ cursor: 'pointer' }}>
                 iBlog
               </Typography>
             </Link>
-            <IconButton
-              style={{ marginLeft: 'auto'}}
-              onClick={switchPaletteType}
-              color="inherit"
-            >
-              { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
-            </IconButton>
-            <IconButton
-              onClick={handleLanguageMenuOpen}
-              color="inherit"
-            >
-              <InvertColorsIcon />
-            </IconButton>
-            <IconButton
-              onClick={handleThemeMenuOpen}
-              color="inherit"
-            >
-              <TranslateIcon />
-            </IconButton>
-            <Link href="/login">
-              <IconButton color="inherit">
-                <AccountCircleIcon />
+            <Hidden smUp>
+              <IconButton
+                style={{ marginLeft: 'auto'}}
+                onClick={switchPaletteType}
+                color="inherit"
+              >
+                { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
               </IconButton>
-            </Link>
+              <IconButton
+                onClick={handleLanguageMenuOpen}
+                color="inherit"
+              >
+                <TranslateIcon />
+              </IconButton>
+              <IconButton
+                  onClick={handleMenuOpen}
+                  color="inherit"
+                >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
+            <Hidden xsDown>
+              <IconButton
+                style={{ marginLeft: 'auto'}}
+                onClick={switchPaletteType}
+                color="inherit"
+              >
+                { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
+              </IconButton>
+              <IconButton
+                onClick={handleThemeMenuOpen}
+                color="inherit"
+              >
+                <InvertColorsIcon />
+              </IconButton>
+              <IconButton
+                onClick={handleLanguageMenuOpen}
+                color="inherit"
+              >
+                <TranslateIcon />
+              </IconButton>
+              <IconButton color="inherit" href="https://github.com/lipohong/iBlog">
+                <GitHubIcon />
+              </IconButton>
+              <Link href="/login">
+                <IconButton color="inherit">
+                  <AccountCircleIcon />
+                </IconButton>
+              </Link>
+            </Hidden>
           </Toolbar>
         </AppBar>
         <Menu
-          anchorEl={anchorEl}
+          anchorEl={anchorElLanguage}
           keepMounted
           open={isLanguageMenuOpen}
           onClose={handleLanguageMenuClose}
@@ -149,14 +185,42 @@ function Layout(props) {
           <MenuItem onClick={switchToEn}>EN</MenuItem>
         </Menu>
         <Menu
-          anchorEl={anchorEl}
+          anchorEl={anchorElTheme}
           keepMounted
-          open={isLanguageMenuOpen}
+          open={isThemeMenuOpen}
           onClose={handleThemeMenuClose}
         >
-          {/* { [1, 2, 3].map(number => {
-            <MenuItem onClick={switchTheme(number)}>Theme {number}</MenuItem>
-          }) } */}
+          { [1, 2, 3].map((number, index) => (
+            <MenuItem onClick={switchTheme} key={index} data-theme-index={index} style={{ color: themeOptions[index].primary.contrastText, backgroundColor: themeOptions[index].primary.light }}>Theme {number}</MenuItem>
+          )) }
+        </Menu>
+        <Menu
+          anchorEl={anchorElMenu}
+          keepMounted
+          open={isMenuOpen}
+          onClose={handleMenuClose}
+        >
+          <div>
+            <IconButton
+              style={{ marginLeft: 'auto'}}
+              onClick={switchPaletteType}
+              color="inherit"
+            >
+              { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
+            </IconButton>
+          </div>
+          <div>
+            <IconButton color="inherit" href="https://github.com/lipohong/iBlog">
+              <GitHubIcon />
+            </IconButton>
+          </div>
+          <div>
+            <Link href="/login">
+              <IconButton color="inherit">
+                <AccountCircleIcon />
+              </IconButton>
+            </Link>
+          </div>
         </Menu>
         {children}
       </div>
@@ -173,7 +237,8 @@ function Layout(props) {
 const mapStateToProps = (state) => {
   const { global } = state;
   return {
-    paletteType: global && global.paletteType || PaletteTypeEnum.light
+    paletteType: global && global.paletteType || PaletteTypeEnum.light,
+    theme: global && global.theme || 0
   }
 }
 
