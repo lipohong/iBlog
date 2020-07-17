@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import Head from 'next/head';
 import { FacebookProvider, LoginButton } from 'react-facebook';
 import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
@@ -38,6 +39,9 @@ function Login({ paletteType, dispatch, t }) {
 
   return (
     <Layout>
+      <Head>
+        <title>iBlog { t('headerLoginPage') }</title>
+      </Head>
       <div className='login'>
         <div className={'paperContainer'}>
           <Paper className='paperStyle'>

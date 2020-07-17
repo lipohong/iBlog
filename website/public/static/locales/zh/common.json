@@ -1,8 +1,5 @@
 {
-  "Home": "主頁",
-  "Test": "測試",
-  "About": "關於",
-  "TestHome": "測試首頁",
-  "Login": "登錄",
-  "loginViaFacebook": "通過 Facebook 登錄"
+  "loginViaFacebook": "通過 Facebook 登錄",
+  "headerHomePage": "首頁",
+  "headerLoginPage" : "登錄頁"
 }
