@@ -1,5 +1,17 @@
 {
-  "loginViaFacebook": "Login via Facebook",
-  "headerHomePage": "HomePage",
-  "headerLoginPage" : "Login Page"
+  "headers": {
+    "homePage": "Home Page",
+    "loginPage" : "Login Page"
+  },
+  "pages": {
+    "login": {
+      "iblogLogin": "iBlog Login",
+      "email": "Email:",
+      "password": "Password:",
+      "forgetPassword": "Forget password?",
+      "submit": "Submit",
+      "loginViaFacebook": "Login via Facebook",
+      "createAccount": "Create Account"
+    }
+  }
 }

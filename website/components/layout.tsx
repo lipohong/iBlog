@@ -126,10 +126,10 @@ function Layout(props) {
             <Hidden smUp>
               <IconButton
                 style={{ marginLeft: 'auto'}}
-                onClick={switchPaletteType}
+                onClick={handleThemeMenuOpen}
                 color="inherit"
               >
-                { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
+                <InvertColorsIcon />
               </IconButton>
               <IconButton
                 onClick={handleLanguageMenuOpen}
@@ -191,7 +191,17 @@ function Layout(props) {
           onClose={handleThemeMenuClose}
         >
           { [1, 2, 3].map((number, index) => (
-            <MenuItem onClick={switchTheme} key={index} data-theme-index={index} style={{ color: themeOptions[index].primary.contrastText, backgroundColor: themeOptions[index].primary.light }}>Theme {number}</MenuItem>
+            <MenuItem
+              onClick={switchTheme}
+              key={index}
+              data-theme-index={index}
+              style={{
+                color: themeOptions[index].primary.contrastText,
+                backgroundColor: themeOptions[index].primary.light
+              }}
+            >
+              Theme {number}
+            </MenuItem>
           )) }
         </Menu>
         <Menu

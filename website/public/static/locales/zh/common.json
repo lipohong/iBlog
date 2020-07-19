@@ -1,5 +1,17 @@
 {
-  "loginViaFacebook": "通過 Facebook 登錄",
-  "headerHomePage": "首頁",
-  "headerLoginPage" : "登錄頁"
+  "headers": {
+    "homePage": "首頁",
+    "loginPage" : "登錄頁"
+  },
+  "pages": {
+    "login": {
+      "iblogLogin": "iBlog 登錄",
+      "email": "電郵:",
+      "password": "密碼:",
+      "forgetPassword": "忘記密碼?",
+      "submit": "提交",
+      "loginViaFacebook": "通過Facebook登錄",
+      "createAccount": "新建賬戶"
+    }
+  }
 }

@@ -9,7 +9,7 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 // components
 import Layout from '../components/layout';
 
-function HomePage({envTest}) {
+function HomePage({ t }) {
 
   const init = async () => {
     // console.log(envTest);
@@ -23,7 +23,7 @@ function HomePage({envTest}) {
   return (
     <Layout>
       <Head>
-        <title>iBlog HomePage</title>
+        <title>iBlog { t('headers.homePage') }</title>
       </Head>
       <div>Home</div>
     </Layout>
