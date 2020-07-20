@@ -1,8 +1,12 @@
-import { SET_PALETTETYPE, SET_THEME } from '../../constants/actionTypes';
+import { SET_PALETTETYPE, SET_THEME, SET_MESSAGE } from '../../constants/actionTypes';
 
 const initialState = {
   paletteType: 'light',
-  theme: 0
+  theme: 0,
+  message: {
+    content: '',
+    open: false
+  }
 }
 
 const globalReducer = (state = initialState, action) => {
@@ -19,6 +23,12 @@ const globalReducer = (state = initialState, action) => {
         ...state,
         theme: action.theme
       }
+    case SET_MESSAGE:
+    
+        return {
+          ...state,
+          message: action.message
+        }
     default:
       return state;
   }

@@ -11,6 +11,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import TranslateIcon from '@material-ui/icons/Translate';
@@ -30,10 +31,9 @@ import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
 import defaultNextI18Next from '../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
 
+import { SET_MESSAGE } from '../constants/actionTypes';
 
-function Layout(props) {
-  const { children, paletteType, theme, dispatch, t } = props;
-
+function Layout({ children, paletteType, theme, message, dispatch, t }) {
   const [cookies, setCookie] = useCookies(['iBlog']);
   const [anchorElLanguage, setAnchorElLanguage] = useState<null | HTMLElement>(null);
   const [anchorElTheme, setAnchorElTheme] = useState<null | HTMLElement>(null);
@@ -99,6 +99,16 @@ function Layout(props) {
     setCookie('theme', themeIndex, { path: '/' });
     handleThemeMenuClose()
   };
+
+  const handleSnackbarClose = () => {
+    dispatch({
+      type: SET_MESSAGE,
+      message: {
+        open: false,
+        message: ''
+      }
+    });
+  }
 
   useEffect(() => {
     if (!!cookies.paletteType) {
@@ -233,6 +243,16 @@ function Layout(props) {
           </MenuItem>
         </Menu>
         {children}
+        <Snackbar
+          message={message.message}
+          open={message.open}
+          autoHideDuration={4000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        />
       </div>
       <style global jsx>{`
         body {
@@ -248,7 +268,8 @@ const mapStateToProps = (state) => {
   const { global } = state;
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
-    theme: global && global.theme || 0
+    theme: global && global.theme || 0,
+    message: global && global.message
   }
 }
 
