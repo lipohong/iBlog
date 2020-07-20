@@ -167,7 +167,7 @@ function Layout(props) {
               <IconButton color="inherit" href="https://github.com/lipohong/iBlog">
                 <GitHubIcon />
               </IconButton>
-              <Link href="/login">
+              <Link href="/auth/login">
                 <IconButton color="inherit">
                   <AccountCircleIcon />
                 </IconButton>
@@ -210,7 +210,7 @@ function Layout(props) {
           open={isMenuOpen}
           onClose={handleMenuClose}
         >
-          <div>
+          <MenuItem>
             <IconButton
               style={{ marginLeft: 'auto'}}
               onClick={switchPaletteType}
@@ -218,19 +218,19 @@ function Layout(props) {
             >
               { paletteType === PaletteTypeEnum.light ? <Brightness4Icon /> : <Brightness5Icon /> }
             </IconButton>
-          </div>
-          <div>
+          </MenuItem>
+          <MenuItem>
             <IconButton color="inherit" href="https://github.com/lipohong/iBlog">
               <GitHubIcon />
             </IconButton>
-          </div>
-          <div>
-            <Link href="/login">
+          </MenuItem>
+          <MenuItem>
+            <Link href="/auth/login">
               <IconButton color="inherit">
                 <AccountCircleIcon />
               </IconButton>
             </Link>
-          </div>
+          </MenuItem>
         </Menu>
         {children}
       </div>

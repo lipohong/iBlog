@@ -8,6 +8,19 @@
       border: 0 solid;
       width: 100%;
       background-color: transparent;
+      .facebookButtonTextContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #fff;
+        background-color: #385499;
+        &:hover {
+          background-color: #364c85;
+        }
+      }
     }
   }
   .MuiButton-root {
