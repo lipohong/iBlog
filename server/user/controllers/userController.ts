@@ -1,4 +1,4 @@
-import * as axios from 'axios';
+import axios from 'axios';
 import * as _ from 'lodash';
 import { IERequest, IEResponse, IJWTSignModel } from '../models/commonModel';
 import FacebookLoginModel from '../models/user/class/facebookLoginModel';
@@ -34,14 +34,9 @@ export class UserController {
   public loginThroughFacebook = async (req: IERequest, res: IEResponse) => {
     try {
       const facebookField = new FacebookLoginModel(req.body, 'post');
-      const { data } = await axios.default.get(`https://graph.facebook.com/oauth/access_token?\
-      client_id=${process.env.FACEBOOK_APP_ID}\
-      &client_secret=${process.env.FACEBOOK_APP_SECRET}\
-      &grant_type=client_credentials`);
+      const { data } = await axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${process.env.FACEBOOK_APP_ID}&client_secret=${process.env.FACEBOOK_APP_SECRET}&grant_type=client_credentials`);
       const appToken = data.access_token;
-      const result = await axios.default.get(`https://graph.facebook.com/debug_token?\
-      input_token=${facebookField.accessToken}\
-      &access_token=${appToken}`);
+      const result = await axios.get(`https://graph.facebook.com/debug_token?input_token=${facebookField.accessToken}&access_token=${appToken}`);
       if (!_.get(result, 'data.data.is_valid')) {
         throw new Error('ex_accessToken_not_valid');
       }
