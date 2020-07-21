@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
@@ -13,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -20,7 +23,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
-import { SET_PALETTETYPE } from '../../constants/actionTypes';
+import { SET_PALETTETYPE, SET_PROGRESS_BAR_ON } from '../../constants/actionTypes';
 import defaultNextI18Next from '../../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
 
@@ -33,6 +36,7 @@ function Login({ paletteType, dispatch, t }) {
   const inputForm = useRef('form');
   const [email, setEmail ] = useState('');
   const [password, setPassword ] = useState('');
+  const [rememberPasswordCheck, setRememberPasswordCheck] = useState(false);
 
   const handleResponse = (res) => {
     console.log(res);
@@ -56,9 +60,21 @@ function Login({ paletteType, dispatch, t }) {
     setPassword(value);
   }
 
-  const handleSubmit = (event) => {
-    console.log(event);
-    
+  const handleSubmit = async (event) => {
+    dispatch({ type: SET_PROGRESS_BAR_ON, progressBarOn: true });
+    try {
+      const res = await axios.post(`${process.env.userApi}/users`, {
+        email,
+        password
+      });
+    } catch {
+
+    }
+    dispatch({ type: SET_PROGRESS_BAR_ON, progressBarOn: false });
+  }
+
+  const handleRememberPasswordCheckChange = (event) => {
+    setRememberPasswordCheck(event.currentTarget.checked);
   }
 
   useEffect(() => {
@@ -131,7 +147,11 @@ function Login({ paletteType, dispatch, t }) {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} style={{ textAlign: "right" }}>
+                  <Grid item xs={12} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <FormControlLabel
+                      control={<Checkbox checked={rememberPasswordCheck} onChange={handleRememberPasswordCheckChange} name="remember" />}
+                      label="Log me in"
+                    />
                     <span style={{ cursor: "pointer" }}>{t('pages.login.forgetPassword')}</span>
                   </Grid>
                   <Grid item xs={12}>

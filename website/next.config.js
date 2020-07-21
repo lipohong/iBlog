@@ -9,4 +9,7 @@ module.exports = {
   sassOptions: {
     includePaths: [path.join(__dirname, './assets/css/styles')],
   },
+  env: {
+    userApi: "http://localhost:8010/api"
+  }
 }

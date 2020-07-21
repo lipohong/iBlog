@@ -1,4 +1,4 @@
-import { SET_PALETTETYPE, SET_THEME, SET_MESSAGE } from '../../constants/actionTypes';
+import { SET_PALETTETYPE, SET_THEME, SET_MESSAGE, SET_PROGRESS_BAR_ON } from '../../constants/actionTypes';
 
 const initialState = {
   paletteType: 'light',
@@ -6,7 +6,8 @@ const initialState = {
   message: {
     content: '',
     open: false
-  }
+  },
+  progressBarOn: false
 }
 
 const globalReducer = (state = initialState, action) => {
@@ -29,6 +30,12 @@ const globalReducer = (state = initialState, action) => {
           ...state,
           message: action.message
         }
+    case SET_PROGRESS_BAR_ON:
+
+      return {
+        ...state,
+        progressBarOn: action.progressBarOn
+      }
     default:
       return state;
   }

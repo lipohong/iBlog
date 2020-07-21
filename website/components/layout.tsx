@@ -12,6 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import TranslateIcon from '@material-ui/icons/Translate';
@@ -33,7 +34,7 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 import { SET_MESSAGE } from '../constants/actionTypes';
 
-function Layout({ children, paletteType, theme, message, dispatch, t }) {
+function Layout({ children, paletteType, theme, message, progressBarOn, dispatch, t }) {
   const [cookies, setCookie] = useCookies(['iBlog']);
   const [anchorElLanguage, setAnchorElLanguage] = useState<null | HTMLElement>(null);
   const [anchorElTheme, setAnchorElTheme] = useState<null | HTMLElement>(null);
@@ -185,6 +186,9 @@ function Layout({ children, paletteType, theme, message, dispatch, t }) {
             </Hidden>
           </Toolbar>
         </AppBar>
+        {
+          progressBarOn && <LinearProgress />
+        }
         <Menu
           anchorEl={anchorElLanguage}
           keepMounted
@@ -269,7 +273,8 @@ const mapStateToProps = (state) => {
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
     theme: global && global.theme || 0,
-    message: global && global.message
+    message: global && global.message,
+    progressBarOn: global && global.progressBarOn || false
   }
 }
 

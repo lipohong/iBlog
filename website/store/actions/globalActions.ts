@@ -1,4 +1,4 @@
-import { SET_PALETTETYPE, SET_THEME, SET_MESSAGE } from '../../constants/actionTypes';
+import { SET_PALETTETYPE, SET_THEME, SET_MESSAGE, SET_PROGRESS_BAR_ON } from '../../constants/actionTypes';
 import { Message } from '../../interfaces/actionTypes';
 
 export const setPaletteType = (paletteType: string)=> ({
@@ -14,4 +14,9 @@ export const setTheme = (theme: number)=> ({
 export const setMessage = (message: Message)=> ({
   type: SET_MESSAGE,
   message
+})
+
+export const setProgressOn = (progressBarOn: boolean)=> ({
+  type: SET_PROGRESS_BAR_ON,
+  progressBarOn
 })
