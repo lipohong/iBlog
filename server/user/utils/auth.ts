@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto-js';
 import * as jwt from 'jsonwebtoken';
 import { IJWTSignModel } from '../models/commonModel';
 import globalVars from '../models/globalVars';
@@ -9,17 +10,18 @@ class Auth {
   }
 
   static async encryptAES(password: string): Promise<string> {
-    const AES = require("react-native-crypto-js").AES;
-    const encryptedPassword = await AES.encrypt(password, globalVars.aesSecret).toString();
+    const encryptedPassword = await crypto.AES.encrypt(password, globalVars.aesSecret).toString();
 
     return encryptedPassword;
   }
 
   static async decryptAES(encryptedPassword: string): Promise<string> {
-    const AES = require("react-native-crypto-js").AES;
-    const enc = require("react-native-crypto-js").enc;
-    const bytes = await AES.decrypt(encryptedPassword, globalVars.aesSecret);
-    const decryptPassword = bytes.toString(enc.Utf8);
+    const bytes = crypto.AES.decrypt(encryptedPassword, globalVars.aesSecret);
+    const decryptPassword = bytes.toString(crypto.enc.Utf8);
+
+    if (!decryptPassword) {
+      throw new Error('ex_incorrect_password');
+    }
 
     return decryptPassword;
   }
