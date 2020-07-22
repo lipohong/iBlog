@@ -12,6 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
@@ -25,14 +26,17 @@ import Menu from '@material-ui/core/Menu';
 import Hidden from '@material-ui/core/Hidden';
 
 import themeOptions from '../assets/theme';
-
+import { SET_MESSAGE } from '../constants/actionTypes';
 import { SET_PALETTETYPE, SET_THEME } from '../constants/actionTypes';
 import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
+import { SeverityEnum } from '../enums/SeverityEnum';
 
 import defaultNextI18Next from '../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
 
-import { SET_MESSAGE } from '../constants/actionTypes';
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function Layout({ children, paletteType, theme, message, progressBarOn, dispatch, t }) {
   const [cookies, setCookie] = useCookies(['iBlog']);
@@ -106,6 +110,7 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
       type: SET_MESSAGE,
       message: {
         open: false,
+        severity: SeverityEnum.info,
         message: ''
       }
     });
@@ -191,6 +196,11 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
         }
         <Menu
           anchorEl={anchorElLanguage}
+          getContentAnchorEl={null}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
           keepMounted
           open={isLanguageMenuOpen}
           onClose={handleLanguageMenuClose}
@@ -200,6 +210,11 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
         </Menu>
         <Menu
           anchorEl={anchorElTheme}
+          getContentAnchorEl={null}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
           keepMounted
           open={isThemeMenuOpen}
           onClose={handleThemeMenuClose}
@@ -220,6 +235,11 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
         </Menu>
         <Menu
           anchorEl={anchorElMenu}
+          getContentAnchorEl={null}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
           keepMounted
           open={isMenuOpen}
           onClose={handleMenuClose}
@@ -248,7 +268,6 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
         </Menu>
         {children}
         <Snackbar
-          message={message.message}
           open={message.open}
           autoHideDuration={4000}
           onClose={handleSnackbarClose}
@@ -256,7 +275,9 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
             vertical: 'bottom',
             horizontal: 'center',
           }}
-        />
+        >
+          <Alert severity={message.severity}>{message.message}</Alert>
+        </Snackbar>
       </div>
       <style global jsx>{`
         body {

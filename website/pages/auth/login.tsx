@@ -1,4 +1,6 @@
 import axios from 'axios';
+import * as crypto from 'crypto-js';
+import * as _ from 'lodash';
 import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
@@ -23,7 +25,9 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
-import { SET_PALETTETYPE, SET_PROGRESS_BAR_ON } from '../../constants/actionTypes';
+import { SET_PALETTETYPE, SET_PROGRESS_BAR_ON, SET_MESSAGE } from '../../constants/actionTypes';
+import { SeverityEnum } from '../../enums/SeverityEnum';
+
 import defaultNextI18Next from '../../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
 
@@ -36,7 +40,7 @@ function Login({ paletteType, dispatch, t }) {
   const inputForm = useRef('form');
   const [email, setEmail ] = useState('');
   const [password, setPassword ] = useState('');
-  const [rememberPasswordCheck, setRememberPasswordCheck] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleResponse = (res) => {
     console.log(res);
@@ -60,21 +64,43 @@ function Login({ paletteType, dispatch, t }) {
     setPassword(value);
   }
 
-  const handleSubmit = async (event) => {
+  const encryptAES = async (password: string): Promise<string> => {
+    const encryptedPassword = await crypto.AES.encrypt(password, process.env.NEXT_PUBLIC_AES_SECRECT).toString();
+
+    return encryptedPassword;
+  }
+
+  const handleSubmit = async () => {
     dispatch({ type: SET_PROGRESS_BAR_ON, progressBarOn: true });
     try {
-      const res = await axios.post(`${process.env.userApi}/users`, {
+      let postData = {
         email,
-        password
+        password: await encryptAES(password)
+      }
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
+      console.log(res.data.payload);
+      if (res.data.payload) {
+        setCookie('auth', PaletteTypeEnum.light, { path: '/' });
+      }
+      
+    } catch (err) {
+      let errMessage: string;
+      const message = _.get(err, 'response.data.message');
+      errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`)
+      dispatch({
+        type: SET_MESSAGE,
+        message: {
+          open: true,
+          severity: SeverityEnum.error,
+          message: errMessage
+        }
       });
-    } catch {
-
     }
     dispatch({ type: SET_PROGRESS_BAR_ON, progressBarOn: false });
   }
 
-  const handleRememberPasswordCheckChange = (event) => {
-    setRememberPasswordCheck(event.currentTarget.checked);
+  const handleRememberMeChange = (event) => {
+    setRememberMe(event.currentTarget.checked);
   }
 
   useEffect(() => {
@@ -115,7 +141,7 @@ function Login({ paletteType, dispatch, t }) {
                       fullWidth
                       validators={['required', 'isEmail']}
                       onChange={handleEmailChange}
-                      errorMessages={['Email is required', 'Email is not valid']}
+                      errorMessages={[t('messages.login.form.emailRequired'), t('messages.login.form.emailNotValid')]}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -130,14 +156,12 @@ function Login({ paletteType, dispatch, t }) {
                       fullWidth
                       validators={['required']}
                       onChange={handlePasswordChange}
-                      errorMessages={['Password is required']}
+                      errorMessages={[t('messages.login.form.passwordRequired')]}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
                             <IconButton
-                              aria-label="toggle password visibility"
                               onClick={handleClickShowPassword}
-                              // onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
                               {showPassword ? <Visibility /> : <VisibilityOff />}
@@ -149,8 +173,8 @@ function Login({ paletteType, dispatch, t }) {
                   </Grid>
                   <Grid item xs={12} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <FormControlLabel
-                      control={<Checkbox checked={rememberPasswordCheck} onChange={handleRememberPasswordCheckChange} name="remember" />}
-                      label="Log me in"
+                      control={<Checkbox checked={rememberMe} onChange={handleRememberMeChange} name="remember" />}
+                      label={t('pages.login.rememberMe')}
                     />
                     <span style={{ cursor: "pointer" }}>{t('pages.login.forgetPassword')}</span>
                   </Grid>

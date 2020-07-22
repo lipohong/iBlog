@@ -12,5 +12,6 @@ export interface setThemeAction {
 
 export interface Message {
   open: boolean,
-  message: string
+  message: string,
+  severity: string
 }

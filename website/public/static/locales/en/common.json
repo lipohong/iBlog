@@ -8,10 +8,27 @@
       "iblogLogin": "iBlog Login",
       "email": "Email:",
       "password": "Password:",
+      "rememberMe": "Remember Me",
       "forgetPassword": "Forget password?",
       "submit": "Submit",
       "loginViaFacebook": "Login via Facebook",
       "createAccount": "Create Account"
+    }
+  },
+  "messages": {
+    "login": {
+      "form": {
+        "emailRequired": "Email is required",
+        "emailNotValid": "Email is not valid",
+        "passwordRequired": "Password is required"
+      },
+      "errors": {
+        "ex_incorrect_password": "Wrong password.",
+        "ex_cannot_find_user": "No user record, please create an account first."
+      }
+    },
+    "common": {
+      "unknownError": "Unknown Error."
     }
   }
 }

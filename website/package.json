@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "build": "next build",
     "watch": "node index.js",
-    "start": "NODE_ENV=production node index.js"
+    "start": "SET NODE_ENV=production&& node index.js"
   },
   "author": "stanli",
   "license": "ISC",
@@ -27,9 +27,12 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "axios": "^0.19.2",
+    "crypto-js": "^4.0.0",
     "express": "^4.17.1",
     "https": "^1.0.0",
+    "lodash": "^4.17.19",
     "next": "^9.4.4",
     "next-i18next": "^4.5.0",
     "react": "^16.13.1",

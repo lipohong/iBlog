@@ -8,10 +8,27 @@
       "iblogLogin": "iBlog 登錄",
       "email": "電郵:",
       "password": "密碼:",
+      "rememberMe": "記住信息",
       "forgetPassword": "忘記密碼?",
       "submit": "提交",
       "loginViaFacebook": "通過Facebook登錄",
       "createAccount": "新建賬戶"
+    }
+  },
+  "messages": {
+    "login": {
+      "form": {
+        "emailRequired": "請填好電郵地址",
+        "emailNotValid": "電郵地址格式不合法",
+        "passwordRequired": "請填好密碼"
+      },
+      "errors": {
+        "ex_incorrect_password": "密碼錯誤，請重試",
+        "ex_cannot_find_user": "該電郵尚未登記，請先新建賬戶"
+      }
+    },
+    "common": {
+      "unknownError": "發生未知錯誤"
     }
   }
 }

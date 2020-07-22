@@ -1,10 +1,13 @@
 import { SET_PALETTETYPE, SET_THEME, SET_MESSAGE, SET_PROGRESS_BAR_ON } from '../../constants/actionTypes';
+import { SeverityEnum } from '../../enums/SeverityEnum';
+import { PaletteTypeEnum } from '../../enums/PaletteTypeEnum';
 
 const initialState = {
-  paletteType: 'light',
+  paletteType: PaletteTypeEnum.light,
   theme: 0,
   message: {
-    content: '',
+    severity: SeverityEnum.info,
+    message: '',
     open: false
   },
   progressBarOn: false
