@@ -35,7 +35,7 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 import Layout from '../../components/layout';
 
 function Login({ paletteType, dispatch, t }) {
-  const [cookies, setCookie] = useCookies(['iBlog']);
+  const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
   const [showPassword, setShowPassword ] = useState(false);
   const inputForm = useRef('form');
   const [email, setEmail ] = useState('');
@@ -70,18 +70,31 @@ function Login({ paletteType, dispatch, t }) {
     return encryptedPassword;
   }
 
+  const decryptAES = async (encryptedPassword: string): Promise<string> => {
+    const bytes = crypto.AES.decrypt(encryptedPassword, process.env.NEXT_PUBLIC_AES_SECRECT);
+    const decryptPassword = bytes.toString(crypto.enc.Utf8);
+
+    if (!decryptPassword) {
+      throw new Error('ex_incorrect_password');
+    }
+
+    return decryptPassword;
+  }
+
   const handleSubmit = async () => {
     dispatch({ type: SET_PROGRESS_BAR_ON, progressBarOn: true });
     try {
-      let postData = {
+      const postData = {
         email,
         password: await encryptAES(password)
       }
       const res = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
-      console.log(res.data.payload);
-      if (res.data.payload) {
-        setCookie('auth', PaletteTypeEnum.light, { path: '/' });
+      if (rememberMe) {
+        setCookie('rememberMe', postData, { path: '/' });
+      } else {
+        removeCookie('rememberMe', { path: '/' });
       }
+      setCookie('auth', res.data.payload, { path: '/' });
       
     } catch (err) {
       let errMessage: string;
@@ -103,12 +116,22 @@ function Login({ paletteType, dispatch, t }) {
     setRememberMe(event.currentTarget.checked);
   }
 
-  useEffect(() => {
+  const init = async () => {
     if (!!cookies.paletteType) {
       dispatch({ type: SET_PALETTETYPE, paletteType: cookies.paletteType});
     } else {
       setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
+    }    
+    if (!!cookies.rememberMe) {
+      const postData = cookies.rememberMe;
+      setRememberMe(true);
+      setEmail(postData.email);
+      setPassword(await decryptAES(postData.password));
     }
+  }
+
+  useEffect(() => {
+    init();
   }, [])
 
   return (
