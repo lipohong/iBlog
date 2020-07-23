@@ -25,9 +25,11 @@ import SortIcon from '@material-ui/icons/Sort';
 import Layout from '../components/layout';
 
 
-function HomePage({ t, dispatch }) {
+function HomePage({ t, dispatch, auth }) {
 
   const init = async () => {
+    console.log(auth);
+    
   }
 
   useEffect(() => {
@@ -90,9 +92,10 @@ function HomePage({ t, dispatch }) {
 }
 
 const mapStateToProps = (state) => {
-  const { global } = state;
+  const { global, auth } = state;
   return {
-    message: global && global.message
+    message: global && global.message,
+    auth: auth && auth.auth
   }
 }
 

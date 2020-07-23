@@ -10,8 +10,13 @@ export interface setThemeAction {
   theme: number
 }
 
-export interface Message {
+export interface IMessage {
   open: boolean,
   message: string,
   severity: string
+}
+
+export interface IAuth {
+  userId: string,
+  jwt: string
 }

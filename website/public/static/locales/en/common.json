@@ -22,6 +22,9 @@
         "emailNotValid": "Email is not valid",
         "passwordRequired": "Password is required"
       },
+      "general": {
+        "loginSuccess": "Login Success."
+      },
       "errors": {
         "ex_incorrect_password": "Wrong password.",
         "ex_cannot_find_user": "No user record, please create an account first."

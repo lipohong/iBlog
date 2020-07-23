@@ -25,7 +25,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
-import { SET_PALETTETYPE, SET_PROGRESS_BAR_ON, SET_MESSAGE } from '../../constants/actionTypes';
+import { setMessage, setPaletteType, setProgressOn } from '../../store/actions/globalActions';
 import { SeverityEnum } from '../../enums/SeverityEnum';
 
 import defaultNextI18Next from '../../plugins/i18n';
@@ -33,6 +33,7 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 // components
 import Layout from '../../components/layout';
+import { setAuth } from 'store/actions/authActions';
 
 function Login({ paletteType, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
@@ -82,34 +83,49 @@ function Login({ paletteType, dispatch, t }) {
   }
 
   const handleSubmit = async () => {
-    dispatch({ type: SET_PROGRESS_BAR_ON, progressBarOn: true });
+    dispatch(setProgressOn(true));
     try {
       const postData = {
         email,
         password: await encryptAES(password)
       }
       const res = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
+
+      // remember me checked
       if (rememberMe) {
         setCookie('rememberMe', postData, { path: '/' });
       } else {
         removeCookie('rememberMe', { path: '/' });
       }
-      setCookie('auth', res.data.payload, { path: '/' });
       
+      // store auth info
+      dispatch(setAuth({
+        userId: res.data.payload.userId,
+        jwt: res.data.payload.jwt
+      }));
+
+      // save auth to cookies
+      setCookie('auth', res.data.payload, { path: '/' });
+
+      // login success tips
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.success,
+        message: t(`messages.login.general.loginSuccess`)
+      }));
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
-      errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`)
-      dispatch({
-        type: SET_MESSAGE,
-        message: {
-          open: true,
-          severity: SeverityEnum.error,
-          message: errMessage
-        }
-      });
+      errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`);
+
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: errMessage
+      }));
     }
-    dispatch({ type: SET_PROGRESS_BAR_ON, progressBarOn: false });
+    dispatch(setProgressOn(false));
   }
 
   const handleRememberMeChange = (event) => {
@@ -118,7 +134,7 @@ function Login({ paletteType, dispatch, t }) {
 
   const init = async () => {
     if (!!cookies.paletteType) {
-      dispatch({ type: SET_PALETTETYPE, paletteType: cookies.paletteType});
+      dispatch(setPaletteType(cookies.paletteType));
     } else {
       setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
     }    

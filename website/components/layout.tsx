@@ -26,8 +26,7 @@ import Menu from '@material-ui/core/Menu';
 import Hidden from '@material-ui/core/Hidden';
 
 import themeOptions from '../assets/theme';
-import { SET_MESSAGE } from '../constants/actionTypes';
-import { SET_PALETTETYPE, SET_THEME } from '../constants/actionTypes';
+import { setTheme, setMessage, setPaletteType } from '../store/actions/globalActions';
 import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
 import { SeverityEnum } from '../enums/SeverityEnum';
 
@@ -50,10 +49,10 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
   const switchPaletteType = () => {
     if (paletteType === PaletteTypeEnum.light) {
       setCookie('paletteType', PaletteTypeEnum.dark, { path: '/' });
-      dispatch({ type: SET_PALETTETYPE, paletteType: PaletteTypeEnum.dark});
+      dispatch(setPaletteType(PaletteTypeEnum.dark));
     } else {
       setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
-      dispatch({ type: SET_PALETTETYPE, paletteType: PaletteTypeEnum.light});
+      dispatch(setPaletteType(PaletteTypeEnum.light));
     }
   }
 
@@ -99,31 +98,28 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
   };
 
   const switchTheme = (event: React.MouseEvent<HTMLElement>) => {
-    const themeIndex = event.currentTarget.dataset.themeIndex;
-    dispatch({ type: SET_THEME, theme: themeIndex});
+    const themeIndex = Number(event.currentTarget.dataset.themeIndex);
+    dispatch(setTheme(themeIndex));
     setCookie('theme', themeIndex, { path: '/' });
     handleThemeMenuClose()
   };
 
   const handleSnackbarClose = () => {
-    dispatch({
-      type: SET_MESSAGE,
-      message: {
-        open: false,
-        severity: SeverityEnum.info,
-        message: ''
-      }
-    });
+    dispatch(setMessage({
+      open: false,
+      severity: SeverityEnum.info,
+      message: ''
+    }));
   }
 
   useEffect(() => {
     if (!!cookies.paletteType) {
-      dispatch({ type: SET_PALETTETYPE, paletteType: cookies.paletteType});
+      dispatch(setPaletteType(cookies.paletteType));
     } else {
       setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
     }
     if (!!cookies.theme) {
-      dispatch({ type: SET_THEME, theme: cookies.theme});
+      dispatch(setTheme(cookies.theme));
     } else {
       setCookie('theme', 0, { path: '/' });
     }

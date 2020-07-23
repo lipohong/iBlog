@@ -22,6 +22,9 @@
         "emailNotValid": "電郵地址格式不合法",
         "passwordRequired": "請填好密碼"
       },
+      "general": {
+        "loginSuccess": "登錄成功"
+      },
       "errors": {
         "ex_incorrect_password": "密碼錯誤，請重試",
         "ex_cannot_find_user": "該電郵尚未登記，請先新建賬戶"
