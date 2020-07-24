@@ -27,7 +27,9 @@
       },
       "errors": {
         "ex_incorrect_password": "Wrong password.",
-        "ex_cannot_find_user": "No user record, please create an account first."
+        "ex_cannot_find_user": "No user record, please create an account first.",
+        "ex_user_not_exists": "No user record, please create an account first.",
+        "ex_user_already_exists": "User already exists, please login"
       }
     },
     "common": {
