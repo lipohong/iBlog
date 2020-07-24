@@ -11,6 +11,15 @@ const UserSchema = new Schema({
   username: String,
   password: String,
   email: String,
+  isActived: {
+    type: Boolean,
+    default: false,
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+  verifyCode: String,
   userInfo: UserInfo,
 }, { versionKey: false, timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } });
 

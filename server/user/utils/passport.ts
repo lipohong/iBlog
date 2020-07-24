@@ -20,7 +20,7 @@ const loginStrategy = {
 
 passport.use('login', new LocalStrategy(loginStrategy, async (req, email, password, done) => {
   try {
-    const user = await getUserByEmail({ email: email });
+    const user = await getUserByEmail({ email: email, isActived: true, isDeleted: false });
     if (!user) {
       throw new Error('ex_user_not_exists');
     }

@@ -8,11 +8,8 @@ const User = mongoose.model('User', UserSchema, 'User');
 async function getUser(expression: object): Promise<UserModel> {
   try {
     const user: any = await User.findOne(expression).lean();
-    if (!user) {
-      throw new Error('ex_cannot_find_user');
-    }
 
-    return new UserModel(user, 'get');
+    return user;
   }
   catch (err) {
     throw err;
@@ -23,7 +20,7 @@ async function getUserByEmail(expression: object): Promise<UserModel> {
   try {
     const user: any = await getUser(expression);
 
-    return new UserModel(user, 'post');
+    return user;
   }
   catch (err) {
     throw err;
@@ -34,7 +31,7 @@ async function getUserById(expression: object): Promise<UserModel> {
   try {
     const user: any = await getUser(expression);
 
-    return new UserModel(user, 'fetch');
+    return user;
   }
   catch (err) {
     throw err;
@@ -52,4 +49,15 @@ async function getMyInfo(expression: object): Promise<UserModel> {
   }
 }
 
-export { getUserByEmail, getUserById, getMyInfo }
+async function saveNewUser(model: UserModel): Promise<Boolean> {
+  try {
+    const user: any = await new User(model).save();
+
+    return !!user;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
+export { getUserByEmail, getUserById, getMyInfo, saveNewUser }

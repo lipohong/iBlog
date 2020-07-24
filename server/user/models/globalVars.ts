@@ -11,6 +11,9 @@ interface IGlobVars {
   logLevel: string;
   facebookAppId: string;
   facebookAppSecret: string;
+  emailFrom: string;
+  emailUser: string;
+  emailPass: string;
 }
 
 class GlobalVars {
@@ -26,7 +29,10 @@ class GlobalVars {
       aesSecret: process.env.AES_SECRET,
       logLevel: process.env.LOG_LEVEL,
       facebookAppId: process.env.FACEBOOK_APP_ID,
-      facebookAppSecret: process.env.FACEBOOK_APP_SECRET
+      facebookAppSecret: process.env.FACEBOOK_APP_SECRET,
+      emailFrom: process.env.EMAIL_FROM,
+      emailUser: process.env.EMAIL_USER,
+      emailPass: process.env.EMAIL_PASS
     } as IGlobVars;
   }
 
