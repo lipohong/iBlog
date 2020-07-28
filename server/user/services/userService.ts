@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import UserModel from '../models/user/class/userModel';
 import UserSchema from '../models/user/schema/userSchema';
 // import { formExpressionFromRestriction } from '../utils/restriction';
+import { removeUndefinedField } from '../utils/removeUndefinedField';
 
 const User = mongoose.model('User', UserSchema, 'User');
 
@@ -60,4 +61,15 @@ async function saveNewUser(model: UserModel): Promise<Boolean> {
   }
 }
 
-export { getUserByEmail, getUserById, getMyInfo, saveNewUser }
+async function updateUser(expression: object, updateFields: object): Promise<any> {
+  try {
+    const user = await User.findOneAndUpdate(expression, { $set: removeUndefinedField(updateFields) }).lean();
+
+    return user;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
+export { getUserByEmail, getUserById, getMyInfo, saveNewUser, updateUser }

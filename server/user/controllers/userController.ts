@@ -5,9 +5,11 @@ import * as nodemailer from 'nodemailer';
 import { IERequest, IEResponse, IJWTSignModel } from '../models/commonModel';
 import globVars from '../models/globalVars';
 import FacebookLoginModel from '../models/user/class/facebookLoginModel';
-import { getUserById, getUserByEmail, getMyInfo, saveNewUser } from '../services/userService';
+import { getUserById, getUserByEmail, getMyInfo, saveNewUser, updateUser } from '../services/userService';
 import UserModel from '../models/user/class/userModel';
 import Auth from '../utils/auth';
+
+let ejs = require('ejs');
 
 export class UserController {
 
@@ -20,6 +22,9 @@ export class UserController {
       if (!userModel.password) {
         throw new Error("ex_no_password");
       }
+      if (!userModel.username) {
+        throw new Error("ex_no_username");
+      }
       const user = await getUserByEmail({ email: userModel.email });
       if (!!user && user.isActived) {
         throw new Error("ex_user_already_exists");
@@ -27,10 +32,12 @@ export class UserController {
 
       const verifyCode = uuidv4().slice(0, 8);
       userModel.verifyCode = verifyCode;
-      userModel.password = await Auth.encryptAES(userModel.password);
       
       if (!user) {
+        userModel.password = await Auth.hashPassword(userModel.password);
         await saveNewUser(userModel);
+      } else {
+        await updateUser({ _id: userModel._id }, { verifyCode })
       }
 
       const transporter = nodemailer.createTransport({
@@ -43,18 +50,36 @@ export class UserController {
           pass: globVars.emailPass
         }
       });
-
+      const html = await ejs.renderFile('views/registerBody.ejs', {
+        username: userModel.username,
+        email: userModel.email,
+        verifyCode
+      });
       const message = {
         from: globVars.emailFrom,
         to: userModel.email,
-        subject: "Message test 2",
-        text: `${userModel.verifyCode}`,
-        // html: "<p>HTML version of the message</p>"
+        subject: "Register comfirmation",
+        html
       }
       const info = await transporter.sendMail(message);
       transporter.close();
 
-      return res.success(null, info);
+      return res.success(null, info['envelope']);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public emailView = async (req: IERequest, res: IEResponse) => {
+    try {
+      const html = await ejs.renderFile('views/registerBody.ejs', {
+        username: "userModel.username",
+        email: "userModel.email",
+        verifyCode: "verifyCode"
+      }); 
+
+      return res.send(html);
     }
     catch (err) {
       return res.throwErr(err);
