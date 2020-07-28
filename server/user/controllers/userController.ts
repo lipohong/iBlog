@@ -34,7 +34,8 @@ export class UserController {
       userModel.verifyCode = verifyCode;
       
       if (!user) {
-        userModel.password = await Auth.hashPassword(userModel.password);
+        const decryptPassword = await Auth.decryptAES(userModel.password);
+        userModel.password = await Auth.hashPassword(decryptPassword);
         await saveNewUser(userModel);
       } else {
         await updateUser({ _id: userModel._id }, { verifyCode })
