@@ -32,9 +32,10 @@ import { setAuth } from 'store/actions/authActions';
 function Register({ paletteType, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
   const inputForm = useRef('form');
+  const [username, setUsername ] = useState('');
   const [email, setEmail ] = useState('');
   const [password, setPassword ] = useState('');
-  const [comfirmPassword, setConfirmPassword ] = useState('');
+  const [confirmPassword, setConfirmPassword ] = useState('');
 
   const handleResponse = (res) => {
     console.log(res);
@@ -42,6 +43,11 @@ function Register({ paletteType, dispatch, t }) {
 
   const handleError = (res) => {
     console.log(res);
+  }
+
+  const handleUsernameChange = (event) => {
+    const value = event.currentTarget.value;
+    setUsername(value);
   }
 
   const handleEmailChange = (event) => {
@@ -69,31 +75,24 @@ function Register({ paletteType, dispatch, t }) {
     dispatch(setProgressOn(true));
     try {
       const postData = {
+        username,
         email,
         password: await encryptAES(password)
       }
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
+      await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/register`, postData);
       
-      // store auth info
-      dispatch(setAuth({
-        userId: res.data.payload.userId,
-        jwt: res.data.payload.jwt
-      }));
-
-      // save auth to cookies
-      setCookie('auth', res.data.payload, { path: '/' });
-
-      // login success tips
+      // register success tips
       dispatch(setMessage({
         open: true,
         severity: SeverityEnum.success,
-        message: t(`messages.login.general.loginSuccess`)
+        message: t(`messages.register.general.registerSuccess`)
       }));
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
       errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`);
-
+      console.log(err);
+      
       // show error message
       dispatch(setMessage({
         open: true,
@@ -110,17 +109,21 @@ function Register({ paletteType, dispatch, t }) {
     } else {
       setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
     }
-    // ValidatorForm.addValidationRule('isPasswordMatch', (value: string) => {
-    //   if (value !== password) {
-    //       return false;
-    //   }
-    //   return true;
-    // });
   }
 
   useEffect(() => {
     init();
   }, [])
+
+  useEffect(() => {
+    ValidatorForm.removeValidationRule('isPasswordMatch');
+    ValidatorForm.addValidationRule('isPasswordMatch', (value: string) => {
+      if (value !== password) {
+          return false;
+      }
+      return true;
+    });
+  }, [confirmPassword])
 
   return (
     <Layout>
@@ -135,11 +138,25 @@ function Register({ paletteType, dispatch, t }) {
                 ref={inputForm}
                 onSubmit={handleSubmit}
               >
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                   <Grid item xs={12} style={{ textAlign: "center" }}>
                     <Typography variant="h6" noWrap>
                       {t('pages.register.iblogRegister')}
                     </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle2" noWrap>
+                    {t('pages.register.username')}
+                    </Typography>
+                    <TextValidator
+                      name="username"
+                      value={username}
+                      variant="outlined"
+                      fullWidth
+                      validators={['required']}
+                      onChange={handleUsernameChange}
+                      errorMessages={[t('messages.register.form.usernameRequired')]}
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" noWrap>
@@ -176,13 +193,13 @@ function Register({ paletteType, dispatch, t }) {
                     </Typography>
                     <TextValidator
                       name="repeatPassword"
-                      value={comfirmPassword}
+                      value={confirmPassword}
                       variant="outlined"
                       type='password'
                       fullWidth
                       validators={['isPasswordMatch', 'required']}
                       onChange={handleConfirmPasswordChange}
-                      errorMessages={['password mismatch', t('messages.register.form.confirmPasswordRequired')]}
+                      errorMessages={[t('messages.register.form.passwordMissmatch'), t('messages.register.form.confirmPasswordRequired')]}
                     />
                   </Grid>
                   <Grid item xs={12}>

@@ -17,6 +17,7 @@
     },
     "register": {
       "iblogRegister": "iBlog 注冊",
+      "username": "用戶名:",
       "email": "電郵:",
       "password": "密碼:",
       "confirmPassword": "密碼確認:",
@@ -37,16 +38,26 @@
       "errors": {
         "ex_incorrect_password": "密碼錯誤，請重試",
         "ex_cannot_find_user": "該電郵尚未登記，請先新建賬戶",
-        "ex_user_not_exists": "該電郵尚未登記，請先新建賬戶",
-        "ex_user_already_exists": "該電郵已注冊，請登錄"
+        "ex_user_not_exists": "該電郵尚未登記，請先新建賬戶"
       }
     },
     "register": {
       "form": {
+        "usernameRequired": "請填好用戶名",
         "emailRequired": "請填好電郵地址",
         "emailNotValid": "電郵地址格式不合法",
         "passwordRequired": "請填好密碼",
-        "confirmPasswordRequired": "請填好確認密碼"
+        "confirmPasswordRequired": "請填好確認密碼",
+        "passwordMissmatch": "確認密碼與密碼不一致"
+      },
+      "general": {
+        "registerSuccess": "註冊成功，請通過所收到的電郵中的鏈接進行賬戶激活"
+      },
+      "errors": {
+        "ex_no_email": "請提供電郵.",
+        "ex_no_password": "請提供密碼.",
+        "ex_no_username": "請提供用戶.",
+        "ex_user_already_exists": "該電郵已注冊，請登錄"
       }
     },
     "common": {

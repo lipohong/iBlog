@@ -17,6 +17,7 @@
     },
     "register": {
       "iblogRegister": "iBlog Register",
+      "username": "Username:",
       "email": "Email:",
       "password": "Password:",
       "confirmPassword": "Confirm Password:",
@@ -37,16 +38,26 @@
       "errors": {
         "ex_incorrect_password": "Wrong password.",
         "ex_cannot_find_user": "No user record, please create an account first.",
-        "ex_user_not_exists": "No user record, please create an account first.",
-        "ex_user_already_exists": "User already exists, please login"
+        "ex_user_not_exists": "No user record, please create an account first."
       }
     },
     "register": {
       "form": {
+        "usernameRequired": "Username is required",
         "emailRequired": "Email is required",
         "emailNotValid": "Email is not valid",
         "passwordRequired": "Password is required",
-        "confirmPasswordRequired": "Confirm Password is required"
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordMissmatch": "Confirm password not match password"
+      },
+      "general": {
+        "registerSuccess": "Register success, you can activate the account via the link from the email you get."
+      },
+      "errors": {
+        "ex_no_email": "Email not provided.",
+        "ex_no_password": "Password not provided.",
+        "ex_no_username": "Username not provided.",
+        "ex_user_already_exists": "User already exists, please login."
       }
     },
     "common": {
