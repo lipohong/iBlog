@@ -19,6 +19,7 @@ export class userRoute {
     router.post('/', login);
     router.get('/emailView', this.userController.emailView);
     router.post('/signUp', this.userController.sendVerifyEmail);
+    router.get('/signUp/:verifyCode', this.userController.verify);
     router.post('/facebook', this.userController.loginThroughFacebook);
     router.get('/', auth, this.userController.getMyInfo);
     router.get('/:userId', this.userController.getUserById);

@@ -3,7 +3,7 @@ import * as passportLocal from 'passport-local';
 import * as passportJWT from 'passport-jwt';
 import Auth from './auth';
 
-import { getUserByEmail } from '../services/userService';
+import { getUser } from '../services/userService';
 import { IJWTPayloadModel, IJWTSignModel } from '../models/commonModel';
 import globalVars from '../models/globalVars';
 
@@ -20,7 +20,7 @@ const loginStrategy = {
 
 passport.use('login', new LocalStrategy(loginStrategy, async (req, email, password, done) => {
   try {
-    const user = await getUserByEmail({ email: email, isActived: true, isDeleted: false });
+    const user = await getUser({ email: email, isActived: true, isDeleted: false });
     if (!user) {
       throw new Error('ex_user_not_exists');
     }

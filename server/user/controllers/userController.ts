@@ -5,7 +5,7 @@ import * as nodemailer from 'nodemailer';
 import { IERequest, IEResponse, IJWTSignModel } from '../models/commonModel';
 import globVars from '../models/globalVars';
 import FacebookLoginModel from '../models/user/class/facebookLoginModel';
-import { getUserById, getUserByEmail, getMyInfo, saveNewUser, updateUser } from '../services/userService';
+import { getUser, getMyInfo, saveNewUser, updateUser } from '../services/userService';
 import UserModel from '../models/user/class/userModel';
 import Auth from '../utils/auth';
 
@@ -25,22 +25,12 @@ export class UserController {
       if (!userModel.username) {
         throw new Error("ex_no_username");
       }
-      const user = await getUserByEmail({ email: userModel.email });
+      const user = await getUser({ email: userModel.email });
       if (!!user && user.isActived) {
         throw new Error("ex_user_already_exists");
       }
-
       const verifyCode = uuidv4().slice(0, 8);
       userModel.verifyCode = verifyCode;
-      
-      if (!user) {
-        const decryptPassword = await Auth.decryptAES(userModel.password);
-        userModel.password = await Auth.hashPassword(decryptPassword);
-        await saveNewUser(userModel);
-      } else {
-        await updateUser({ _id: userModel._id }, { verifyCode })
-      }
-
       const transporter = nodemailer.createTransport({
         host: 'smtp.office365.com',
         port: 587,
@@ -65,7 +55,32 @@ export class UserController {
       const info = await transporter.sendMail(message);
       transporter.close();
 
+      if (!user) {
+        const decryptPassword = await Auth.decryptAES(userModel.password);
+        userModel.password = await Auth.hashPassword(decryptPassword);
+        await saveNewUser(userModel);
+      } else {
+        await updateUser({ _id: userModel._id }, { verifyCode })
+      }
+
       return res.success(null, info['envelope']);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public verify = async (req: IERequest, res: IEResponse) => {
+    try {
+      const verifyCode = req.params.verifyCode;
+      const user = await getUser({ verifyCode });
+      if (!user) {
+        throw new Error('ex_user_not_found')
+      } else {
+        await updateUser({ _id: user._id }, { verifyCode: null, isActived: true })
+      }
+
+      return res.success(null, { email: user.email });
     }
     catch (err) {
       return res.throwErr(err);
@@ -102,7 +117,7 @@ export class UserController {
   public getUserById = async (req: IERequest, res: IEResponse) => {
     try {
       const expression = { _id: req.params.userId };
-      const userInfo = await getUserById(expression);
+      const userInfo = await getUser(expression);
       if (!userInfo) {
         throw new Error('ex_cannot_find_user');
       }
@@ -123,7 +138,7 @@ export class UserController {
       if (!_.get(result, 'data.data.is_valid')) {
         throw new Error('ex_accessToken_not_valid');
       }
-      const user = await getUserByEmail({ email: facebookField.email });
+      const user = await getUser({ email: facebookField.email });
       const token = Auth.signLoginToken({
         userId: user._id,
         username: user.username

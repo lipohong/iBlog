@@ -17,28 +17,6 @@ async function getUser(expression: object): Promise<UserModel> {
   }
 }
 
-async function getUserByEmail(expression: object): Promise<UserModel> {
-  try {
-    const user: any = await getUser(expression);
-
-    return user;
-  }
-  catch (err) {
-    throw err;
-  }
-}
-
-async function getUserById(expression: object): Promise<UserModel> {
-  try {
-    const user: any = await getUser(expression);
-
-    return user;
-  }
-  catch (err) {
-    throw err;
-  }
-}
-
 async function getMyInfo(expression: object): Promise<UserModel> {
   try {
     const user: any = await getUser(expression);
@@ -72,4 +50,4 @@ async function updateUser(expression: object, updateFields: object): Promise<any
   }
 }
 
-export { getUserByEmail, getUserById, getMyInfo, saveNewUser, updateUser }
+export { getUser, getMyInfo, saveNewUser, updateUser }
