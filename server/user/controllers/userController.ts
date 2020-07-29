@@ -49,7 +49,7 @@ export class UserController {
       const message = {
         from: globVars.emailFrom,
         to: userModel.email,
-        subject: "Register comfirmation",
+        subject: "[iBlog] Register comfirmation",
         html
       }
       const info = await transporter.sendMail(message);
@@ -70,7 +70,52 @@ export class UserController {
     }
   }
 
-  public verify = async (req: IERequest, res: IEResponse) => {
+  public sendForgetPasswordEmail = async (req: IERequest, res: IEResponse) => {
+    try {
+      const userModel = new UserModel(req.body, 'post');
+      if (!userModel.email) {
+        throw new Error("ex_no_email");
+      }
+      const user = await getUser({ email: userModel.email, isActived: true });
+      if (!user) {
+        throw new Error("ex_user_not_exists");
+      }
+      const verifyCode = uuidv4().slice(0, 8);
+      userModel.verifyCode = verifyCode;
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.office365.com',
+        port: 587,
+        secure: false,
+        tls: { ciphers: 'SSLv3' },
+        auth: {
+          user: globVars.emailUser,
+          pass: globVars.emailPass
+        }
+      });
+      const html = await ejs.renderFile('views/forgetPasswordBody.ejs', {
+        username: userModel.username,
+        email: userModel.email,
+        verifyCode
+      });
+      const message = {
+        from: globVars.emailFrom,
+        to: userModel.email,
+        subject: "[iBlog] Reset password comfirmation",
+        html
+      }
+      const info = await transporter.sendMail(message);
+      transporter.close();
+
+      await updateUser({ _id: userModel._id }, { verifyCode })
+
+      return res.success(null, info['envelope']);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public registerVerify = async (req: IERequest, res: IEResponse) => {
     try {
       const verifyCode = req.params.verifyCode;
       const user = await getUser({ verifyCode });
@@ -87,9 +132,26 @@ export class UserController {
     }
   }
 
+  public forgetPasswordVerify = async (req: IERequest, res: IEResponse) => {
+    try {
+      // const verifyCode = req.params.verifyCode;
+      // const user = await getUser({ verifyCode });
+      // if (!user) {
+      //   throw new Error('ex_user_not_found')
+      // } else {
+      //   await updateUser({ _id: user._id }, { verifyCode: null, isActived: true })
+      // }
+
+      return res.success(null, null);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
   public emailView = async (req: IERequest, res: IEResponse) => {
     try {
-      const html = await ejs.renderFile('views/registerBody.ejs', {
+      const html = await ejs.renderFile('views/forgetPasswordBody.ejs', {
         username: "userModel.username",
         email: "userModel.email",
         verifyCode: "verifyCode"

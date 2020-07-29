@@ -8,23 +8,30 @@
   </head>
   <body style="margin: 0; background-color: #eee;">
     <div style="margin-top: 20px; display: flex; justify-content: center;">
-      <div style="max-width: 600px; background-color: #fff;">
+      <div style="max-width: 500px; background-color: #fff;">
         <div style="background-color: blue; color: #fff; padding: 10px 20px; font-size: 20px; font-weight: bolder;">iBlog</div>
         <div style="padding: 20px 40px;">
           <p style="font-size: 18px; font-weight: 900;">Dear <%= username %>:</p>
           <p>Please click the following link to finish the account activation. Thank you!</p>
-          <p>Link: <a href="https://lipohong.xyz/verifyCode/<%= verifyCode %>">https://lipohong.xyz/verifyCode/<%= verifyCode %></a></p>
+          <p>Link: 
+            <a href="https://lipohong.xyz/auth/register?verifyCode=<%= verifyCode %>" target="_blank">
+              https://lipohong.xyz/auth/register?verifyCode=<%= verifyCode %>
+            </a>
+          </p>
           <div style="margin-top: 50px;">
-            <p>Need help? Please contact <a href="mailto:lipohong@hotmail.com">lipohong@hotmail.com</a></p>
+            <p>Need help? Please contact: <a href="mailto:lipohong@hotmail.com">lipohong@hotmail.com</a></p>
           </div>
         </div>
         <hr style="border: 0px solid #eee; border-width: 10px;" />
         <div style="padding: 20px 40px;">
           <p style="font-size: 18px; font-weight: 900;"><%= username %> 先生/女士:</p>
           <p>請點擊下面的鏈接，以完成賬號的激活。</p>
-          <p>鏈接: <a href="https://lipohong.xyz/verifyCode/<%= verifyCode %>">https://lipohong.xyz/verifyCode/<%= verifyCode %></a></p>
+          <p>鏈接: 
+            <a href="https://lipohong.xyz/auth/register?verifyCode=<%= verifyCode %>" target="_blank">
+              https://lipohong.xyz/auth/register?verifyCode=<%= verifyCode %></a>
+            </p>
           <div style="margin-top: 50px;">
-            <p>遇到問題? 可以聯係 <a href="mailto:lipohong@hotmail.com">lipohong@hotmail.com</a></p>
+            <p>遇到問題? 可以聯係: <a href="mailto:lipohong@hotmail.com">lipohong@hotmail.com</a></p>
           </div>
         </div>
       </div>
