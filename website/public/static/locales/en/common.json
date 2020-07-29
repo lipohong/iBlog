@@ -1,7 +1,8 @@
 {
   "headers": {
     "homePage": "Home Page",
-    "loginPage" : "Login Page"
+    "loginPage": "Login Page",
+    "registerPage": "Register Page"
   },
   "pages": {
     "login": {
@@ -13,6 +14,14 @@
       "submit": "Submit",
       "loginViaFacebook": "Login via Facebook",
       "createAccount": "Create Account"
+    },
+    "register": {
+      "iblogRegister": "iBlog Register",
+      "email": "Email:",
+      "password": "Password:",
+      "confirmPassword": "Confirm Password:",
+      "registerViaFacebook": "Register via Facebook",
+      "alreadyHaveAccount": "Already have an account?"
     }
   },
   "messages": {
@@ -30,6 +39,14 @@
         "ex_cannot_find_user": "No user record, please create an account first.",
         "ex_user_not_exists": "No user record, please create an account first.",
         "ex_user_already_exists": "User already exists, please login"
+      }
+    },
+    "register": {
+      "form": {
+        "emailRequired": "Email is required",
+        "emailNotValid": "Email is not valid",
+        "passwordRequired": "Password is required",
+        "confirmPasswordRequired": "Confirm Password is required"
       }
     },
     "common": {

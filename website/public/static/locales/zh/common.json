@@ -1,7 +1,8 @@
 {
   "headers": {
     "homePage": "首頁",
-    "loginPage" : "登錄頁"
+    "loginPage" : "登錄頁",
+    "registerPage": "注冊頁"
   },
   "pages": {
     "login": {
@@ -11,8 +12,16 @@
       "rememberMe": "記住信息",
       "forgetPassword": "忘記密碼?",
       "submit": "提交",
-      "loginViaFacebook": "通過Facebook登錄",
+      "loginViaFacebook": "通過 Facebook 登錄",
       "createAccount": "新建賬戶"
+    },
+    "register": {
+      "iblogRegister": "iBlog 注冊",
+      "email": "電郵:",
+      "password": "密碼:",
+      "confirmPassword": "密碼確認:",
+      "registerViaFacebook": "通過 Facebook 注冊",
+      "alreadyHaveAccount": "已有賬號?"
     }
   },
   "messages": {
@@ -30,6 +39,14 @@
         "ex_cannot_find_user": "該電郵尚未登記，請先新建賬戶",
         "ex_user_not_exists": "該電郵尚未登記，請先新建賬戶",
         "ex_user_already_exists": "該電郵已注冊，請登錄"
+      }
+    },
+    "register": {
+      "form": {
+        "emailRequired": "請填好電郵地址",
+        "emailNotValid": "電郵地址格式不合法",
+        "passwordRequired": "請填好密碼",
+        "confirmPasswordRequired": "請填好確認密碼"
       }
     },
     "common": {
