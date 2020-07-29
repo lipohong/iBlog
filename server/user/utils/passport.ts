@@ -3,7 +3,7 @@ import * as passportLocal from 'passport-local';
 import * as passportJWT from 'passport-jwt';
 import Auth from './auth';
 
-import { getUser } from '../services/userService';
+import { getUser, updateUser } from '../services/userService';
 import { IJWTPayloadModel, IJWTSignModel } from '../models/commonModel';
 import globalVars from '../models/globalVars';
 
@@ -27,6 +27,8 @@ passport.use('login', new LocalStrategy(loginStrategy, async (req, email, passwo
     const decryptPassword = await Auth.decryptAES(password);
     if (!(await Auth.comparePassword(decryptPassword, user.password))) {
       return done(null, null, { message: 'ex_incorrect_password' });
+    } else {
+      await updateUser({ _id: user._id }, { verifyCode: null }); // make sure not at register/reset password status
     }
     const token = Auth.signLoginToken({
       userId: user._id,

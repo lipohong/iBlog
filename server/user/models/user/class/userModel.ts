@@ -29,7 +29,7 @@ export default class UserModel {
   @ValidateIf(o => o.isDeleted && o.isDeleted !== null)
   public isDeleted: boolean;
 
-  @Expose({ groups: ['get', 'fetch', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
   @IsString({ message: 'ex_input_accept_string_only' })
   @ValidateIf(o => o.verifyCode && o.verifyCode !== null)
   public verifyCode: string;

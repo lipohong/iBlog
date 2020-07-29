@@ -44,6 +44,7 @@ export class UserController {
       const html = await ejs.renderFile('views/registerBody.ejs', {
         username: userModel.username,
         email: userModel.email,
+        registerPage: globVars.registerPage,
         verifyCode
       });
       const message = {
@@ -63,7 +64,7 @@ export class UserController {
         await updateUser({ _id: userModel._id }, { verifyCode })
       }
 
-      return res.success(null, info['envelope']);
+      return res.success("msg_register_verify_email_sent", null);
     }
     catch (err) {
       return res.throwErr(err);
@@ -76,7 +77,7 @@ export class UserController {
       if (!userModel.email) {
         throw new Error("ex_no_email");
       }
-      const user = await getUser({ email: userModel.email, isActived: true });
+      const user = await getUser({ email: userModel.email, isActived: true, isDeleted: false });
       if (!user) {
         throw new Error("ex_user_not_exists");
       }
@@ -93,22 +94,22 @@ export class UserController {
         }
       });
       const html = await ejs.renderFile('views/forgetPasswordBody.ejs', {
-        username: userModel.username,
-        email: userModel.email,
+        username: user.username,
+        resetPasswordPage: globVars.resetPasswordPage,
         verifyCode
       });
       const message = {
         from: globVars.emailFrom,
-        to: userModel.email,
+        to: user.email,
         subject: "[iBlog] Reset password comfirmation",
         html
       }
       const info = await transporter.sendMail(message);
       transporter.close();
 
-      await updateUser({ _id: userModel._id }, { verifyCode })
+      await updateUser({ _id: user._id }, { verifyCode })
 
-      return res.success(null, info['envelope']);
+      return res.success("msg_reset_password_email_sent", null);
     }
     catch (err) {
       return res.throwErr(err);
@@ -117,32 +118,49 @@ export class UserController {
 
   public registerVerify = async (req: IERequest, res: IEResponse) => {
     try {
-      const verifyCode = req.params.verifyCode;
-      const user = await getUser({ verifyCode });
+      const userModel = new UserModel(req.body, 'post');
+      if (!userModel.email) {
+        throw new Error("ex_no_email");
+      }
+      if (!userModel.verifyCode) {
+        throw new Error("ex_no_verifyCode");
+      }
+      const user = await getUser({ email: userModel.email, verifyCode: userModel.verifyCode });
       if (!user) {
-        throw new Error('ex_user_not_found')
+        throw new Error('ex_wrong_verifyCode');
       } else {
-        await updateUser({ _id: user._id }, { verifyCode: null, isActived: true })
+        await updateUser({ _id: user._id }, { verifyCode: null, isActived: true });
       }
 
-      return res.success(null, { email: user.email });
+      return res.success("register_sueccess", { email: user.email });
     }
     catch (err) {
       return res.throwErr(err);
     }
   }
 
-  public forgetPasswordVerify = async (req: IERequest, res: IEResponse) => {
+  public resetPasswordVerify = async (req: IERequest, res: IEResponse) => {
     try {
-      // const verifyCode = req.params.verifyCode;
-      // const user = await getUser({ verifyCode });
-      // if (!user) {
-      //   throw new Error('ex_user_not_found')
-      // } else {
-      //   await updateUser({ _id: user._id }, { verifyCode: null, isActived: true })
-      // }
+      const userModel = new UserModel(req.body, 'post');
+      if (!userModel.email) {
+        throw new Error("ex_no_email");
+      }
+      if (!userModel.verifyCode) {
+        throw new Error("ex_no_verifyCode");
+      }
+      if (!userModel.password) {
+        throw new Error("ex_no_password");
+      }
+      const user = await getUser({ email: userModel.email, verifyCode: userModel.verifyCode });
+      if (!user) {
+        throw new Error('ex_wrong_verifyCode')
+      } else {
+        const decryptPassword = await Auth.decryptAES(userModel.password);
+        userModel.password = await Auth.hashPassword(decryptPassword);
+        await updateUser({ _id: user._id }, { password: userModel.password, verifyCode: null })
+      }
 
-      return res.success(null, null);
+      return res.success("msg_reset_password_success", null);
     }
     catch (err) {
       return res.throwErr(err);
@@ -154,6 +172,8 @@ export class UserController {
       const html = await ejs.renderFile('views/forgetPasswordBody.ejs', {
         username: "userModel.username",
         email: "userModel.email",
+        resetPasswordPage: globVars.resetPasswordPage,
+        registerPage: globVars.registerPage,
         verifyCode: "verifyCode"
       }); 
 

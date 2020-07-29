@@ -14,6 +14,8 @@ interface IGlobVars {
   emailFrom: string;
   emailUser: string;
   emailPass: string;
+  registerPage: string;
+  resetPasswordPage: string;
 }
 
 class GlobalVars {
@@ -32,7 +34,9 @@ class GlobalVars {
       facebookAppSecret: process.env.FACEBOOK_APP_SECRET,
       emailFrom: process.env.EMAIL_FROM,
       emailUser: process.env.EMAIL_USER,
-      emailPass: process.env.EMAIL_PASS
+      emailPass: process.env.EMAIL_PASS,
+      registerPage: process.env.REGISTER_PAGE,
+      resetPasswordPage: process.env.RESET_PASSWORD_PAGE
     } as IGlobVars;
   }
 
