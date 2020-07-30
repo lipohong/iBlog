@@ -220,7 +220,10 @@ export class UserController {
       if (!_.get(result, 'data.data.is_valid')) {
         throw new Error('ex_accessToken_not_valid');
       }
-      const user = await getUser({ email: facebookField.email });
+      const user = await getUser({ email: facebookField.email, isActived: true, isDeleted: false });
+      if (!user) {
+        throw new Error('ex_user_not_exists');
+      }
       const token = Auth.signLoginToken({
         userId: user._id,
         username: user.username
