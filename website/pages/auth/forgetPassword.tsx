@@ -207,7 +207,7 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
                         errorMessages={[t('messages.register.form.passwordMissmatch'), t('messages.register.form.confirmPasswordRequired')]}
                       />
                     </Grid>
-                    <Grid item xs={12} style={{ marginBottom: '10px' }}>
+                    <Grid item xs={12}>
                       <Button 
                         variant="contained"
                         type="submit"
@@ -216,6 +216,11 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
                       >
                         {t('pages.login.submit')}
                       </Button>
+                    </Grid>
+                    <Grid item xs={12} style={{ textAlign: "center", marginTop: '40px' }}>
+                      <Link href="/auth/login">
+                        <span style={{ cursor: "pointer" }}>{t('pages.forgetPassword.backToLogin')}</span>
+                      </Link>
                     </Grid>
                   </Grid>
                 </ValidatorForm>

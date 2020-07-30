@@ -31,7 +31,8 @@
       "verifyCode": "Verify Code:",
       "getVerifyCode": "Get Verify Code",
       "password": "Password:",
-      "confirmPassword": "Confirm Password:"
+      "confirmPassword": "Confirm Password:",
+      "backToLogin": "Back to login page"
     }
   },
   "messages": {
@@ -69,6 +70,7 @@
         "ex_no_password": "Password not provided.",
         "ex_no_username": "Username not provided.",
         "ex_user_already_exists": "User already exists, please login.",
+        "ex_wrong_verifyCode": "Wrong verify code",
         "activateFail": "Account activate fail, please try it later."
       }
     },

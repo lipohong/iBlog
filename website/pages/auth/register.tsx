@@ -90,11 +90,13 @@ function Register({ paletteType, dispatch, t }) {
         severity: SeverityEnum.success,
         message: t(`messages.register.general.registerSuccess`)
       }));
+
+      // redirect to login page
+      router.push('/auth/login');
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
-      errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`);
-      console.log(err);
+      errMessage = !!message ? t(`messages.register.errors.${message}`) : t(`messages.common.unknownError`);
       
       // show error message
       dispatch(setMessage({
@@ -110,9 +112,8 @@ function Register({ paletteType, dispatch, t }) {
     dispatch(setProgressOn(true));
       try {
         const postData = {
-          username,
-          email: userEmail,
-          password: await encryptAES(password)
+          email,
+          verifyCode
         }
         await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/registerVerify`, postData);
 
@@ -125,6 +126,16 @@ function Register({ paletteType, dispatch, t }) {
         // redirect to login page
         router.push('/auth/login');
       } catch (err) {
+        const message = _.get(err, 'response.data.message');
+        const errMessage = !!message ? t(`messages.register.errors.${message}`) : t(`messages.common.unknownError`);
+
+        // show error message
+        dispatch(setMessage({
+          open: true,
+          severity: SeverityEnum.error,
+          message: errMessage
+        }));
+          
         setVerifying(false);
       }
     dispatch(setProgressOn(false));
@@ -201,7 +212,7 @@ function Register({ paletteType, dispatch, t }) {
                       {t('pages.register.email')}
                       </Typography>
                       <TextValidator
-                        name="userEmail"
+                        name="email"
                         value={userEmail}
                         variant="outlined"
                         fullWidth
