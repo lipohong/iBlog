@@ -215,7 +215,9 @@ function Login({ paletteType, dispatch, t }) {
                       control={<Checkbox checked={rememberMe} onChange={handleRememberMeChange} name="remember" />}
                       label={t('pages.login.rememberMe')}
                     />
-                    <span style={{ cursor: "pointer" }}>{t('pages.login.forgetPassword')}</span>
+                    <Link href="/auth/forgetPassword">
+                      <span style={{ cursor: "pointer" }}>{t('pages.login.forgetPassword')}</span>
+                    </Link>
                   </Grid>
                   <Grid item xs={12}>
                     <Button 

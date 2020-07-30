@@ -2,7 +2,8 @@
   "headers": {
     "homePage": "Home Page",
     "loginPage": "Login Page",
-    "registerPage": "Register Page"
+    "registerPage": "Register Page",
+    "forgetPasswordPage": "Forget Password Page"
   },
   "pages": {
     "login": {
@@ -23,6 +24,14 @@
       "confirmPassword": "Confirm Password:",
       "registerViaFacebook": "Register via Facebook",
       "alreadyHaveAccount": "Already have an account?"
+    },
+    "forgetPassword": {
+      "iblogResetPassword": "iBlog Reset Password",
+      "email": "Email:",
+      "verifyCode": "Verify Code:",
+      "getVerifyCode": "Get Verify Code",
+      "password": "Password:",
+      "confirmPassword": "Confirm Password:"
     }
   },
   "messages": {

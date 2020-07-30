@@ -2,7 +2,8 @@
   "headers": {
     "homePage": "首頁",
     "loginPage" : "登錄頁",
-    "registerPage": "注冊頁"
+    "registerPage": "注冊頁",
+    "forgetPasswordPage": "重置密碼頁"
   },
   "pages": {
     "login": {
@@ -23,6 +24,14 @@
       "confirmPassword": "密碼確認:",
       "registerViaFacebook": "通過 Facebook 注冊",
       "alreadyHaveAccount": "已有賬號?"
+    },
+    "forgetPassword": {
+      "iblogResetPassword": "iBlog 重置密碼",
+      "email": "電郵:",
+      "verifyCode": "驗證碼:",
+      "getVerifyCode": "接收驗證碼",
+      "password": "密碼:",
+      "confirmPassword": "密碼確認:"
     }
   },
   "messages": {
