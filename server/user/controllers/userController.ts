@@ -56,12 +56,12 @@ export class UserController {
       const info = await transporter.sendMail(message);
       transporter.close();
 
+      const decryptPassword = await Auth.decryptAES(userModel.password);
+      userModel.password = await Auth.hashPassword(decryptPassword);
       if (!user) {
-        const decryptPassword = await Auth.decryptAES(userModel.password);
-        userModel.password = await Auth.hashPassword(decryptPassword);
         await saveNewUser(userModel);
       } else {
-        await updateUser({ _id: userModel._id }, { verifyCode })
+        await updateUser({ _id: user._id }, { verifyCode, password: userModel.password, username: userModel.username })
       }
 
       return res.success("msg_register_verify_email_sent", null);
