@@ -74,6 +74,28 @@
         "activateFail": "Account activate fail, please try it later."
       }
     },
+    "forgetPassword": {
+      "form": {
+        "usernameRequired": "Username is required",
+        "emailRequired": "Email is required",
+        "emailNotValid": "Email is not valid",
+        "verifyCodeRequired": "Verify Code is required",
+        "passwordRequired": "Password is required",
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordMissmatch": "Confirm password not match password"
+      },
+      "general": {
+        "resetPasswordSuccess": "Reset password success, you can login with the new password now.",
+        "sendVerifyCodeSuccess": "Verify code is sent to your register email, please check it out."
+      },
+      "errors": {
+        "ex_no_email": "Email not provided.",
+        "ex_no_password": "Password not provided.",
+        "ex_no_verifyCode": "Verify code not provided.",
+        "ex_wrong_verifyCode": "Wrong verify code",
+        "ex_user_not_exists": "No user record, please create the account first."
+      }
+    },
     "common": {
       "unknownError": "Unknown Error."
     }

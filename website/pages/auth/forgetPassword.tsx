@@ -65,6 +65,46 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
     return encryptedPassword;
   }
 
+  const sendVerifyCodeEmail = async () => {
+    dispatch(setProgressOn(true));
+    try {
+      if (!userEmail) {
+        dispatch(setMessage({
+          open: true,
+          severity: SeverityEnum.error,
+          message: t(`messages.forgetPassword.form.emailRequired`)
+        }));
+        dispatch(setProgressOn(false));
+
+        return
+      }
+      const postData = {
+        email: userEmail
+      }
+      await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/forgetPassword`, postData);
+      
+      // register success tips
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.success,
+        message: t(`messages.forgetPassword.general.sendVerifyCodeSuccess`)
+      }));
+    } catch (err) {
+      let errMessage: string;
+      const message = _.get(err, 'response.data.message');
+      errMessage = !!message ? t(`messages.forgetPassword.errors.${message}`) : t(`messages.common.unknownError`);
+      console.log(err);
+      
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: errMessage
+      }));
+    }
+    dispatch(setProgressOn(false));
+  } 
+
   const handleSubmit = async () => {
     dispatch(setProgressOn(true));
     try {
@@ -73,18 +113,21 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
         verifyCode,
         password: await encryptAES(password)
       }
-      await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/register`, postData);
+      await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/resetPassword`, postData);
       
       // register success tips
       dispatch(setMessage({
         open: true,
         severity: SeverityEnum.success,
-        message: t(`messages.register.general.registerSuccess`)
+        message: t(`messages.forgetPassword.general.resetPasswordSuccess`)
       }));
+
+      // redirect to login page
+      router.push('/auth/login');
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
-      errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`);
+      errMessage = !!message ? t(`messages.forgetPassword.errors.${message}`) : t(`messages.common.unknownError`);
       console.log(err);
       
       // show error message
@@ -149,7 +192,7 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
                         fullWidth
                         validators={['required', 'isEmail']}
                         onChange={handleEmailChange}
-                        errorMessages={[t('messages.register.form.emailRequired'), t('messages.register.form.emailNotValid')]}
+                        errorMessages={[t('messages.forgetPassword.form.emailRequired'), t('messages.forgetPassword.form.emailNotValid')]}
                       />
                     </Grid>
                     <Grid item xs={6}>
@@ -157,6 +200,7 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
                         <Button 
                           variant="contained"
                           type="button"
+                          onClick={sendVerifyCodeEmail}
                           color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                         >
                           {t('pages.forgetPassword.getVerifyCode')}
@@ -172,9 +216,9 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
                         value={verifyCode}
                         variant="outlined"
                         fullWidth
-                        validators={['required', 'isEmail']}
+                        validators={['required']}
                         onChange={handleVerifyCodeChange}
-                        errorMessages={[t('messages.register.form.emailRequired')]}
+                        errorMessages={[t('messages.forgetPassword.form.verifyCodeRequired')]}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -189,7 +233,7 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
                         fullWidth
                         validators={['required']}
                         onChange={handlePasswordChange}
-                        errorMessages={[t('messages.register.form.passwordRequired')]}
+                        errorMessages={[t('messages.forgetPassword.form.passwordRequired')]}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -204,7 +248,7 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
                         fullWidth
                         validators={['isPasswordMatch', 'required']}
                         onChange={handleConfirmPasswordChange}
-                        errorMessages={[t('messages.register.form.passwordMissmatch'), t('messages.register.form.confirmPasswordRequired')]}
+                        errorMessages={[t('messages.forgetPassword.form.passwordMissmatch'), t('messages.forgetPassword.form.confirmPasswordRequired')]}
                       />
                     </Grid>
                     <Grid item xs={12}>

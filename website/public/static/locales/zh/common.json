@@ -66,12 +66,34 @@
         "activateSuccess": "賬戶激活成功，請登錄"
       },
       "errors": {
-        "ex_no_email": "請提供電郵.",
-        "ex_no_password": "請提供密碼.",
-        "ex_no_username": "請提供用戶.",
+        "ex_no_email": "請提供電郵",
+        "ex_no_password": "請提供密碼",
+        "ex_no_username": "請提供用戶名",
         "ex_user_already_exists": "該電郵已注冊，請登錄",
         "ex_wrong_verifyCode": "驗證碼錯誤",
         "activateFail": "賬戶激活失敗，請稍後重試"
+      }
+    },
+    "forgetPassword": {
+      "form": {
+        "usernameRequired": "請填好用戶名",
+        "emailRequired": "請填好電郵地址",
+        "emailNotValid": "電郵地址格式不合法",
+        "verifyCodeRequired": "請填好驗證碼",
+        "passwordRequired": "請填好密碼",
+        "confirmPasswordRequired": "請填好確認密碼",
+        "passwordMissmatch": "確認密碼與密碼不一致"
+      },
+      "general": {
+        "resetPasswordSuccess": "密碼已重置，請登錄",
+        "sendVerifyCodeSuccess": "驗證碼已發送到注冊郵箱，請檢查電郵"
+      },
+      "errors": {
+        "ex_no_email": "請提供電郵.",
+        "ex_no_password": "請提供密碼",
+        "ex_no_verifyCode": "請提供驗證碼",
+        "ex_wrong_verifyCode": "驗證碼錯誤",
+        "ex_user_not_exists": "該電郵尚未登記，請先新建賬戶"
       }
     },
     "common": {
