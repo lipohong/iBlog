@@ -37,10 +37,10 @@ import { setAuth } from 'store/actions/authActions';
 
 function Login({ paletteType, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
-  const [showPassword, setShowPassword ] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const inputForm = useRef('form');
-  const [email, setEmail ] = useState('');
-  const [password, setPassword ] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleResponse = (res) => {

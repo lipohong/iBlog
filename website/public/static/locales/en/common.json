@@ -51,13 +51,16 @@
         "passwordMissmatch": "Confirm password not match password"
       },
       "general": {
-        "registerSuccess": "Register success, you can activate the account via the link from the email you get."
+        "registerSuccess": "Register success, you can activate the account via the link from the email you get.",
+        "activatingAccount": "Activating account, please wait.",
+        "activateSuccess": "Account activated, please login with the account."
       },
       "errors": {
         "ex_no_email": "Email not provided.",
         "ex_no_password": "Password not provided.",
         "ex_no_username": "Username not provided.",
-        "ex_user_already_exists": "User already exists, please login."
+        "ex_user_already_exists": "User already exists, please login.",
+        "activateFail": "Account activate fail, please try it later."
       }
     },
     "common": {

@@ -51,13 +51,16 @@
         "passwordMissmatch": "確認密碼與密碼不一致"
       },
       "general": {
-        "registerSuccess": "註冊成功，請通過所收到的電郵中的鏈接進行賬戶激活"
+        "registerSuccess": "註冊成功，請通過所收到的電郵中的鏈接進行賬戶激活",
+        "activatingAccount": "正在激活賬戶，請稍等",
+        "activateSuccess": "賬戶激活成功，請登錄"
       },
       "errors": {
         "ex_no_email": "請提供電郵.",
         "ex_no_password": "請提供密碼.",
         "ex_no_username": "請提供用戶.",
-        "ex_user_already_exists": "該電郵已注冊，請登錄"
+        "ex_user_already_exists": "該電郵已注冊，請登錄",
+        "activateFail": "賬戶激活失敗，請稍後重試"
       }
     },
     "common": {

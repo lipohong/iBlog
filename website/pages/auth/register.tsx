@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { FacebookProvider, LoginButton } from 'react-facebook';
 import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
@@ -27,15 +28,17 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 // components
 import Layout from '../../components/layout';
-import { setAuth } from 'store/actions/authActions';
 
 function Register({ paletteType, dispatch, t }) {
-  const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
+  const [cookies, setCookie] = useCookies(['iBlog']);
   const inputForm = useRef('form');
-  const [username, setUsername ] = useState('');
-  const [email, setEmail ] = useState('');
-  const [password, setPassword ] = useState('');
-  const [confirmPassword, setConfirmPassword ] = useState('');
+  const [username, setUsername] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [verifying, setVerifying] = useState(true);
+  const router = useRouter();
+  const { email, verifyCode } = router.query;
 
   const handleResponse = (res) => {
     console.log(res);
@@ -52,7 +55,7 @@ function Register({ paletteType, dispatch, t }) {
 
   const handleEmailChange = (event) => {
     const value = event.currentTarget.value;
-    setEmail(value);
+    setUserEmail(value);
   }
 
   const handlePasswordChange = (event) => {
@@ -76,7 +79,7 @@ function Register({ paletteType, dispatch, t }) {
     try {
       const postData = {
         username,
-        email,
+        email: userEmail,
         password: await encryptAES(password)
       }
       await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/register`, postData);
@@ -103,11 +106,38 @@ function Register({ paletteType, dispatch, t }) {
     dispatch(setProgressOn(false));
   }
 
+  const registerVerify = async () => {
+    dispatch(setProgressOn(true));
+      try {
+        const postData = {
+          username,
+          email: userEmail,
+          password: await encryptAES(password)
+        }
+        await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/registerVerify`, postData);
+
+        dispatch(setMessage({
+          open: true,
+          severity: SeverityEnum.success,
+          message: t(`messages.register.general.activateSuccess`)
+        }));
+        
+        // redirect to login page
+        router.push('/auth/login');
+      } catch (err) {
+        setVerifying(false);
+      }
+    dispatch(setProgressOn(false));
+  }
+
   const init = async () => {
     if (!!cookies.paletteType) {
       dispatch(setPaletteType(cookies.paletteType));
     } else {
       setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
+    }
+    if (!!email && !!verifyCode) {
+      registerVerify();
     }
   }
 
@@ -132,109 +162,118 @@ function Register({ paletteType, dispatch, t }) {
       </Head>
       <div className='register'>
         <Container className="paperContainer" maxWidth="xs">
-          <Paper className='paperStyle'>
-            <Container>
-              <ValidatorForm
-                ref={inputForm}
-                onSubmit={handleSubmit}
-              >
-                <Grid container spacing={2}>
-                  <Grid item xs={12} style={{ textAlign: "center" }}>
-                    <Typography variant="h6" noWrap>
-                      {t('pages.register.iblogRegister')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle2" noWrap>
-                    {t('pages.register.username')}
-                    </Typography>
-                    <TextValidator
-                      name="username"
-                      value={username}
-                      variant="outlined"
-                      fullWidth
-                      validators={['required']}
-                      onChange={handleUsernameChange}
-                      errorMessages={[t('messages.register.form.usernameRequired')]}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle2" noWrap>
-                    {t('pages.register.email')}
-                    </Typography>
-                    <TextValidator
-                      name="email"
-                      value={email}
-                      variant="outlined"
-                      fullWidth
-                      validators={['required', 'isEmail']}
-                      onChange={handleEmailChange}
-                      errorMessages={[t('messages.register.form.emailRequired'), t('messages.register.form.emailNotValid')]}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle2" noWrap>
-                      {t('pages.register.password')}
-                    </Typography>
-                    <TextValidator
-                      name="password"
-                      value={password}
-                      variant="outlined"
-                      type='password'
-                      fullWidth
-                      validators={['required']}
-                      onChange={handlePasswordChange}
-                      errorMessages={[t('messages.register.form.passwordRequired')]}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle2" noWrap>
-                      {t('pages.register.confirmPassword')}
-                    </Typography>
-                    <TextValidator
-                      name="repeatPassword"
-                      value={confirmPassword}
-                      variant="outlined"
-                      type='password'
-                      fullWidth
-                      validators={['isPasswordMatch', 'required']}
-                      onChange={handleConfirmPasswordChange}
-                      errorMessages={[t('messages.register.form.passwordMissmatch'), t('messages.register.form.confirmPasswordRequired')]}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button 
-                      variant="contained"
-                      type="submit"
-                      fullWidth
-                      color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
-                    >
-                      {t('pages.login.submit')}
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FacebookProvider appId="614470885873864">
-                      <LoginButton
-                        scope="email"
-                        onCompleted={handleResponse}
-                        onError={handleError}
-                        className="facebookButton"
+          {
+            !!email && !!verifyCode &&
+            <div className="pageMeassage">
+              { verifying ? t(`messages.register.general.activatingAccount`) : t(`messages.register.errors.activateFail`) }
+            </div>
+          }
+          {
+            !(email && verifyCode) &&
+            <Paper className='paperStyle'>
+              <Container>
+                <ValidatorForm
+                  ref={inputForm}
+                  onSubmit={handleSubmit}
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} style={{ textAlign: "center" }}>
+                      <Typography variant="h6" noWrap>
+                        {t('pages.register.iblogRegister')}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle2" noWrap>
+                      {t('pages.register.username')}
+                      </Typography>
+                      <TextValidator
+                        name="username"
+                        value={username}
+                        variant="outlined"
+                        fullWidth
+                        validators={['required']}
+                        onChange={handleUsernameChange}
+                        errorMessages={[t('messages.register.form.usernameRequired')]}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle2" noWrap>
+                      {t('pages.register.email')}
+                      </Typography>
+                      <TextValidator
+                        name="userEmail"
+                        value={userEmail}
+                        variant="outlined"
+                        fullWidth
+                        validators={['required', 'isEmail']}
+                        onChange={handleEmailChange}
+                        errorMessages={[t('messages.register.form.emailRequired'), t('messages.register.form.emailNotValid')]}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle2" noWrap>
+                        {t('pages.register.password')}
+                      </Typography>
+                      <TextValidator
+                        name="password"
+                        value={password}
+                        variant="outlined"
+                        type='password'
+                        fullWidth
+                        validators={['required']}
+                        onChange={handlePasswordChange}
+                        errorMessages={[t('messages.register.form.passwordRequired')]}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle2" noWrap>
+                        {t('pages.register.confirmPassword')}
+                      </Typography>
+                      <TextValidator
+                        name="repeatPassword"
+                        value={confirmPassword}
+                        variant="outlined"
+                        type='password'
+                        fullWidth
+                        validators={['isPasswordMatch', 'required']}
+                        onChange={handleConfirmPasswordChange}
+                        errorMessages={[t('messages.register.form.passwordMissmatch'), t('messages.register.form.confirmPasswordRequired')]}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button 
+                        variant="contained"
+                        type="submit"
+                        fullWidth
+                        color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                       >
-                        <div className="facebookButtonTextContainer">
-                          <FacebookIcon /><span>{t('pages.register.registerViaFacebook')}</span>
-                        </div>
-                      </LoginButton>
-                    </FacebookProvider>
+                        {t('pages.login.submit')}
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FacebookProvider appId="614470885873864">
+                        <LoginButton
+                          scope="email"
+                          onCompleted={handleResponse}
+                          onError={handleError}
+                          className="facebookButton"
+                        >
+                          <div className="facebookButtonTextContainer">
+                            <FacebookIcon /><span>{t('pages.register.registerViaFacebook')}</span>
+                          </div>
+                        </LoginButton>
+                      </FacebookProvider>
+                    </Grid>
+                    <Grid item xs={12} style={{ textAlign: "center" }}>
+                      <Link href="/auth/login">
+                        <span style={{ cursor: "pointer" }}>{t('pages.register.alreadyHaveAccount')}</span>
+                      </Link>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} style={{ textAlign: "center" }}>
-                    <Link href="/auth/login">
-                      <span style={{ cursor: "pointer" }}>{t('pages.register.alreadyHaveAccount')}</span>
-                    </Link>
-                  </Grid>
-                </Grid>
-              </ValidatorForm>
-            </Container>
-          </Paper>
+                </ValidatorForm>
+              </Container>
+            </Paper>
+          }
         </Container>
       </div>
     </Layout>
