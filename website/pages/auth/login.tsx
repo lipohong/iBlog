@@ -43,12 +43,49 @@ function Login({ paletteType, dispatch, t }) {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleResponse = (res) => {
-    console.log(res);
+  const handleResponse = async (res) => {
+    const { profile, tokenDetail } = res;
+    dispatch(setProgressOn(true));
+    try {
+      const postData = {
+        email: profile.email,
+        accessToken: tokenDetail.accessToken
+      }
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/facebook`, postData);
+
+      // store auth info
+      dispatch(setAuth({
+        userId: res.data.payload.userId,
+        jwt: res.data.payload.jwt
+      }));
+
+      // login success tips
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.success,
+        message: t(`messages.login.general.loginSuccess`)
+      }));
+    } catch (err) {
+      let errMessage: string;
+      const message = _.get(err, 'response.data.message');
+      errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`);
+
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: errMessage
+      }));
+    }
+    dispatch(setProgressOn(false));
   }
 
   const handleError = (res) => {
-    console.log(res);
+    dispatch(setMessage({
+      open: true,
+      severity: SeverityEnum.error,
+      message: t(`messages.common.unknownError`)
+    }));
   }
 
   const handleClickShowPassword = () => {

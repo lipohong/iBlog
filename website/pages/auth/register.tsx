@@ -16,7 +16,6 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import FacebookIcon from '@material-ui/icons/Facebook';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
@@ -39,14 +38,6 @@ function Register({ paletteType, dispatch, t }) {
   const [verifying, setVerifying] = useState(true);
   const router = useRouter();
   const { email, verifyCode } = router.query;
-
-  const handleResponse = (res) => {
-    console.log(res);
-  }
-
-  const handleError = (res) => {
-    console.log(res);
-  }
 
   const handleUsernameChange = (event) => {
     const value = event.currentTarget.value;
@@ -261,21 +252,7 @@ function Register({ paletteType, dispatch, t }) {
                         {t('pages.login.submit')}
                       </Button>
                     </Grid>
-                    <Grid item xs={12}>
-                      <FacebookProvider appId="614470885873864">
-                        <LoginButton
-                          scope="email"
-                          onCompleted={handleResponse}
-                          onError={handleError}
-                          className="facebookButton"
-                        >
-                          <div className="facebookButtonTextContainer">
-                            <FacebookIcon /><span>{t('pages.register.registerViaFacebook')}</span>
-                          </div>
-                        </LoginButton>
-                      </FacebookProvider>
-                    </Grid>
-                    <Grid item xs={12} style={{ textAlign: "center" }}>
+                    <Grid item xs={12} style={{ textAlign: "center", marginTop: '40px' }}>
                       <Link href="/auth/login">
                         <span style={{ cursor: "pointer" }}>{t('pages.register.alreadyHaveAccount')}</span>
                       </Link>
