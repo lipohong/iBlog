@@ -249,7 +249,12 @@ function Login({ paletteType, dispatch, t }) {
                   </Grid>
                   <Grid item xs={12} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <FormControlLabel
-                      control={<Checkbox checked={rememberMe} onChange={handleRememberMeChange} name="remember" />}
+                      control={
+                        <Checkbox 
+                          color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
+                          checked={rememberMe}
+                          onChange={handleRememberMeChange} name="remember" />
+                        }
                       label={t('pages.login.rememberMe')}
                     />
                     <Link href="/auth/forgetPassword">
