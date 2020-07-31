@@ -86,7 +86,8 @@
       },
       "general": {
         "resetPasswordSuccess": "Reset password success, you can login with the new password now.",
-        "sendVerifyCodeSuccess": "Verify code is sent to your register email, please check it out."
+        "sendVerifyCodeSuccess": "Verify code is sent to your register email, please check it out.",
+        "sendEmailCountdown": "sec to resend email."
       },
       "errors": {
         "ex_no_email": "Email not provided.",

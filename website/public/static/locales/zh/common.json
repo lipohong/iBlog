@@ -86,7 +86,8 @@
       },
       "general": {
         "resetPasswordSuccess": "密碼已重置，請登錄",
-        "sendVerifyCodeSuccess": "驗證碼已發送到注冊郵箱，請檢查電郵"
+        "sendVerifyCodeSuccess": "驗證碼已發送到注冊郵箱，請檢查電郵",
+        "sendEmailCountdown": "秒後重發電郵"
       },
       "errors": {
         "ex_no_email": "請提供電郵.",

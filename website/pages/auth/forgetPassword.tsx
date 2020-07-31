@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { FacebookProvider, LoginButton } from 'react-facebook';
 import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
 import { PaletteTypeEnum } from '../../enums/PaletteTypeEnum';
@@ -16,7 +15,6 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import FacebookIcon from '@material-ui/icons/Facebook';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
@@ -24,7 +22,7 @@ import { setMessage, setPaletteType, setProgressOn } from '../../store/actions/g
 import { SeverityEnum } from '../../enums/SeverityEnum';
 
 import defaultNextI18Next from '../../plugins/i18n';
-const { i18n, Link, withTranslation } = defaultNextI18Next;
+const { Link, withTranslation } = defaultNextI18Next;
 
 // components
 import Layout from '../../components/layout';
@@ -36,6 +34,13 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [verifyCode, setVerifyCode] = useState('');
+  const [disableSendEmail, setDisableSendEmail] = useState(false);
+  const [countDown, setCountDown] = useState(60);
+  const countRef = useRef(countDown);
+  countRef.current = countDown;
+
+  const passwordRef = useRef(password);
+  passwordRef.current = password;
   const router = useRouter();
 
 
@@ -89,6 +94,20 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
         severity: SeverityEnum.success,
         message: t(`messages.forgetPassword.general.sendVerifyCodeSuccess`)
       }));
+
+      // disable send email
+      setDisableSendEmail(true);
+
+      // set timer to ban email sending
+      const timer = setInterval(() => {
+        if (countRef.current > 0) {
+          setCountDown(countRef.current - 1);
+        } else {
+          clearInterval(timer);
+          setCountDown(60);
+          setDisableSendEmail(false);
+        }
+      }, 1000);
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
@@ -146,21 +165,19 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
     } else {
       setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
     }
-  }
-
-  useEffect(() => {
-    init();
-  }, [])
-
-  useEffect(() => {
-    ValidatorForm.removeValidationRule('isPasswordMatch');
     ValidatorForm.addValidationRule('isPasswordMatch', (value: string) => {
-      if (value !== password) {
+      if (value !== passwordRef.current) {
           return false;
       }
       return true;
     });
-  }, [confirmPassword])
+  }
+
+  useEffect(() => {
+    init();
+
+    return () => ValidatorForm.removeValidationRule('isPasswordMatch');
+  }, []);
 
   return (
     <Layout>
@@ -197,10 +214,17 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
                     </Grid>
                     <Grid item xs={6}>
                       <Grid container alignItems="center" style={{ height: '100%' }}>
+                        {
+                          disableSendEmail &&
+                          <div>
+                            {`${countDown} ${t('messages.forgetPassword.general.sendEmailCountdown')}`}
+                          </div>
+                        }
                         <Button 
                           variant="contained"
                           type="button"
                           onClick={sendVerifyCodeEmail}
+                          disabled={disableSendEmail}
                           color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                         >
                           {t('pages.forgetPassword.getVerifyCode')}
