@@ -68,7 +68,7 @@ export class FileController {
           media: media,
           fields: 'id'
         }, (err, result) => {
-          if (!!err || !result || !!result.data) {
+          if (!!err || !result || !result.data) {
             return res.throwErr(new Error('ex_upload_to_drive_fail'));
           } else {
             return res.success(null, { fileId: result.data.id });
