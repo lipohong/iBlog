@@ -67,11 +67,11 @@ export class FileController {
           resource: fileMetadata,
           media: media,
           fields: 'id'
-        }, (err, { data }) => {
-          if (err) {
-            throw new Error('ex_upload_to_drive_fail')
+        }, (err, result) => {
+          if (!!err || !result || !!result.data) {
+            return res.throwErr(new Error('ex_upload_to_drive_fail'));
           } else {
-            return res.success(null, { fileId: data.id });
+            return res.success(null, { fileId: result.data.id });
           }
         });
       });
