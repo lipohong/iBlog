@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { FacebookProvider, LoginButton } from 'react-facebook';
 import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
 import { PaletteTypeEnum } from '../../enums/PaletteTypeEnum';
@@ -36,6 +35,9 @@ function Register({ paletteType, dispatch, t }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [verifying, setVerifying] = useState(true);
+
+  const passwordRef = useRef(password);
+  passwordRef.current = password;
   const router = useRouter();
   const { email, verifyCode } = router.query;
 
@@ -141,21 +143,18 @@ function Register({ paletteType, dispatch, t }) {
     if (!!email && !!verifyCode) {
       registerVerify();
     }
-  }
-
-  useEffect(() => {
-    init();
-  }, [])
-
-  useEffect(() => {
-    ValidatorForm.removeValidationRule('isPasswordMatch');
     ValidatorForm.addValidationRule('isPasswordMatch', (value: string) => {
-      if (value !== password) {
+      if (value !== passwordRef.current) {
           return false;
       }
       return true;
     });
-  }, [confirmPassword])
+  }
+
+  useEffect(() => {
+    init();
+    return () => ValidatorForm.removeValidationRule('isPasswordMatch');
+  }, []);
 
   return (
     <Layout>
@@ -222,6 +221,7 @@ function Register({ paletteType, dispatch, t }) {
                         variant="outlined"
                         type='password'
                         fullWidth
+                        autoComplete='false'
                         validators={['required']}
                         onChange={handlePasswordChange}
                         errorMessages={[t('messages.register.form.passwordRequired')]}
@@ -237,6 +237,7 @@ function Register({ paletteType, dispatch, t }) {
                         variant="outlined"
                         type='password'
                         fullWidth
+                        autoComplete='false'
                         validators={['isPasswordMatch', 'required']}
                         onChange={handleConfirmPasswordChange}
                         errorMessages={[t('messages.register.form.passwordMissmatch'), t('messages.register.form.confirmPasswordRequired')]}
