@@ -15,6 +15,8 @@ export class userRoute {
   private fileRoute() {
     let router = express.Router();
 
+    router.get('/auth/URL', auth, this.fileController.getGoogleAuthURL);
+    router.post('/auth', auth, this.fileController.setGoogleAuthToken);
     router.get('/:fileId', this.fileController.getFileByFileId);
     router.post('/', auth, this.fileController.uploadFile);
 

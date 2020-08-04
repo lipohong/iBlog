@@ -1,7 +1,8 @@
 import { IERequest, IEResponse } from '../models/commonModel';
 import globalVars from '../models/globalVars';
 import * as fs from 'fs';
-import { getGoogleDriveAuth } from '../services/fileService'
+const path = require("path");
+import { getGoogleDriveAuth, getAuthURL, setAuthToken } from '../services/fileService'
 const { google } = require('googleapis');
 
 export class FileController {
@@ -11,7 +12,9 @@ export class FileController {
       const auth = await getGoogleDriveAuth();
       const drive = google.drive({version: 'v3', auth});
       const fileId = req.params.fileId;
-      var dest = fs.createWriteStream('/tmp/photo.jpg');
+      const tempFileFolderPath = '../tmp';
+      const tempFilePath = '../tmp/photo.jpg';
+      const dest = fs.createWriteStream(path.resolve(__dirname, tempFilePath));
       drive.files.get({
         fileId: fileId,
         alt: 'media'
@@ -19,10 +22,11 @@ export class FileController {
         responseType: 'stream'
       }, (err, result) => {
         if (!!err || !result || !result.data) {
+          
           return res.throwErr(new Error('ex_file_not_found'));
         }
         result.data.on('end',  () => {
-          let rootPath = '/tmp/';
+          let rootPath = path.resolve(__dirname, tempFileFolderPath);
           const options = {
               root: rootPath,
               dotfiles: 'allow'
@@ -69,6 +73,8 @@ export class FileController {
           fields: 'id'
         }, (err, result) => {
           if (!!err || !result || !result.data) {
+            console.log(err);
+            
             return res.throwErr(new Error('ex_upload_to_drive_fail'));
           } else {
             return res.success(null, { fileId: result.data.id });
@@ -85,4 +91,26 @@ export class FileController {
     }
   }
 
+  public async getGoogleAuthURL(req: IERequest, res: IEResponse) {
+    try {
+      const token = getAuthURL();
+
+      return res.success(null, token);
+    } catch (err) {
+
+      return res.throwErr(err);
+    }
+  }
+
+  public async setGoogleAuthToken(req: IERequest, res: IEResponse) {
+    try {
+      if (!req.body.code) throw new Error('ex_no_token');
+      await setAuthToken(req.body.code);
+
+      return res.success('msg_set_token_success', null);
+    } catch (err) {
+
+      return res.throwErr(err);
+    }
+  }
 }
