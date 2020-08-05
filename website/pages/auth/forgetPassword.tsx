@@ -160,11 +160,6 @@ function ForgetPassword ({ paletteType, dispatch, t }) {
   }
 
   const init = async () => {
-    if (!!cookies.paletteType) {
-      dispatch(setPaletteType(cookies.paletteType));
-    } else {
-      setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
-    }
     ValidatorForm.addValidationRule('isPasswordMatch', (value: string) => {
       if (value !== passwordRef.current) {
           return false;

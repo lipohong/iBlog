@@ -3,6 +3,7 @@ import * as crypto from 'crypto-js';
 import * as _ from 'lodash';
 import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { FacebookProvider, LoginButton } from 'react-facebook';
 import { compose } from 'redux';
@@ -42,6 +43,17 @@ function Login({ paletteType, dispatch, t }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const router = useRouter();
+  const { from } = router.query;
+
+
+  const redirectToPreviousPage = () => {
+    if (!!from && from !== '/' && from !== 'auth/login') {
+      router.push(`/${from}`);
+    } else {
+      router.push(`/`);
+    }
+  }
 
   const handleResponse = async (res) => {
     const { profile, tokenDetail } = res;
@@ -59,12 +71,18 @@ function Login({ paletteType, dispatch, t }) {
         jwt: res.data.payload.jwt
       }));
 
+      // save auth to cookies
+      setCookie('auth', res.data.payload, { path: '/' });
+
       // login success tips
       dispatch(setMessage({
         open: true,
         severity: SeverityEnum.success,
         message: t(`messages.login.general.loginSuccess`)
       }));
+
+      // redirect to previous page
+      redirectToPreviousPage();
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
@@ -150,6 +168,9 @@ function Login({ paletteType, dispatch, t }) {
         severity: SeverityEnum.success,
         message: t(`messages.login.general.loginSuccess`)
       }));
+
+      // redirect to previous page
+      redirectToPreviousPage();
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
@@ -170,11 +191,14 @@ function Login({ paletteType, dispatch, t }) {
   }
 
   const init = async () => {
-    if (!!cookies.paletteType) {
-      dispatch(setPaletteType(cookies.paletteType));
-    } else {
-      setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
-    }    
+    if (!!cookies.auth) {
+      // store auth info
+      dispatch(setAuth(cookies.auth));
+
+      // redirect to previous page
+      redirectToPreviousPage();
+      return;
+    }
     if (!!cookies.rememberMe) {
       const postData = cookies.rememberMe;
       setRememberMe(true);

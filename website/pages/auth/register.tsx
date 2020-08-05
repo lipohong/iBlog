@@ -135,11 +135,6 @@ function Register({ paletteType, dispatch, t }) {
   }
 
   const init = async () => {
-    if (!!cookies.paletteType) {
-      dispatch(setPaletteType(cookies.paletteType));
-    } else {
-      setCookie('paletteType', PaletteTypeEnum.light, { path: '/' });
-    }
     if (!!email && !!verifyCode) {
       registerVerify();
     }
