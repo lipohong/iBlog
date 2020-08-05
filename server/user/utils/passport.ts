@@ -4,6 +4,7 @@ import * as passportJWT from 'passport-jwt';
 import Auth from './auth';
 
 import { getUser, updateUser } from '../services/userService';
+import { checkIfAdminUserExist } from '../services/adminUserService';
 import { IJWTPayloadModel, IJWTSignModel } from '../models/commonModel';
 import globalVars from '../models/globalVars';
 
@@ -27,12 +28,13 @@ passport.use('login', new LocalStrategy(loginStrategy, async (req, email, passwo
     const decryptPassword = await Auth.decryptAES(password);
     if (!(await Auth.comparePassword(decryptPassword, user.password))) {
       return done(null, null, { message: 'ex_incorrect_password' });
-    } else {
-      await updateUser({ _id: user._id }, { verifyCode: null }); // make sure not at register/reset password status
     }
+    await updateUser({ _id: user._id }, { verifyCode: null }); // make sure not at register/reset password status
+
     const token = Auth.signLoginToken({
       userId: user._id,
-      username: user.username
+      username: user.username,
+      isAdmin: await checkIfAdminUserExist({ userId: user._id, isDeleted: user.isDeleted })
     } as IJWTSignModel);
 
     return done(null, {
