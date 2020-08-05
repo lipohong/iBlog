@@ -93,6 +93,7 @@ export class FileController {
 
   public async getGoogleAuthURL(req: IERequest, res: IEResponse) {
     try {
+      if (!req.state.jwtPayload.isAdmin) throw new Error('ex_not_admin_user');
       const token = getAuthURL();
 
       return res.success(null, token);
@@ -104,6 +105,7 @@ export class FileController {
 
   public async setGoogleAuthToken(req: IERequest, res: IEResponse) {
     try {
+      if (!req.state.jwtPayload.isAdmin) throw new Error('ex_not_admin_user');
       if (!req.body.code) throw new Error('ex_no_token');
       await setAuthToken(req.body.code);
 

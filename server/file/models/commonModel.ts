@@ -26,7 +26,8 @@ export interface IEResponse extends Response {
 
 export interface IJWTSignModel {
   userId: string,
-  username: string
+  username: string,
+  isAdmin: boolean
 }
 
 export interface IJWTPayloadModel extends IJWTSignModel {
