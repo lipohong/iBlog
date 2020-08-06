@@ -1,5 +1,6 @@
 import * as crypto from 'crypto-js';
 import * as _ from 'lodash';
+import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -33,11 +34,11 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 // components
 import Layout from '../../components/layout';
-import { setAuth, loginWithFacebook } from 'store/actions/authActions';
+import { setAuth } from 'store/actions/authActions';
 import { setUser } from 'store/actions/userActions';
 
 
-function Login({ paletteType, auth, user, dispatch, t }) {
+function Login({ paletteType, user, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
   const [showPassword, setShowPassword] = useState(false);
   const inputForm = useRef('form');
@@ -66,8 +67,12 @@ function Login({ paletteType, auth, user, dispatch, t }) {
       }
 
       // store auth info
-      dispatch(await loginWithFacebook(postData));
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/facebook`, postData);
 
+      const auth = {
+        userId: data.payload.userId,
+        jwt: data.payload.jwt
+      }
       // get user info
       dispatch(await setUser(auth));
 
@@ -144,7 +149,13 @@ function Login({ paletteType, auth, user, dispatch, t }) {
         email,
         password: await encryptAES(password)
       }
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
+      const auth = {
+        userId: data.payload.userId,
+        jwt: data.payload.jwt
+      }
+      // get user info
+      dispatch(await setUser(auth));
 
       // remember me checked
       if (rememberMe) {
@@ -154,13 +165,10 @@ function Login({ paletteType, auth, user, dispatch, t }) {
       }
       
       // store auth info
-      dispatch(setAuth({
-        userId: res.data.payload.userId,
-        jwt: res.data.payload.jwt
-      }));
+      dispatch(setAuth(auth));
 
       // save auth to cookies
-      setCookie('auth', res.data.payload, { path: '/' });
+      setCookie('auth', auth, { path: '/' });
 
       // login success tips
       dispatch(setMessage({
@@ -191,19 +199,26 @@ function Login({ paletteType, auth, user, dispatch, t }) {
   }
 
   const init = async () => {
-    // if (!!cookies.auth) {
-    //   // store auth info
-    //   dispatch(setAuth(cookies.auth));
-
-    //   // redirect to previous page
-    //   redirectToPreviousPage();
-    //   return;
-    // }
-    if (!!cookies.rememberMe) {
-      const postData = cookies.rememberMe;
-      setRememberMe(true);
-      setEmail(postData.email);
-      setPassword(await decryptAES(postData.password));
+    try {
+      if (!!cookies.auth) {
+        // get user info
+        dispatch(await setUser(cookies.auth));
+  
+        // store auth info
+        dispatch(await setAuth(cookies.auth));
+  
+        // redirect to previous page
+        redirectToPreviousPage();
+        return;
+      }
+      if (!!cookies.rememberMe) {
+        const postData = cookies.rememberMe;
+        setRememberMe(true);
+        setEmail(postData.email);
+        setPassword(await decryptAES(postData.password));
+      }
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -328,7 +343,6 @@ const mapStateToProps = (state) => {
   const { global, auth, user } = state;
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
-    auth: auth && auth.auth || null,
     user: user && user.user || null
   }
 }

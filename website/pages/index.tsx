@@ -26,9 +26,9 @@ import Layout from '../components/layout';
 
 
 function HomePage(props) {
-  const { t } = props;
+  const { t, user } = props;
   const init = async () => {
-    // console.log(auth);
+    console.log(user);
     
   }
 
@@ -92,10 +92,11 @@ function HomePage(props) {
 }
 
 const mapStateToProps = (state) => {
-  const { global, auth } = state;
+  const { global, auth, user } = state;
   return {
     message: global && global.message,
-    auth: auth && auth.auth
+    auth: auth && auth.auth,
+    user: user && user.user
   }
 }
 
