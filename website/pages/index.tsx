@@ -25,10 +25,10 @@ import SortIcon from '@material-ui/icons/Sort';
 import Layout from '../components/layout';
 
 
-function HomePage({ t, dispatch, auth }) {
-
+function HomePage(props) {
+  const { t } = props;
   const init = async () => {
-    console.log(auth);
+    // console.log(auth);
     
   }
 

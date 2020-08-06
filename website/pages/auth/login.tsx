@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as crypto from 'crypto-js';
 import * as _ from 'lodash';
 import { useEffect, useState, useRef } from 'react';
@@ -26,7 +25,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
-import { setMessage, setPaletteType, setProgressOn } from '../../store/actions/globalActions';
+import { setMessage, setProgressOn } from '../../store/actions/globalActions';
 import { SeverityEnum } from '../../enums/SeverityEnum';
 
 import defaultNextI18Next from '../../plugins/i18n';
@@ -34,9 +33,11 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 // components
 import Layout from '../../components/layout';
-import { setAuth } from 'store/actions/authActions';
+import { setAuth, loginWithFacebook } from 'store/actions/authActions';
+import { setUser } from 'store/actions/userActions';
 
-function Login({ paletteType, dispatch, t }) {
+
+function Login({ paletteType, auth, user, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
   const [showPassword, setShowPassword] = useState(false);
   const inputForm = useRef('form');
@@ -63,16 +64,15 @@ function Login({ paletteType, dispatch, t }) {
         email: profile.email,
         accessToken: tokenDetail.accessToken
       }
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/facebook`, postData);
 
       // store auth info
-      dispatch(setAuth({
-        userId: res.data.payload.userId,
-        jwt: res.data.payload.jwt
-      }));
+      dispatch(await loginWithFacebook(postData));
+
+      // get user info
+      dispatch(await setUser(auth));
 
       // save auth to cookies
-      setCookie('auth', res.data.payload, { path: '/' });
+      setCookie('auth', auth, { path: '/' });
 
       // login success tips
       dispatch(setMessage({
@@ -191,14 +191,14 @@ function Login({ paletteType, dispatch, t }) {
   }
 
   const init = async () => {
-    if (!!cookies.auth) {
-      // store auth info
-      dispatch(setAuth(cookies.auth));
+    // if (!!cookies.auth) {
+    //   // store auth info
+    //   dispatch(setAuth(cookies.auth));
 
-      // redirect to previous page
-      redirectToPreviousPage();
-      return;
-    }
+    //   // redirect to previous page
+    //   redirectToPreviousPage();
+    //   return;
+    // }
     if (!!cookies.rememberMe) {
       const postData = cookies.rememberMe;
       setRememberMe(true);
@@ -325,9 +325,11 @@ function Login({ paletteType, dispatch, t }) {
 }
 
 const mapStateToProps = (state) => {
-  const { global } = state;
+  const { global, auth, user } = state;
   return {
-    paletteType: global && global.paletteType || PaletteTypeEnum.light
+    paletteType: global && global.paletteType || PaletteTypeEnum.light,
+    auth: auth && auth.auth || null,
+    user: user && user.user || null
   }
 }
 

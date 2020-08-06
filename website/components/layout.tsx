@@ -31,6 +31,8 @@ import { setTheme, setMessage, setPaletteType } from '../store/actions/globalAct
 import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
 import { SeverityEnum } from '../enums/SeverityEnum';
 
+import { IUser } from '../interfaces/user'
+
 import defaultNextI18Next from '../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
 
@@ -38,7 +40,8 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function Layout({ children, paletteType, theme, message, progressBarOn, dispatch, t }) {
+function Layout(props) {
+  const { children, paletteType, theme, message, progressBarOn, userInfo, dispatch, t } = props;
   const [cookies, setCookie] = useCookies(['iBlog']);
   const [anchorElLanguage, setAnchorElLanguage] = useState<null | HTMLElement>(null);
   const [anchorElTheme, setAnchorElTheme] = useState<null | HTMLElement>(null);
@@ -46,6 +49,7 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
   const isLanguageMenuOpen = Boolean(anchorElLanguage);
   const isThemeMenuOpen = Boolean(anchorElTheme);
   const isMenuOpen = Boolean(anchorElMenu);
+  const [user, setUser] = useState<IUser>(null);
 
   const switchPaletteType = () => {
     if (paletteType === PaletteTypeEnum.light) {
@@ -113,7 +117,7 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
     }));
   }
 
-  useEffect(() => {
+  const init = async () => {
     if (!!cookies.paletteType) {
       dispatch(setPaletteType(cookies.paletteType));
     } else {
@@ -123,7 +127,12 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
       dispatch(setTheme(cookies.theme));
     } else {
       setCookie('theme', 0, { path: '/' });
-    }
+    }      
+  }
+
+  useEffect(() => {
+    init();
+    
   }, []);
   
   return (
@@ -258,7 +267,11 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
           <MenuItem>
             <Link href="/auth/login">
               <IconButton color="inherit">
-                <AccountCircleIcon />
+                {
+                  user && user.userInfo ? 
+                  <Avatar alt="t" src={`${user.userInfo.avatar}`} /> :
+                  <AccountCircleIcon />
+                }
               </IconButton>
             </Link>
           </MenuItem>
@@ -287,18 +300,15 @@ function Layout({ children, paletteType, theme, message, progressBarOn, dispatch
 }
 
 const mapStateToProps = (state) => {
-  const { global } = state;
+  const { global, auth } = state;
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
     theme: global && global.theme || 0,
     message: global && global.message,
-    progressBarOn: global && global.progressBarOn || false
+    progressBarOn: global && global.progressBarOn || false,
+    auth: auth && auth.auth || null
   }
 }
-
-Layout.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
-})
 
 export default compose<any>(
   connect(mapStateToProps),

@@ -6,3 +6,6 @@ export const SET_PROGRESS_BAR_ON = 'SET_PROGRESS_BAR_ON';
 
 // auth
 export const SET_AUTH = 'SET_AUTH';
+
+// user
+export const SET_USER = 'SET_USER';

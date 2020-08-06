@@ -48,7 +48,8 @@
       "errors": {
         "ex_incorrect_password": "密碼錯誤，請重試",
         "ex_cannot_find_user": "該電郵尚未登記，請先新建賬戶",
-        "ex_user_not_exists": "該電郵尚未登記，請先新建賬戶"
+        "ex_user_not_exists": "該電郵尚未登記，請先新建賬戶",
+        "ex_not_authenticated": "驗證失敗，請稍候重試"
       }
     },
     "register": {
