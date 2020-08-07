@@ -18,7 +18,9 @@ import Grid from '@material-ui/core/Grid';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
-import { setMessage, setPaletteType, setProgressOn } from '../../store/actions/globalActions';
+import { setMessage, setProgressOn } from '../../store/actions/globalActions';
+import { setAuth } from '../../store/actions/authActions';
+import { setUser } from '../../store/actions/userActions';
 import { SeverityEnum } from '../../enums/SeverityEnum';
 
 import defaultNextI18Next from '../../plugins/i18n';
@@ -39,7 +41,15 @@ function Register({ paletteType, dispatch, t }) {
   const passwordRef = useRef(password);
   passwordRef.current = password;
   const router = useRouter();
-  const { email, verifyCode } = router.query;
+  const { email, verifyCode, from } = router.query;
+
+  const redirectToPreviousPage = () => {
+    if (!!from && from !== '/' && from !== 'auth/register') {
+      router.push(`/${from}`);
+    } else {
+      router.push(`/`);
+    }
+  }
 
   const handleUsernameChange = (event) => {
     const value = event.currentTarget.value;
@@ -135,6 +145,17 @@ function Register({ paletteType, dispatch, t }) {
   }
 
   const init = async () => {
+    if (!!cookies.auth) {
+      // get user info
+      dispatch(await setUser(cookies.auth));
+
+      // store auth info
+      dispatch(await setAuth(cookies.auth));
+
+      // redirect to previous page
+      redirectToPreviousPage();
+      return;
+    }
     if (!!email && !!verifyCode) {
       registerVerify();
     }

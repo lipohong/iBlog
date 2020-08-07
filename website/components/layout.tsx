@@ -31,7 +31,8 @@ import { setTheme, setMessage, setPaletteType } from '../store/actions/globalAct
 import { PaletteTypeEnum } from '../enums/PaletteTypeEnum';
 import { SeverityEnum } from '../enums/SeverityEnum';
 
-import { IUser } from '../interfaces/user'
+import { setAuth } from '../store/actions/authActions';
+import { setUser } from '../store/actions/userActions';
 
 import defaultNextI18Next from '../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
@@ -41,7 +42,7 @@ function Alert(props: AlertProps) {
 }
 
 function Layout(props) {
-  const { children, paletteType, theme, message, progressBarOn, userInfo, dispatch, t } = props;
+  const { children, paletteType, theme, message, progressBarOn, auth, user, dispatch, t } = props;
   const [cookies, setCookie] = useCookies(['iBlog']);
   const [anchorElLanguage, setAnchorElLanguage] = useState<null | HTMLElement>(null);
   const [anchorElTheme, setAnchorElTheme] = useState<null | HTMLElement>(null);
@@ -49,7 +50,6 @@ function Layout(props) {
   const isLanguageMenuOpen = Boolean(anchorElLanguage);
   const isThemeMenuOpen = Boolean(anchorElTheme);
   const isMenuOpen = Boolean(anchorElMenu);
-  const [user, setUser] = useState<IUser>(null);
 
   const switchPaletteType = () => {
     if (paletteType === PaletteTypeEnum.light) {
@@ -127,7 +127,18 @@ function Layout(props) {
       dispatch(setTheme(cookies.theme));
     } else {
       setCookie('theme', 0, { path: '/' });
-    }      
+    }
+    if (!auth || !auth.userId) {
+      if (!!cookies.auth) {
+        // get user info
+        dispatch(await setUser(cookies.auth));
+        // store auth info
+        dispatch(await setAuth(cookies.auth));
+      } 
+    } else {
+      // get user info
+      dispatch(await setUser(auth));
+    }
   }
 
   useEffect(() => {
@@ -189,11 +200,22 @@ function Layout(props) {
               <IconButton color="inherit" href="https://github.com/lipohong/iBlog">
                 <GitHubIcon />
               </IconButton>
-              <Link href="/auth/login">
-                <IconButton color="inherit">
-                  <AccountCircleIcon />
-                </IconButton>
-              </Link>
+              {
+                user && user._id ?
+                <Link href="/user/profile">
+                  <IconButton color="inherit">
+                    <Avatar alt="t" src={`${user.userInfo.avatar}`} style={{ width: '30px', height: '30px' }} >
+                      { !user.userInfo.avatar && user.username[0] }
+                    </Avatar>
+                  </IconButton>
+                </Link> :
+                <Link href="/auth/login">
+                  <IconButton color="inherit">
+                    <AccountCircleIcon />
+                  </IconButton>
+                </Link>
+                
+              }
             </Hidden>
           </Toolbar>
         </AppBar>
@@ -265,15 +287,21 @@ function Layout(props) {
             </IconButton>
           </MenuItem>
           <MenuItem>
+          {
+            user && user._id ?
+            <Link href="/user/profile">
+              <IconButton color="inherit">
+                <Avatar alt="t" src={`${user.userInfo.avatar}`} style={{ width: '30px', height: '30px' }} >
+                  { !user.userInfo.avatar && user.username[0] }
+                </Avatar>
+              </IconButton>
+            </Link> :
             <Link href="/auth/login">
               <IconButton color="inherit">
-                {
-                  user && user.userInfo ? 
-                  <Avatar alt="t" src={`${user.userInfo.avatar}`} /> :
-                  <AccountCircleIcon />
-                }
+                <AccountCircleIcon />
               </IconButton>
             </Link>
+          }
           </MenuItem>
         </Menu>
         {children}
@@ -300,13 +328,14 @@ function Layout(props) {
 }
 
 const mapStateToProps = (state) => {
-  const { global, auth } = state;
+  const { global, auth, user } = state;
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
     theme: global && global.theme || 0,
     message: global && global.message,
     progressBarOn: global && global.progressBarOn || false,
-    auth: auth && auth.auth || null
+    auth: auth && auth.auth || null,
+    user: user && user.user || null
   }
 }
 

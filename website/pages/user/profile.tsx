@@ -27,8 +27,6 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
 import { setMessage, setProgressOn } from '../../store/actions/globalActions';
-import { setAuth } from '../../store/actions/authActions';
-import { setUser } from '../../store/actions/userActions';
 import { SeverityEnum } from '../../enums/SeverityEnum';
 
 import defaultNextI18Next from '../../plugins/i18n';
@@ -36,9 +34,11 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 // components
 import Layout from '../../components/layout';
+import { setAuth } from '../../store/actions/authActions';
+import { setUser } from '../../store/actions/userActions';
 
 
-function Login({ paletteType, user, dispatch, t }) {
+function Profile({ paletteType, user, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
   const [showPassword, setShowPassword] = useState(false);
   const inputForm = useRef('form');
@@ -49,12 +49,8 @@ function Login({ paletteType, user, dispatch, t }) {
   const { from } = router.query;
 
 
-  const redirectToPreviousPage = () => {
-    if (!!from && from !== '/' && from !== 'auth/login') {
-      router.push(`/${from}`);
-    } else {
-      router.push(`/`);
-    }
+  const redirectToLoginPage = () => {
+    router.push('/auth/login?from=user/profile')
   }
 
   const handleResponse = async (res) => {
@@ -86,8 +82,6 @@ function Login({ paletteType, user, dispatch, t }) {
         message: t(`messages.login.general.loginSuccess`)
       }));
 
-      // redirect to previous page
-      redirectToPreviousPage();
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
@@ -177,8 +171,6 @@ function Login({ paletteType, user, dispatch, t }) {
         message: t(`messages.login.general.loginSuccess`)
       }));
 
-      // redirect to previous page
-      redirectToPreviousPage();
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
@@ -199,26 +191,10 @@ function Login({ paletteType, user, dispatch, t }) {
   }
 
   const init = async () => {
-    try {
-      if (!!cookies.auth) {
-        // get user info
-        dispatch(await setUser(cookies.auth));
-  
-        // store auth info
-        dispatch(await setAuth(cookies.auth));
-  
-        // redirect to previous page
-        redirectToPreviousPage();
-        return;
-      }
-      if (!!cookies.rememberMe) {
-        const postData = cookies.rememberMe;
-        setRememberMe(true);
-        setEmail(postData.email);
-        setPassword(await decryptAES(postData.password));
-      }
-    } catch (err) {
-      throw err;
+    if (!cookies.auth) {
+      // redirect to login page
+      redirectToLoginPage();
+      return;
     }
   }
 
@@ -229,10 +205,10 @@ function Login({ paletteType, user, dispatch, t }) {
   return (
     <Layout>
       <Head>
-        <title>iBlog { t('headers.loginPage') }</title>
+        <title>iBlog { t('headers.profilePage') }</title>
       </Head>
-      <div className='login'>
-        <Container className="paperContainer" maxWidth="xs">
+      <div className='profile'>
+        <Container className="paperContainer" maxWidth="md">
           <Paper className='paperStyle'>
             <Container>
               <ValidatorForm
@@ -304,30 +280,10 @@ function Login({ paletteType, user, dispatch, t }) {
                     <Button 
                       variant="contained"
                       type="submit"
-                      fullWidth
                       color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                     >
                       {t('pages.login.submit')}
                     </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FacebookProvider appId="614470885873864">
-                      <LoginButton
-                        scope="email"
-                        onCompleted={handleResponse}
-                        onError={handleError}
-                        className="facebookButton"
-                      >
-                        <div className="facebookButtonTextContainer">
-                          <FacebookIcon /><span>{t('pages.login.loginViaFacebook')}</span>
-                        </div>
-                      </LoginButton>
-                    </FacebookProvider>
-                  </Grid>
-                  <Grid item xs={12} style={{ textAlign: "center" }}>
-                  <Link href="/auth/register">
-                    <span style={{ cursor: "pointer" }}>{t('pages.login.createAccount')}</span>
-                  </Link>
                   </Grid>
                 </Grid>
               </ValidatorForm>
@@ -347,11 +303,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-Login.getInitialProps = async () => ({
+Profile.getInitialProps = async () => ({
   namespacesRequired: ['common'],
 })
 
 export default compose<any>(
   connect(mapStateToProps),
   withTranslation('common')
-)(Login)
+)(Profile)

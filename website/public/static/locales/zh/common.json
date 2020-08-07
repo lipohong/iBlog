@@ -3,7 +3,8 @@
     "homePage": "首頁",
     "loginPage" : "登錄頁",
     "registerPage": "注冊頁",
-    "forgetPasswordPage": "重置密碼頁"
+    "forgetPasswordPage": "重置密碼頁",
+    "profilePage": "個人資料頁"
   },
   "pages": {
     "login": {
