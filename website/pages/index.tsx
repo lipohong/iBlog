@@ -28,7 +28,6 @@ import Layout from '../components/layout';
 function HomePage(props) {
   const { t, user } = props;
   const init = async () => {
-    console.log(user);
     
   }
 

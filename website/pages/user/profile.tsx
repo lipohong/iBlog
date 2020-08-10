@@ -22,7 +22,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import FacebookIcon from '@material-ui/icons/Facebook';
+import Avatar from '@material-ui/core/Avatar';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
@@ -34,6 +34,7 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 // components
 import Layout from '../../components/layout';
+
 import { setAuth } from '../../store/actions/authActions';
 import { setUser } from '../../store/actions/userActions';
 
@@ -42,76 +43,17 @@ function Profile({ paletteType, user, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
   const [showPassword, setShowPassword] = useState(false);
   const inputForm = useRef('form');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
-  const { from } = router.query;
 
 
   const redirectToLoginPage = () => {
     router.push('/auth/login?from=user/profile')
   }
 
-  const handleResponse = async (res) => {
-    const { profile, tokenDetail } = res;
-    dispatch(setProgressOn(true));
-    try {
-      const postData = {
-        email: profile.email,
-        accessToken: tokenDetail.accessToken
-      }
-
-      // store auth info
-      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/facebook`, postData);
-
-      const auth = {
-        userId: data.payload.userId,
-        jwt: data.payload.jwt
-      }
-      // get user info
-      dispatch(await setUser(auth));
-
-      // save auth to cookies
-      setCookie('auth', auth, { path: '/' });
-
-      // login success tips
-      dispatch(setMessage({
-        open: true,
-        severity: SeverityEnum.success,
-        message: t(`messages.login.general.loginSuccess`)
-      }));
-
-    } catch (err) {
-      let errMessage: string;
-      const message = _.get(err, 'response.data.message');
-      errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`);
-
-      // show error message
-      dispatch(setMessage({
-        open: true,
-        severity: SeverityEnum.error,
-        message: errMessage
-      }));
-    }
-    dispatch(setProgressOn(false));
-  }
-
-  const handleError = (res) => {
-    dispatch(setMessage({
-      open: true,
-      severity: SeverityEnum.error,
-      message: t(`messages.common.unknownError`)
-    }));
-  }
-
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
-  }
-
-  const handleEmailChange = (event) => {
-    const value = event.currentTarget.value;
-    setEmail(value);
   }
 
   const handlePasswordChange = (event) => {
@@ -140,7 +82,6 @@ function Profile({ paletteType, user, dispatch, t }) {
     dispatch(setProgressOn(true));
     try {
       const postData = {
-        email,
         password: await encryptAES(password)
       }
       const { data } = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
@@ -216,24 +157,18 @@ function Profile({ paletteType, user, dispatch, t }) {
                 onSubmit={handleSubmit}
               >
                 <Grid container spacing={3}>
-                  <Grid item xs={12} style={{ textAlign: "center" }}>
-                    <Typography variant="h6" noWrap>
-                      {t('pages.login.iblogLogin')}
-                    </Typography>
+                  <Grid item xs={12}>
+                    <Grid container justify="center">
+                      <Avatar alt="t" src={`${user.userInfo.avatar}`} style={{ width: '150px', height: '150px', backgroundColor: '#eee' }} >
+                        { !user.userInfo.avatar && user.username[0] }
+                      </Avatar>
+                    </Grid>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" noWrap>
-                    {t('pages.login.email')}
+                      {t('pages.login.email')}
                     </Typography>
-                    <TextValidator
-                      name="email"
-                      value={email}
-                      variant="outlined"
-                      fullWidth
-                      validators={['required', 'isEmail']}
-                      onChange={handleEmailChange}
-                      errorMessages={[t('messages.login.form.emailRequired'), t('messages.login.form.emailNotValid')]}
-                    />
+                    <TextValidator value={user.email} variant="outlined" fullWidth disabled="true" />
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" noWrap>
@@ -261,20 +196,6 @@ function Profile({ paletteType, user, dispatch, t }) {
                         )
                       }}
                     />
-                  </Grid>
-                  <Grid item xs={12} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox 
-                          color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
-                          checked={rememberMe}
-                          onChange={handleRememberMeChange} name="remember" />
-                        }
-                      label={t('pages.login.rememberMe')}
-                    />
-                    <Link href="/auth/forgetPassword">
-                      <span style={{ cursor: "pointer" }}>{t('pages.login.forgetPassword')}</span>
-                    </Link>
                   </Grid>
                   <Grid item xs={12}>
                     <Button 
