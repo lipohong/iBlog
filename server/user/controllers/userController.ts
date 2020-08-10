@@ -104,12 +104,57 @@ export class UserController {
         subject: "[iBlog] Reset password comfirmation",
         html
       }
-      const info = await transporter.sendMail(message);
+      await transporter.sendMail(message);
       transporter.close();
 
       await updateUser({ _id: user._id }, { verifyCode })
 
-      return res.success("msg_reset_password_email_sent", null);
+      return res.success("msg_verify_code_email_sent", null);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public sendNewPasswordEmail = async (req: IERequest, res: IEResponse) => {
+    try {
+      const userModel = new UserModel(req.body, 'post');
+      if (!userModel.email) {
+        throw new Error("ex_no_email");
+      }
+      const user = await getUser({ email: userModel.email, isActived: true, isDeleted: false });
+      if (!user) {
+        throw new Error("ex_user_not_exists");
+      }
+      const verifyCode = uuidv4().slice(0, 8);
+      userModel.verifyCode = verifyCode;
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.office365.com',
+        port: 587,
+        secure: false,
+        tls: { ciphers: 'SSLv3' },
+        auth: {
+          user: globVars.emailUser,
+          pass: globVars.emailPass
+        }
+      });
+      const html = await ejs.renderFile('views/resetPasswordBody.ejs', {
+        username: user.username,
+        resetPasswordPage: globVars.resetPasswordPage,
+        verifyCode
+      });
+      const message = {
+        from: globVars.emailFrom,
+        to: user.email,
+        subject: "[iBlog] Reset password comfirmation",
+        html
+      }
+      await transporter.sendMail(message);
+      transporter.close();
+
+      await updateUser({ _id: user._id }, { verifyCode })
+
+      return res.success("msg_verify_code_email_sent", null);
     }
     catch (err) {
       return res.throwErr(err);

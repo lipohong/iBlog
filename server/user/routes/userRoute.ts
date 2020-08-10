@@ -21,6 +21,7 @@ export class userRoute {
     router.post('/register', this.userController.sendVerifyEmail);
     router.post('/registerVerify', this.userController.registerVerify);
     router.post('/forgetPassword', this.userController.sendForgetPasswordEmail);
+    router.post('/newPassword', auth, this.userController.sendNewPasswordEmail);
     router.post('/resetPassword', this.userController.resetPasswordVerify);
     router.post('/facebook', this.userController.loginThroughFacebook);
     router.get('/', auth, this.userController.getMyInfo);
