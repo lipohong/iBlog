@@ -24,7 +24,7 @@ import { setUser } from '../../store/actions/userActions';
 import { SeverityEnum } from '../../enums/SeverityEnum';
 
 import defaultNextI18Next from '../../plugins/i18n';
-const { i18n, Link, withTranslation } = defaultNextI18Next;
+const { Link, withTranslation } = defaultNextI18Next;
 
 // components
 import Layout from '../../components/layout';

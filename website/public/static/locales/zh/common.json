@@ -40,7 +40,10 @@
       "password": "密碼:",
       "changePassword": "更改密碼",
       "verifyCode": "驗證碼:",
-      "getVerifyCode": "接收驗證碼"
+      "getVerifyCode": "接收驗證碼",
+      "description": "個人描述",
+      "updateProfile": "更新個人資料",
+      "logOut": "退出"
     },
     "common": {
       "submit": "提交",

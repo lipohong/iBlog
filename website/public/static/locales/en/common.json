@@ -40,7 +40,10 @@
       "password": "Password:",
       "changePassword": "Change password",
       "verifyCode": "Verify Code:",
-      "getVerifyCode": "Get Verify Code"
+      "getVerifyCode": "Get Verify Code",
+      "description": "Description",
+      "updateProfile": "Update Profile",
+      "logOut": "Log Out"
     },
     "common": {
       "submit": "Submit",

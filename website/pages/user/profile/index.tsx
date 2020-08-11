@@ -47,6 +47,7 @@ function Profile({ paletteType, user, dispatch, t }) {
   const inputForm = useRef('form');
   const passwordForm = useRef('passwordForm');
   const [password, setPassword] = useState('');
+  const [description, setDescription] = useState('');
   const router = useRouter();
 
 
@@ -61,6 +62,11 @@ function Profile({ paletteType, user, dispatch, t }) {
   const handlePasswordChange = (event) => {
     const value = event.currentTarget.value;
     setPassword(value);
+  }
+
+  const handleDescriptionChange = (event) => {
+    const value = event.currentTarget.value;
+    setDescription(value);
   }
 
   const handleDialogOpen = () => {
@@ -129,6 +135,7 @@ function Profile({ paletteType, user, dispatch, t }) {
       redirectToLoginPage();
       return;
     }
+    setDescription(user.userInfo.description);
   }
 
   useEffect(() => {
@@ -160,21 +167,38 @@ function Profile({ paletteType, user, dispatch, t }) {
                     <Typography variant="subtitle2" noWrap>
                       {t('pages.login.email')}
                     </Typography>
-                    <TextValidator value={user.email} variant="outlined" fullWidth disabled="true" />
+                    <TextValidator value={user.email} variant="outlined" fullWidth disabled={true} />
                   </Grid>
-                  <Grid item xs={12} style={{ textAlign: "center" }}>
-                    <div style={{ cursor: "pointer" }} onClick={handleDialogOpen}>
-                      {t('pages.profile.changePassword')}
-                    </div>
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle2" noWrap>
+                      {t('pages.profile.description')}
+                    </Typography>
+                    <TextValidator value={description} variant="outlined" fullWidth multiline rows={5} onChange={handleDescriptionChange} />
                   </Grid>
                   <Grid item xs={12}>
                     <Button 
                       variant="contained"
                       type="submit"
+                      fullWidth
                       color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                     >
-                      {t('pages.login.submit')}
+                      {t('pages.profile.updateProfile')}
                     </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button 
+                      variant="contained"
+                      type="button"
+                      fullWidth
+                      color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
+                    >
+                      {t('pages.profile.logOut')}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} style={{ textAlign: "center" }}>
+                    <div style={{ cursor: "pointer" }} onClick={handleDialogOpen}>
+                      {t('pages.profile.changePassword')}
+                    </div>
                   </Grid>
                 </Grid>
               </ValidatorForm>
@@ -237,7 +261,7 @@ function Profile({ paletteType, user, dispatch, t }) {
 }
 
 const mapStateToProps = (state) => {
-  const { global, auth, user } = state;
+  const { global, user } = state;
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
     user: user && user.user || null
