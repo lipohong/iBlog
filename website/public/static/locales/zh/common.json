@@ -34,6 +34,17 @@
       "password": "密碼:",
       "confirmPassword": "密碼確認:",
       "backToLogin": "回登錄頁"
+    },
+    "profile": {
+      "setupNewPassword": "設定新密碼",
+      "password": "密碼:",
+      "changePassword": "更改密碼",
+      "verifyCode": "驗證碼:",
+      "getVerifyCode": "接收驗證碼"
+    },
+    "common": {
+      "submit": "提交",
+      "cancel": "取消"
     }
   },
   "messages": {
@@ -97,6 +108,11 @@
         "ex_no_verifyCode": "請提供驗證碼",
         "ex_wrong_verifyCode": "驗證碼錯誤",
         "ex_user_not_exists": "該電郵尚未登記，請先新建賬戶"
+      }
+    },
+    "profile": {
+      "form": {
+        "passwordRequired": "請填好密碼"
       }
     },
     "common": {

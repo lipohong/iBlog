@@ -34,6 +34,17 @@
       "password": "Password:",
       "confirmPassword": "Confirm Password:",
       "backToLogin": "Back to login page"
+    },
+    "profile": {
+      "setupNewPassword": "Set up new password",
+      "password": "Password:",
+      "changePassword": "Change password",
+      "verifyCode": "Verify Code:",
+      "getVerifyCode": "Get Verify Code"
+    },
+    "common": {
+      "submit": "Submit",
+      "cancel": "Cancel"
     }
   },
   "messages": {
@@ -97,6 +108,11 @@
         "ex_no_verifyCode": "Verify code not provided.",
         "ex_wrong_verifyCode": "Wrong verify code",
         "ex_user_not_exists": "No user record, please create the account first."
+      }
+    },
+    "profile": {
+      "form": {
+        "passwordRequired": "Password is required"
       }
     },
     "common": {

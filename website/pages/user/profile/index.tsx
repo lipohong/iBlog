@@ -5,10 +5,9 @@ import { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { FacebookProvider, LoginButton } from 'react-facebook';
 import { compose } from 'redux';
 import { useCookies } from 'react-cookie';
-import { PaletteTypeEnum } from '../../enums/PaletteTypeEnum';
+import { PaletteTypeEnum } from '../../../enums/PaletteTypeEnum';
 
 // mui
 import Typography from '@material-ui/core/Typography';
@@ -17,8 +16,10 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -26,25 +27,26 @@ import Avatar from '@material-ui/core/Avatar';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
-import { setMessage, setProgressOn } from '../../store/actions/globalActions';
-import { SeverityEnum } from '../../enums/SeverityEnum';
+import { setMessage, setProgressOn } from '../../../store/actions/globalActions';
+import { SeverityEnum } from '../../../enums/SeverityEnum';
 
-import defaultNextI18Next from '../../plugins/i18n';
+import defaultNextI18Next from '../../../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
 
 // components
-import Layout from '../../components/layout';
+import Layout from '../../../components/layout';
 
-import { setAuth } from '../../store/actions/authActions';
-import { setUser } from '../../store/actions/userActions';
+import { setAuth } from '../../../store/actions/authActions';
+import { setUser } from '../../../store/actions/userActions';
 
 
 function Profile({ paletteType, user, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
   const [showPassword, setShowPassword] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const inputForm = useRef('form');
+  const passwordForm = useRef('passwordForm');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
 
 
@@ -61,21 +63,18 @@ function Profile({ paletteType, user, dispatch, t }) {
     setPassword(value);
   }
 
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  }
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  }
+
   const encryptAES = async (password: string): Promise<string> => {
     const encryptedPassword = await crypto.AES.encrypt(password, process.env.NEXT_PUBLIC_AES_SECRECT).toString();
 
     return encryptedPassword;
-  }
-
-  const decryptAES = async (encryptedPassword: string): Promise<string> => {
-    const bytes = crypto.AES.decrypt(encryptedPassword, process.env.NEXT_PUBLIC_AES_SECRECT);
-    const decryptPassword = bytes.toString(crypto.enc.Utf8);
-
-    if (!decryptPassword) {
-      throw new Error('ex_incorrect_password');
-    }
-
-    return decryptPassword;
   }
 
   const handleSubmit = async () => {
@@ -92,13 +91,6 @@ function Profile({ paletteType, user, dispatch, t }) {
       // get user info
       dispatch(await setUser(auth));
 
-      // remember me checked
-      if (rememberMe) {
-        setCookie('rememberMe', postData, { path: '/' });
-      } else {
-        removeCookie('rememberMe', { path: '/' });
-      }
-      
       // store auth info
       dispatch(setAuth(auth));
 
@@ -127,8 +119,8 @@ function Profile({ paletteType, user, dispatch, t }) {
     dispatch(setProgressOn(false));
   }
 
-  const handleRememberMeChange = (event) => {
-    setRememberMe(event.currentTarget.checked);
+  const handlePasswordFormSubmit = async () => {
+
   }
 
   const init = async () => {
@@ -149,7 +141,7 @@ function Profile({ paletteType, user, dispatch, t }) {
         <title>iBlog { t('headers.profilePage') }</title>
       </Head>
       <div className='profile'>
-        <Container className="paperContainer" maxWidth="md">
+        <Container className="paperContainer" maxWidth="xs">
           <Paper className='paperStyle'>
             <Container>
               <ValidatorForm
@@ -170,9 +162,39 @@ function Profile({ paletteType, user, dispatch, t }) {
                     </Typography>
                     <TextValidator value={user.email} variant="outlined" fullWidth disabled="true" />
                   </Grid>
+                  <Grid item xs={12} style={{ textAlign: "center" }}>
+                    <div style={{ cursor: "pointer" }} onClick={handleDialogOpen}>
+                      {t('pages.profile.changePassword')}
+                    </div>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button 
+                      variant="contained"
+                      type="submit"
+                      color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
+                    >
+                      {t('pages.login.submit')}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </ValidatorForm>
+            </Container>
+          </Paper>
+        </Container>
+        <Dialog
+            open={dialogOpen}
+            onClose={handleDialogClose}
+          >
+            <Container className="passwordContainer">
+              <DialogTitle >{t(`pages.profile.setupNewPassword`)}</DialogTitle>
+              <DialogContent>
+                <ValidatorForm
+                  ref={passwordForm}
+                  onSubmit={handlePasswordFormSubmit}
+                >
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" noWrap>
-                      {t('pages.login.password')}
+                      {t('pages.profile.password')}
                     </Typography>
                     <TextValidator
                       name="password"
@@ -197,20 +219,18 @@ function Profile({ paletteType, user, dispatch, t }) {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <Button 
-                      variant="contained"
-                      type="submit"
-                      color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
-                    >
-                      {t('pages.login.submit')}
-                    </Button>
-                  </Grid>
-                </Grid>
-              </ValidatorForm>
+                </ValidatorForm>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleDialogClose} color="inherit">
+                  {t(`pages.common.cancel`)}
+                </Button>
+                <Button  color="inherit">
+                  {t(`pages.common.submit`)}
+                </Button>
+              </DialogActions>
             </Container>
-          </Paper>
-        </Container>
+          </Dialog>
       </div>
     </Layout>
   )

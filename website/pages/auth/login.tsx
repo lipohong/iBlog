@@ -325,9 +325,9 @@ function Login({ paletteType, user, dispatch, t }) {
                     </FacebookProvider>
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "center" }}>
-                  <Link href="/auth/register">
-                    <span style={{ cursor: "pointer" }}>{t('pages.login.createAccount')}</span>
-                  </Link>
+                    <Link href="/auth/register">
+                      <span style={{ cursor: "pointer" }}>{t('pages.login.createAccount')}</span>
+                    </Link>
                   </Grid>
                 </Grid>
               </ValidatorForm>
