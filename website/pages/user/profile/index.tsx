@@ -37,22 +37,39 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 import Layout from '../../../components/layout';
 
 import { setAuth } from '../../../store/actions/authActions';
-import { setUser } from '../../../store/actions/userActions';
+import { setUser, resetUser } from '../../../store/actions/userActions';
 
 
-function Profile({ paletteType, user, dispatch, t }) {
+function Profile({ paletteType, user, auth, dispatch, t }) {
   const [cookies, setCookie, removeCookie] = useCookies(['iBlog']);
   const [showPassword, setShowPassword] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const inputForm = useRef('form');
   const passwordForm = useRef('passwordForm');
   const [password, setPassword] = useState('');
+  const [disableSendEmail, setDisableSendEmail] = useState(false);
+  const [verifyCode, setVerifyCode] = useState('');
   const [description, setDescription] = useState('');
   const router = useRouter();
+  const [countDown, setCountDown] = useState(60);
+  const countRef = useRef(countDown);
+  countRef.current = countDown;
 
+  const logOut = async () => {
+    // remove auth cookies
+    removeCookie('auth', { path: '/' });
+    // reset auth info
+    dispatch(await setAuth({
+      userId: "",
+      jwt: ""
+    }));
+    // reset user info
+    dispatch(await resetUser());
+    router.push('/auth/login');
+  }
 
   const redirectToLoginPage = () => {
-    router.push('/auth/login?from=user/profile')
+    router.push('/auth/login?from=user/profile');
   }
 
   const handleClickShowPassword = () => {
@@ -67,6 +84,11 @@ function Profile({ paletteType, user, dispatch, t }) {
   const handleDescriptionChange = (event) => {
     const value = event.currentTarget.value;
     setDescription(value);
+  }
+
+  const handleVerifyCodeChange = (event) => {
+    const value = event.currentTarget.value;
+    setVerifyCode(value);
   }
 
   const handleDialogOpen = () => {
@@ -124,9 +146,97 @@ function Profile({ paletteType, user, dispatch, t }) {
     }
     dispatch(setProgressOn(false));
   }
+  
+  const sendVerifyCodeEmail = async () => {
+    dispatch(setProgressOn(true));
+    try {
+      const postData = {
+        email: user.email
+      }
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_USER_API}/users/newPassword`, 
+        postData, {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
+      
+      // send email success tips
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.success,
+        message: t(`messages.profile.general.sendVerifyCodeSuccess`)
+      }));
+
+      // disable send email
+      setDisableSendEmail(true);
+
+      // set timer to ban email sending
+      const timer = setInterval(() => {
+        if (countRef.current > 0) {
+          setCountDown(countRef.current - 1);
+        } else {
+          clearInterval(timer);
+          setCountDown(60);
+          setDisableSendEmail(false);
+        }
+      }, 1000);
+    } catch (err) {
+      let errMessage: string;
+      const message = _.get(err, 'response.data.message');
+      errMessage = !!message ? t(`messages.profile.errors.${message}`) : t(`messages.common.unknownError`);
+      console.log(err);
+      
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: errMessage
+      }));
+    }
+    dispatch(setProgressOn(false));
+  }
 
   const handlePasswordFormSubmit = async () => {
+    dispatch(setProgressOn(true));
+    try {
+      const postData = {
+        password: await encryptAES(password),
+        email: user.email,
+        verifyCode
+      }
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_USER_API}/users/resetPassword`,
+        postData, {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
 
+      // change password success tips
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.success,
+        message: t(`messages.profile.general.resetPasswordSuccess`)
+      }));
+
+      handleDialogClose();
+      logOut();
+    } catch (err) {
+      let errMessage: string;
+      const message = _.get(err, 'response.data.message');
+      errMessage = !!message ? t(`messages.profile.errors.${message}`) : t(`messages.common.unknownError`);
+
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: errMessage
+      }));
+    }
+    dispatch(setProgressOn(false));
   }
 
   const init = async () => {
@@ -190,6 +300,7 @@ function Profile({ paletteType, user, dispatch, t }) {
                       variant="contained"
                       type="button"
                       fullWidth
+                      onClick={logOut}
                       color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
                     >
                       {t('pages.profile.logOut')}
@@ -206,64 +317,98 @@ function Profile({ paletteType, user, dispatch, t }) {
           </Paper>
         </Container>
         <Dialog
-            open={dialogOpen}
-            onClose={handleDialogClose}
+          open={dialogOpen}
+          onClose={handleDialogClose}
+        >
+          <ValidatorForm
+            ref={passwordForm}
+            onSubmit={handlePasswordFormSubmit}
           >
-            <Container className="passwordContainer">
-              <DialogTitle >{t(`pages.profile.setupNewPassword`)}</DialogTitle>
-              <DialogContent>
-                <ValidatorForm
-                  ref={passwordForm}
-                  onSubmit={handlePasswordFormSubmit}
-                >
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle2" noWrap>
-                      {t('pages.profile.password')}
-                    </Typography>
-                    <TextValidator
-                      name="password"
-                      value={password}
-                      variant="outlined"
-                      type={showPassword ? 'text' : 'password'}
-                      fullWidth
-                      validators={['required']}
-                      onChange={handlePasswordChange}
-                      errorMessages={[t('messages.login.form.passwordRequired')]}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={handleClickShowPassword}
-                              edge="end"
-                            >
-                              {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
+            <DialogTitle >{t(`pages.profile.setupNewPassword`)}</DialogTitle>
+            <DialogContent>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" noWrap>
+                    {t('pages.profile.password')}
+                  </Typography>
+                  <TextValidator
+                    name="password"
+                    value={password}
+                    variant="outlined"
+                    type={showPassword ? 'text' : 'password'}
+                    fullWidth
+                    validators={['required']}
+                    onChange={handlePasswordChange}
+                    errorMessages={[t('messages.profile.form.passwordRequired')]}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={handleClickShowPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" noWrap>
+                  {t('pages.profile.verifyCode')}
+                  </Typography>
+                  <TextValidator
+                    name="verifyCode"
+                    value={verifyCode}
+                    variant="outlined"
+                    fullWidth
+                    validators={['required']}
+                    onChange={handleVerifyCodeChange}
+                    errorMessages={[t('messages.profile.form.verifyCodeRequired')]}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container alignItems="center" style={{ height: '100%' }}>
+                    <Button 
+                      variant="contained"
+                      type="button"
+                      onClick={sendVerifyCodeEmail}
+                      disabled={disableSendEmail}
+                      color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
+                    >
+                      {t('pages.profile.getVerifyCode')}
+                    </Button>
+                    {
+                      disableSendEmail &&
+                      <div>
+                        {`${countDown} ${t('messages.profile.general.sendEmailCountdown')}`}
+                      </div>
+                    }
                   </Grid>
-                </ValidatorForm>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleDialogClose} color="inherit">
-                  {t(`pages.common.cancel`)}
-                </Button>
-                <Button  color="inherit">
-                  {t(`pages.common.submit`)}
-                </Button>
-              </DialogActions>
-            </Container>
-          </Dialog>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDialogClose} color="inherit">
+                {t(`pages.common.cancel`)}
+              </Button>
+              <Button type="submit" color="inherit">
+                {t(`pages.common.submit`)}
+              </Button>
+            </DialogActions>
+          </ValidatorForm>
+        </Dialog>
       </div>
     </Layout>
   )
 }
 
 const mapStateToProps = (state) => {
-  const { global, user } = state;
+  const { global, auth, user } = state;
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
+    auth: auth && auth.auth || null,
     user: user && user.user || null
   }
 }

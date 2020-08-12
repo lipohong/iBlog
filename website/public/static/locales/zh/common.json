@@ -115,7 +115,19 @@
     },
     "profile": {
       "form": {
-        "passwordRequired": "請填好密碼"
+        "passwordRequired": "請填好密碼",
+        "verifyCodeRequired": "請填好驗證碼"
+      },
+      "general": {
+        "resetPasswordSuccess": "密碼已重置",
+        "sendVerifyCodeSuccess": "驗證碼已發送到注冊郵箱，請檢查電郵",
+        "sendEmailCountdown": "秒後重發電郵"
+      },
+      "errors": {
+        "ex_no_email": "請提供電郵.",
+        "ex_no_password": "請提供密碼",
+        "ex_no_verifyCode": "請提供驗證碼",
+        "ex_wrong_verifyCode": "驗證碼錯誤"
       }
     },
     "common": {

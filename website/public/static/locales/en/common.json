@@ -115,7 +115,19 @@
     },
     "profile": {
       "form": {
-        "passwordRequired": "Password is required"
+        "passwordRequired": "Password is required",
+        "verifyCodeRequired": "Verify Code is required"
+      },
+      "general": {
+        "resetPasswordSuccess": "Reset password success, you can login with the new password now.",
+        "sendVerifyCodeSuccess": "Verify code is sent, please check it out.",
+        "sendEmailCountdown": "sec to resend email."
+      },
+      "errors": {
+        "ex_no_email": "Email not provided.",
+        "ex_no_password": "Password not provided.",
+        "ex_no_verifyCode": "Verify code not provided.",
+        "ex_wrong_verifyCode": "Wrong verify code"
       }
     },
     "common": {

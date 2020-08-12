@@ -15,3 +15,18 @@ export const setUser = async (auth: IAuth) => {
     throw err;
   }
 }
+
+export const resetUser = async () => {
+  return {
+    type: SET_USER,
+    user: {
+      _id: '',
+      username: '',
+      email: '',
+      userInfo: {
+        avatar: '',
+        description: ''
+      }
+    }
+  }
+}
