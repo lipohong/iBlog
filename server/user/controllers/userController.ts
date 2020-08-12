@@ -285,4 +285,22 @@ export class UserController {
     }
   }
 
+  public update = async (req: IERequest, res: IEResponse) => {
+    try {
+      const user = await getUser({ _id: req.state.jwtPayload.userId, isActived: true, isDeleted: false });
+      if (!user) {
+        throw new Error('ex_user_not_exists');
+      }
+      
+      const model = new UserModel(req.body, 'update');
+
+      await updateUser({ _id: req.state.jwtPayload.userId }, model);
+
+      return res.success("msg_update_user_info_success", null);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
 }

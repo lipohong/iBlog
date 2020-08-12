@@ -25,6 +25,7 @@ export class userRoute {
     router.post('/resetPassword', this.userController.resetPasswordVerify);
     router.post('/facebook', this.userController.loginThroughFacebook);
     router.get('/', auth, this.userController.getMyInfo);
+    router.put('/', auth, this.userController.update);
     router.get('/:userId', this.userController.getUserById);
 
     return router;

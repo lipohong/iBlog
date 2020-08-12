@@ -8,7 +8,7 @@ export default class UserModel {
   @Expose({ groups: ['get', 'fetch'] })
   public _id: string;
 
-  @Expose({ groups: ['get', 'fetch', 'put', 'post'] })
+  @Expose({ groups: ['get', 'fetch', 'put', 'update', 'post'] })
   @IsString({ message: 'ex_input_accept_string_only' })
   @ValidateIf(o => o.username && o.username !== null)
   public username: string;
@@ -34,7 +34,7 @@ export default class UserModel {
   @ValidateIf(o => o.verifyCode && o.verifyCode !== null)
   public verifyCode: string;
 
-  @Expose({ groups: ['get', 'fetch', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'put', 'update'] })
   @ValidateIf(o => o.userInfo && o.userInfo !== null)
   public userInfo: UserInfoModel;
 

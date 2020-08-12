@@ -4,12 +4,12 @@ import 'reflect-metadata';
 
 export default class UserInfoModel {
 
-  @Expose({ groups: ['get', 'fetch', 'put', 'post'] })
+  @Expose({ groups: ['get', 'fetch', 'put', 'update', 'post'] })
   @IsString({ message: 'ex_input_accept_string_only' })
   @ValidateIf(o => o.avatar && o.avatar !== null)
   public avatar: string;
 
-  @Expose({ groups: ['get', 'fetch', 'put', 'post'] })
+  @Expose({ groups: ['get', 'fetch', 'put', 'update', 'post'] })
   @IsString({ message: 'ex_input_accept_string_only' })
   @ValidateIf(o => o.description && o.description !== null)
   public description: string;
