@@ -37,7 +37,7 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 import Layout from '../../../components/layout';
 
 import { setAuth } from '../../../store/actions/authActions';
-import { setUser, resetUser } from '../../../store/actions/userActions';
+import { resetUser } from '../../../store/actions/userActions';
 
 
 function Profile({ paletteType, user, auth, dispatch, t }) {
@@ -49,7 +49,9 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
   const [password, setPassword] = useState('');
   const [disableSendEmail, setDisableSendEmail] = useState(false);
   const [verifyCode, setVerifyCode] = useState('');
+  const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
+  const [avatar, setAvatar] = useState('');
   const router = useRouter();
   const [countDown, setCountDown] = useState(60);
   const countRef = useRef(countDown);
@@ -81,6 +83,11 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
     setPassword(value);
   }
 
+  const handleUsernameChange = (event) => {
+    const value = event.currentTarget.value;
+    setUsername(value);
+  }
+
   const handleDescriptionChange = (event) => {
     const value = event.currentTarget.value;
     setDescription(value);
@@ -109,33 +116,32 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
     dispatch(setProgressOn(true));
     try {
       const postData = {
-        password: await encryptAES(password)
+        username,
+        userInfo: {
+          avatar,
+          description
+        }
       }
-      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
-      const auth = {
-        userId: data.payload.userId,
-        jwt: data.payload.jwt
-      }
-      // get user info
-      dispatch(await setUser(auth));
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_USER_API}/users`,
+        postData, {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
 
-      // store auth info
-      dispatch(setAuth(auth));
-
-      // save auth to cookies
-      setCookie('auth', auth, { path: '/' });
-
-      // login success tips
+      // update profile success tips
       dispatch(setMessage({
         open: true,
         severity: SeverityEnum.success,
-        message: t(`messages.login.general.loginSuccess`)
+        message: t(`messages.profile.general.updateProfileSuccess`)
       }));
 
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
-      errMessage = !!message ? t(`messages.login.errors.${message}`) : t(`messages.common.unknownError`);
+      errMessage = !!message ? t(`messages.profile.errors.${message}`) : t(`messages.common.unknownError`);
 
       // show error message
       dispatch(setMessage({
@@ -245,7 +251,9 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
       redirectToLoginPage();
       return;
     }
+    setUsername(user.username);
     setDescription(user.userInfo.description);
+    setAvatar(user.userInfo.avatar);
   }
 
   useEffect(() => {
@@ -268,7 +276,7 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
                     <Grid container justify="center">
-                      <Avatar alt="t" src={`${user.userInfo.avatar}`} style={{ width: '150px', height: '150px', backgroundColor: '#eee' }} >
+                      <Avatar alt="t" src={`${user.userInfo.avatar}`} style={{ width: '150px', height: '150px', backgroundColor: '#eee', fontSize: '50px' }} >
                         { !user.userInfo.avatar && user.username[0] }
                       </Avatar>
                     </Grid>
@@ -278,6 +286,19 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
                       {t('pages.login.email')}
                     </Typography>
                     <TextValidator value={user.email} variant="outlined" fullWidth disabled={true} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle2" noWrap>
+                      {t('pages.profile.username')}
+                    </Typography>
+                    <TextValidator
+                      value={username}
+                      variant="outlined"
+                      fullWidth
+                      onChange={handleUsernameChange}
+                      validators={['required']}
+                      errorMessages={[t('messages.profile.form.usernameRequired')]}
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" noWrap>
@@ -319,6 +340,7 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
         <Dialog
           open={dialogOpen}
           onClose={handleDialogClose}
+          className="dialogContainer"
         >
           <ValidatorForm
             ref={passwordForm}

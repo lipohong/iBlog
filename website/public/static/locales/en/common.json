@@ -41,7 +41,8 @@
       "changePassword": "Change password",
       "verifyCode": "Verify Code:",
       "getVerifyCode": "Get Verify Code",
-      "description": "Description",
+      "username": "Username:",
+      "description": "Description:",
       "updateProfile": "Update Profile",
       "logOut": "Log Out"
     },
@@ -115,13 +116,15 @@
     },
     "profile": {
       "form": {
+        "usernameRequired": "Username is required",
         "passwordRequired": "Password is required",
         "verifyCodeRequired": "Verify Code is required"
       },
       "general": {
         "resetPasswordSuccess": "Reset password success, you can login with the new password now.",
         "sendVerifyCodeSuccess": "Verify code is sent, please check it out.",
-        "sendEmailCountdown": "sec to resend email."
+        "sendEmailCountdown": "sec to resend email.",
+        "updateProfileSuccess": "Update profile success."
       },
       "errors": {
         "ex_no_email": "Email not provided.",

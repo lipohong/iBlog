@@ -11,3 +11,11 @@
     text-transform: none;
   }
 }
+.dialogContainer {
+  .MuiDialogContent-root {
+    overflow-y: hidden;
+  }
+  .MuiButton-root {
+    text-transform: none;
+  }
+}

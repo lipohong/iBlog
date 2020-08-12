@@ -41,7 +41,8 @@
       "changePassword": "更改密碼",
       "verifyCode": "驗證碼:",
       "getVerifyCode": "接收驗證碼",
-      "description": "個人描述",
+      "username": "用戶名:",
+      "description": "個人描述:",
       "updateProfile": "更新個人資料",
       "logOut": "退出"
     },
@@ -115,13 +116,15 @@
     },
     "profile": {
       "form": {
+        "usernameRequired": "請填好用戶名",
         "passwordRequired": "請填好密碼",
         "verifyCodeRequired": "請填好驗證碼"
       },
       "general": {
         "resetPasswordSuccess": "密碼已重置",
         "sendVerifyCodeSuccess": "驗證碼已發送到注冊郵箱，請檢查電郵",
-        "sendEmailCountdown": "秒後重發電郵"
+        "sendEmailCountdown": "秒後重發電郵",
+        "updateProfileSuccess": "個人資料已更新"
       },
       "errors": {
         "ex_no_email": "請提供電郵.",

@@ -165,7 +165,7 @@ function Login({ paletteType, user, dispatch, t }) {
       }
       
       // store auth info
-      dispatch(setAuth(auth));
+      dispatch(await setAuth(auth));
 
       // save auth to cookies
       setCookie('auth', auth, { path: '/' });
