@@ -128,16 +128,17 @@ function Layout(props) {
     } else {
       setCookie('theme', 0, { path: '/' });
     }
-    if (!(auth && auth.userId)) {
-      if (!!cookies.auth) {
-        // get user info
-        dispatch(await setUser(cookies.auth));
-        // store auth info
-        dispatch(await setAuth(cookies.auth));
-      } 
-    } else {
+    
+    if (auth && !!auth.userId) {
       // get user info
       dispatch(await setUser(auth));
+    } else {
+      if (!!cookies.auth) {
+        // store auth info
+        dispatch(await setAuth(cookies.auth));
+        // get user info
+        dispatch(await setUser(cookies.auth));
+      } 
     }
   }
 

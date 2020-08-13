@@ -37,7 +37,7 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 import Layout from '../../../components/layout';
 
 import { setAuth } from '../../../store/actions/authActions';
-import { resetUser } from '../../../store/actions/userActions';
+import { setUser, resetUser } from '../../../store/actions/userActions';
 
 
 function Profile({ paletteType, user, auth, dispatch, t }) {
@@ -114,7 +114,7 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
             }
           }
         );
-        const avatar = data.payload.fileId;
+        const avatar = `${process.env.NEXT_PUBLIC_FILE_API}/files/${data.payload.fileId}`;
         setAvatar(avatar);
       } catch (err) {
         // show error message
@@ -160,14 +160,14 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
           }
         }
       );
-
+      // get user info
+      dispatch(await setUser(auth));
       // update profile success tips
       dispatch(setMessage({
         open: true,
         severity: SeverityEnum.success,
         message: t(`messages.profile.general.updateProfileSuccess`)
       }));
-
     } catch (err) {
       let errMessage: string;
       const message = _.get(err, 'response.data.message');
@@ -280,7 +280,10 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
       // redirect to login page
       redirectToLoginPage();
       return;
-    }
+    }  
+  }
+
+  const resetUserInfo = () => {
     setUsername(user.username);
     setDescription(user.userInfo.description);
     setAvatar(user.userInfo.avatar);    
@@ -288,7 +291,11 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
 
   useEffect(() => {
     init();
-  }, [user])
+  }, []);
+
+  useEffect(() => {
+    resetUserInfo();
+  }, [user]);
 
   return (
     <Layout>
@@ -329,29 +336,26 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
                             </label> 
                           </div>
                         }
-                        {
-                          avatar &&
-                          <div>
-                            <input
-                              accept="image/*"
-                              id="update-image-button"
-                              onChange={handleFileChange}
-                              style={{ display: 'none' }}
-                              type="file"
-                            />
-                            <label htmlFor="update-image-button">
-                              <Button
-                                variant="outlined"
-                                color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
-                              >
-                                { t(`pages.profile.updateImage`) }
-                              </Button>
-                            </label> 
-                          </div>
-                        }
                       </Avatar>
                     </Grid>
                   </Grid>
+                  {
+                    avatar &&
+                    <Grid item xs={12} style={{ textAlign: 'center' }}>
+                      <Button
+                        variant="contained"
+                        component="label"
+                        color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
+                      >
+                        { t(`pages.profile.updateImage`) }
+                        <input
+                          onChange={handleFileChange}
+                          style={{ display: 'none' }}
+                          type="file"
+                        />
+                      </Button>
+                    </Grid>
+                  }
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" noWrap>
                       {t('pages.login.email')}

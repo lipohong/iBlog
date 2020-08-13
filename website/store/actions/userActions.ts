@@ -5,6 +5,7 @@ import { IAuth } from '../../interfaces/actionTypes';
 
 export const setUser = async (auth: IAuth) => {
   try {
+    
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_USER_API}/users/${auth.userId}`);
   
     return {
