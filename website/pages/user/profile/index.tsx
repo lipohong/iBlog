@@ -98,6 +98,36 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
     setVerifyCode(value);
   }
 
+  const handleFileChange = async (event) => {
+    const newImage = event.target.files[0];
+    if (newImage) {
+      dispatch(setProgressOn(true));
+      try {
+        const postData =  new FormData();
+        postData.append("image", newImage);
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_FILE_API}/files`,
+          postData, {
+            headers: {
+              Authorization: 'Bearer ' + auth.jwt,
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        );
+        const avatar = data.payload.fileId;
+        setAvatar(avatar);
+      } catch (err) {
+        // show error message
+        dispatch(setMessage({
+          open: true,
+          severity: SeverityEnum.error,
+          message: t(`messages.common.unknownError`)
+        }));
+      }
+      dispatch(setProgressOn(false));
+    }
+  }
+
   const handleDialogOpen = () => {
     setDialogOpen(true);
   }
@@ -253,12 +283,12 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
     }
     setUsername(user.username);
     setDescription(user.userInfo.description);
-    setAvatar(user.userInfo.avatar);
+    setAvatar(user.userInfo.avatar);    
   }
 
   useEffect(() => {
     init();
-  }, [])
+  }, [user])
 
   return (
     <Layout>
@@ -276,8 +306,49 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
                     <Grid container justify="center">
-                      <Avatar alt="t" src={`${user.userInfo.avatar}`} style={{ width: '150px', height: '150px', backgroundColor: '#eee', fontSize: '50px' }} >
-                        { !user.userInfo.avatar && user.username[0] }
+                      <Avatar
+                        src={`${avatar}`} style={{ width: '150px', height: '150px', backgroundColor: '#eee' }}
+                      >
+                        {
+                          !avatar &&
+                          <div>
+                            <input
+                              accept="image/*"
+                              style={{ display: 'none' }}
+                              id="upload-image-button"
+                              onChange={handleFileChange}
+                              type="file"
+                            />
+                            <label htmlFor="upload-image-button">
+                              <Button
+                                variant="contained"
+                                color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
+                              >
+                                { t(`pages.profile.uploadImage`) }
+                              </Button>
+                            </label> 
+                          </div>
+                        }
+                        {
+                          avatar &&
+                          <div>
+                            <input
+                              accept="image/*"
+                              id="update-image-button"
+                              onChange={handleFileChange}
+                              style={{ display: 'none' }}
+                              type="file"
+                            />
+                            <label htmlFor="update-image-button">
+                              <Button
+                                variant="outlined"
+                                color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
+                              >
+                                { t(`pages.profile.updateImage`) }
+                              </Button>
+                            </label> 
+                          </div>
+                        }
                       </Avatar>
                     </Grid>
                   </Grid>
@@ -435,9 +506,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-Profile.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
-})
+Profile.getInitialProps = async () => {
+  return {
+    namespacesRequired: ['common']
+  }
+}
 
 export default compose<any>(
   connect(mapStateToProps),

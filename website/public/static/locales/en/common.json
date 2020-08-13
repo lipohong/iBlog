@@ -44,7 +44,9 @@
       "username": "Username:",
       "description": "Description:",
       "updateProfile": "Update Profile",
-      "logOut": "Log Out"
+      "logOut": "Log Out",
+      "uploadImage": "Upload Image",
+      "updateImage": "Update Image"
     },
     "common": {
       "submit": "Submit",

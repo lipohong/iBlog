@@ -44,7 +44,9 @@
       "username": "用戶名:",
       "description": "個人描述:",
       "updateProfile": "更新個人資料",
-      "logOut": "退出"
+      "logOut": "退出",
+      "uploadImage": "上傳照片",
+      "updateImage": "更新照片"
     },
     "common": {
       "submit": "提交",
