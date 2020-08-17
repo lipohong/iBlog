@@ -1,5 +1,6 @@
 import { Expose, plainToClass } from 'class-transformer';
-import { IsString, ValidateIf, validateSync } from 'class-validator';
+import { ValidateIf, validateSync, IsIn } from 'class-validator';
+import BlogStatus from '../enum/blogStatus';
 import 'reflect-metadata';
 
 export default class BlogModel {
@@ -7,31 +8,34 @@ export default class BlogModel {
   @Expose({ groups: ['get', 'fetch'] })
   public _id: string;
 
-  @Expose({ groups: ['get', 'fetch', 'put', 'update', 'post'] })
-  @IsString({ message: 'ex_input_accept_string_only' })
-  @ValidateIf(o => o.username && o.username !== null)
-  public username: string;
-
-  @Expose({ groups: ['get', 'post', 'resetPassword'] })
-  public password: string;
-
-  @Expose({ groups: ['get', 'fetch', 'put', 'post'] })
-  @IsString({ message: 'ex_input_accept_string_only' })
-  @ValidateIf(o => o.email && o.email !== null)
-  public email: string;
-
-  @Expose({ groups: ['get', 'fetch', 'put'] })
-  @ValidateIf(o => o.isActived && o.isActived !== null)
-  public isActived: boolean;
-
-  @Expose({ groups: ['get', 'fetch', 'put'] })
-  @ValidateIf(o => o.isDeleted && o.isDeleted !== null)
-  public isDeleted: boolean;
+  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  public userId: string;
 
   @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
-  @IsString({ message: 'ex_input_accept_string_only' })
-  @ValidateIf(o => o.verifyCode && o.verifyCode !== null)
-  public verifyCode: string;
+  public title: string;
+
+  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  public content: string;
+
+  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  public categories: string[];
+
+  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  public tags: string[];
+
+  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @IsIn(Object.values(BlogStatus), { message: 'ex_incorrect_blog_status' })
+  @ValidateIf(o => o.status && o.status !== null)
+  public status: string;
+
+  @Expose({ groups: ['get', 'put'] })
+  public isDeleted: boolean;
+
+  @Expose({ groups: ['get', 'fetch'] })
+  public createdDate: Date;
+
+  @Expose({ groups: ['get', 'fetch'] })
+  public updatedDate: Date;
 
   constructor(data: Partial<BlogModel>, group: string) { 
     if (data) {

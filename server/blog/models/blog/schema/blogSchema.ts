@@ -1,26 +1,29 @@
 import * as mongoose from 'mongoose';
+import BlogStatus from '../enum/blogStatus';
 
 const Schema = mongoose.Schema;
 
-const UserInfo = new Schema({
-  avatar: String,
-  description: String,
-}, { _id: false });
 
 const BlogSchema = new Schema({
-  username: String,
-  password: String,
-  email: String,
-  isActived: {
-    type: Boolean,
-    default: false,
+  userId: String,
+  title: String,
+  content: String,
+  categories: {
+    type: [String],
+    default: []
+  },
+  tags: {
+    type: [String],
+    default: []
+  },
+  status: {
+    type: String,
+    default: BlogStatus.private
   },
   isDeleted: {
     type: Boolean,
     default: false,
-  },
-  verifyCode: String,
-  userInfo: UserInfo,
+  }
 }, { versionKey: false, timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } });
 
 export default BlogSchema;
