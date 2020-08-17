@@ -32,13 +32,26 @@ export class BlogController {
       if (!isAdmin) {
         expression['isDeleted'] = false;
       }
+      if (req.query.search) {
+        expression['$or'] = [];
+        expression['$or'].push({ title: new RegExp(req.query.search.toString(), 'ig') });
+        expression['$or'].push({ content: new RegExp(req.query.search.toString(), 'g') });
+      }
+      if (req.query.categories) {
+        const categoriesList = req.query.categories.toString().split(',');
+        expression['categories'] = { $in: categoriesList }
+      }
+      if (req.query.tags) {
+        const tagsList = req.query.tags.toString().split(',');
+        expression['tags'] = { $in: tagsList }
+      }
       const page = req.query.page;
       const perPage = req.query.perPage;
       let pageObject = null;
       if (page && perPage) {
         pageObject = {
-          page,
-          perPage
+          page: Number(page),
+          perPage: Number(perPage)
         }
       }
       const resultObject = await getBlogPagination(expression, pageObject, null);
@@ -56,6 +69,19 @@ export class BlogController {
       const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
       if (!isAdmin) {
         expression['isDeleted'] = false;
+      }
+      if (req.query.search) {
+        expression['$or'] = [];
+        expression['$or'].push({ title: new RegExp(req.query.search.toString(), 'ig') });
+        expression['$or'].push({ content: new RegExp(req.query.search.toString(), 'g') });
+      }
+      if (req.query.categories) {
+        const categoriesList = req.query.categories.toString().split(',');
+        expression['categories'] = { $in: categoriesList }
+      }
+      if (req.query.tags) {
+        const tagsList = req.query.tags.toString().split(',');
+        expression['tags'] = { $in: tagsList }
       }
       const page = req.query.page;
       const perPage = req.query.perPage;
