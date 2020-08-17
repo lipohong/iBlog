@@ -111,7 +111,7 @@ export class BlogController {
       model.userId = req.state.jwtPayload.userId;
       const blog = await saveNewBlog(model);
 
-      return res.success("msg_update_blog_success", blog);
+      return res.success("msg_create_blog_success", blog);
     }
     catch (err) {
       return res.throwErr(err);
