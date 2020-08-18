@@ -7,6 +7,7 @@ import * as passport from 'passport';
 import * as userAgent from 'express-useragent';
 
 import { commentRoute } from './routes/commentRoute';
+import { likeRoute } from './routes/likeRoute';
 
 import { IERequest, IEResponse, ReqStateModel, IRoute, StandardResponse } from './models/commonModel';
 import globalVars from './models/globalVars';
@@ -20,7 +21,8 @@ class App {
 
   public app: express.Application = express();
   public routes: IRoute[] = [
-    new commentRoute()
+    new commentRoute(),
+    new likeRoute()
   ];
 
   constructor() {
