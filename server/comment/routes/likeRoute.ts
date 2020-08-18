@@ -1,10 +1,10 @@
 import * as express from 'express';
-import { CommentController } from '../controllers/commentController';
+import { LikeController } from '../controllers/likeController';
 const auth = require('../middlewares/auth');
 
 export class likeRoute {
 
-  public commentController: CommentController = new CommentController();
+  public likeController: LikeController = new LikeController();
 
   public routes(app): void {
     app.use('/api/likes', this.likeRoute());
@@ -13,12 +13,10 @@ export class likeRoute {
   private likeRoute() {
     let router = express.Router();
 
-    router.get('/blog/:blogId', auth(false), this.commentController.getCommentsByBlogId);
-    router.get('/', auth(false), this.commentController.getMyComments);
-    router.get('/:commentId', auth(false), this.commentController.getCommentById);
-    router.post('/', auth(true), this.commentController.create);
-    router.put('/:commentId', auth(true), this.commentController.update);
-    router.delete('/:commentId', auth(true), this.commentController.remove);
+    router.get('/blog/:blogId', auth(false), this.likeController.getLikesByBlogId);
+    router.get('/', auth(true), this.likeController.getMyLikes);
+    router.post('/blog', auth(false), this.likeController.getLikeAmountForBlogs);
+    router.post('/blog/:blogId', auth(true), this.likeController.likeOrUnlike);
 
     return router;
   }

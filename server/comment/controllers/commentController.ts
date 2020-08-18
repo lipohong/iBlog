@@ -50,6 +50,28 @@ export class CommentController {
     }
   }
 
+  public getcommentAmountForBlogs = async (req: IERequest, res: IEResponse) => {
+    try {
+      const blogIds = req.body.blogIds;
+      if (!blogIds || blogIds.length === 0) {
+        return res.success(null, {});
+      }
+      let expression: object = { blogId: { $in: blogIds }, status: CommentStatus.published };
+      const resultObject = await getCommentPagination(expression, null, null);
+      const commentListMap = _.groupBy(resultObject.commentList, 'blogId');
+      let blogsCommentAmount = {};
+
+      blogIds.forEach(blogId => {
+        blogsCommentAmount[blogId] = !!commentListMap[blogId] ? commentListMap[blogId].length : 0;
+      });
+
+      return res.success(null, blogsCommentAmount);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
   public getMyComments = async (req: IERequest, res: IEResponse) => {
     try {
       let expression: object = { userId: req.state.jwtPayload.userId };

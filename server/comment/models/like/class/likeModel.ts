@@ -4,20 +4,17 @@ import 'reflect-metadata';
 
 export default class LikeModel {
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'likeReturn', 'getLikesByBlogId'] })
   public _id: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'post'] })
   public blogId: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'post', 'getLikesByBlogId'] })
   public userId: string;
 
-  @Expose({ groups: ['get', 'fetch'] })
+  @Expose({ groups: ['get', 'getLikesByBlogId'] })
   public createdDate: Date;
-
-  @Expose({ groups: ['get', 'fetch'] })
-  public updatedDate: Date;
 
   constructor(data: Partial<LikeModel>, group: string) { 
     if (data) {

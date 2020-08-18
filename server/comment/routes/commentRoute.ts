@@ -17,6 +17,7 @@ export class commentRoute {
     router.get('/', auth(false), this.commentController.getMyComments);
     router.get('/:commentId', auth(false), this.commentController.getCommentById);
     router.post('/', auth(true), this.commentController.create);
+    router.post('/blog', auth(false), this.commentController.getcommentAmountForBlogs);
     router.put('/:commentId', auth(true), this.commentController.update);
     router.delete('/:commentId', auth(true), this.commentController.remove);
 

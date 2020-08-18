@@ -19,15 +19,12 @@ async function getLike(expression: object): Promise<LikeModel> {
 
 async function getLikePagination(expression: object, pageObj: IPageModel, option: object): Promise<any> {
   try {
-
     let pagination = null;
     if (pageObj) {
       const total: number = await Like.countDocuments(expression).lean();
-
       if (!option) {
         option = { skip: pageObj.perPage * (pageObj.page - 1), limit: pageObj.perPage };
       }
-
       pagination = {
         totalItems: total,
         totalPage: Math.ceil(total / pageObj.perPage),
@@ -35,9 +32,7 @@ async function getLikePagination(expression: object, pageObj: IPageModel, option
         currentPage: pageObj.page,
       };
     }
-
     let likeResultList: LikeModel[] = await Like.find(expression, null, option).sort({ createdDate: -1 }).lean();
-
     const result = {
       likeList: likeResultList,
       pagination: pagination
@@ -54,7 +49,7 @@ async function saveNewLike(model: LikeModel): Promise<LikeModel> {
   try {
     const like: any = await new Like(model).save();
 
-    return new LikeModel(like, 'fetch');
+    return new LikeModel(like, 'likeReturn');
   }
   catch (err) {
     throw err;
@@ -72,4 +67,15 @@ async function updateLike(expression: object, updateFields: object): Promise<Lik
   }
 }
 
-export { getLike, getLikePagination, saveNewLike, updateLike }
+async function removeLike(expression: object): Promise<boolean> {
+  try {
+    await Like.deleteOne(expression).lean();
+
+    return true;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
+export { getLike, getLikePagination, saveNewLike, updateLike, removeLike }
