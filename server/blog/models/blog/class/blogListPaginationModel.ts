@@ -16,7 +16,7 @@ export default class BlogListPaginationModel {
       Object.assign(this, plainToClass(BlogListPaginationModel, data, { excludeExtraneousValues: true }));
 
       this.blogList = data.blogList.map(blog => {
-        return new BlogModel(blog, 'get');
+        return new BlogModel(blog, 'fetch');
       });
 
       const errors = validateSync(this);

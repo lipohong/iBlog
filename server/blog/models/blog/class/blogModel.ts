@@ -5,36 +5,42 @@ import 'reflect-metadata';
 
 export default class BlogModel {
 
-  @Expose({ groups: ['get', 'fetch'] })
+  @Expose({ groups: ['get', 'fetch', 'create', 'update'] })
   public _id: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get'] })
   public userId: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
   public title: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
   public content: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
   public categories: string[];
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
   public tags: string[];
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
   @IsIn(Object.values(BlogStatus), { message: 'ex_incorrect_blog_status' })
   @ValidateIf(o => o.status && o.status !== null)
   public status: string;
 
+  @Expose({ groups: ['fetch'] })
+  public likes: number;
+
+  @Expose({ groups: ['fetch'] })
+  public comments: number;
+
   @Expose({ groups: ['get', 'put'] })
   public isDeleted: boolean;
 
-  @Expose({ groups: ['get', 'fetch'] })
+  @Expose({ groups: ['get', 'fetch', 'create', 'update'] })
   public createdDate: Date;
 
-  @Expose({ groups: ['get', 'fetch'] })
+  @Expose({ groups: ['get', 'fetch', 'create', 'update'] })
   public updatedDate: Date;
 
   constructor(data: Partial<BlogModel>, group: string) { 

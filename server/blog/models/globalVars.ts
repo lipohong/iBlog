@@ -9,13 +9,7 @@ interface IGlobVars {
   jwtBcryptSaltRounds: number;
   aesSecret: string;
   logLevel: string;
-  facebookAppId: string;
-  facebookAppSecret: string;
-  emailFrom: string;
-  emailUser: string;
-  emailPass: string;
-  registerPage: string;
-  resetPasswordPage: string;
+  commentUrl: string;
 }
 
 class GlobalVars {
@@ -30,13 +24,7 @@ class GlobalVars {
       jwtBcryptSaltRounds: Number.parseInt(process.env.JWT_BCRYPT_SALT_ROUNDS),
       aesSecret: process.env.AES_SECRET,
       logLevel: process.env.LOG_LEVEL,
-      facebookAppId: process.env.FACEBOOK_APP_ID,
-      facebookAppSecret: process.env.FACEBOOK_APP_SECRET,
-      emailFrom: process.env.EMAIL_FROM,
-      emailUser: process.env.EMAIL_USER,
-      emailPass: process.env.EMAIL_PASS,
-      registerPage: process.env.REGISTER_PAGE,
-      resetPasswordPage: process.env.RESET_PASSWORD_PAGE
+      commentUrl: process.env.COMMENT_URL
     } as IGlobVars;
   }
 

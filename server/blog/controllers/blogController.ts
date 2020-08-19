@@ -2,13 +2,15 @@ import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import BlogModel  from '../models/blog/class/blogModel';
 import BlogStatus from '../models/blog/enum/blogStatus';
+import { getLikeAmountForBlogs, getCommentAmountForBlogs } from '../services/commentService';
 import { getBlog, getBlogPagination, saveNewBlog, updateBlog } from '../services/blogService';
 
 export class BlogController {
 
   public getBlogById = async (req: IERequest, res: IEResponse) => {
     try {
-      const expression = { _id: req.params.blogId, isDeleted: false };
+      const blogId = req.params.blogId;
+      const expression = { _id: blogId, isDeleted: false };
       const blog = await getBlog(expression);
       const userId = _.get(req, 'state.jwtPayload.userId');
       const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
@@ -17,6 +19,10 @@ export class BlogController {
           throw new Error('ex_cannot_find_blog');
         }
       }
+      const commentMap = await getCommentAmountForBlogs([blogId]);
+      const likeMap = await getLikeAmountForBlogs([blogId]);
+      blog.comments = commentMap[blogId] || 0;
+      blog.likes = likeMap[blogId] || 0;
 
       return res.success(null, new BlogModel(blog, 'fetch'));
     }
