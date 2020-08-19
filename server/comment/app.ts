@@ -8,7 +8,7 @@ import * as userAgent from 'express-useragent';
 
 import { commentRoute } from './routes/commentRoute';
 import { likeRoute } from './routes/likeRoute';
-
+import { collectionRoute } from './routes/collectionRoute';
 import { IERequest, IEResponse, ReqStateModel, IRoute, StandardResponse } from './models/commonModel';
 import globalVars from './models/globalVars';
 import { ReadPreference } from 'mongodb';
@@ -22,7 +22,8 @@ class App {
   public app: express.Application = express();
   public routes: IRoute[] = [
     new commentRoute(),
-    new likeRoute()
+    new likeRoute(),
+    new collectionRoute()
   ];
 
   constructor() {

@@ -1,56 +1,31 @@
 import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
-import CommentModel  from '../models/comment/class/commentModel';
-import CommentStatus from '../models/comment/enum/commentStatus';
-import { getComment, getCommentPagination, saveNewComment, updateComment } from '../services/commentService';
+import CollectionModel  from '../models/collection/class/collectionModel';
+import CollectionStatusEnum from '../models/collection/enum/collectionStatusEnum';
+import { getCollection, saveNewCollection, updateCollection } from '../services/collectionService';
 
 export class CommentController {
 
-  public getCommentById = async (req: IERequest, res: IEResponse) => {
+  public getCollectionById = async (req: IERequest, res: IEResponse) => {
     try {
-      const expression = { _id: req.params.commentId, isDeleted: false };
-      const comment = await getComment(expression);
+      const expression = { _id: req.params.collectionId, isDeleted: false };
+      const collection = await getCollection(expression);
       const userId = _.get(req, 'state.jwtPayload.userId');
       const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
-      if (comment.userId !== userId || !isAdmin) {
-        if (comment.status !== CommentStatus.published) {
+      if (collection.userId !== userId || !isAdmin) {
+        if (collection.status !== CollectionStatusEnum.published) {
           throw new Error('ex_cannot_find_comment');
         }
       }
 
-      return res.success(null, new CommentModel(comment, 'fetch'));
+      return res.success(null, new CollectionModel(collection, 'fetch'));
     }
     catch (err) {
       return res.throwErr(err);
     }
   }
 
-  public getCommentsByBlogId = async (req: IERequest, res: IEResponse) => {
-    try {
-      let expression: object = { blogId: req.params.blogId, status: CommentStatus.published };
-      const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
-      if (!isAdmin) {
-        expression['isDeleted'] = false;
-      }
-      const page = req.query.page;
-      const perPage = req.query.perPage;
-      let pageObject = null;
-      if (page && perPage) {
-        pageObject = {
-          page: Number(page),
-          perPage: Number(perPage)
-        }
-      }
-      const resultObject = await getCommentPagination(expression, pageObject, null);
-
-      return res.success(null, resultObject);
-    }
-    catch (err) {
-      return res.throwErr(err);
-    }
-  }
-
-  public getCommentAmountForBlogs = async (req: IERequest, res: IEResponse) => {
+  public getCollectionAmountForBlogs = async (req: IERequest, res: IEResponse) => {
     try {
       const blogIds = req.body.blogIds;
       if (!blogIds || blogIds.length === 0) {
