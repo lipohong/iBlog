@@ -1,22 +1,25 @@
 import * as express from 'express';
-import { LikeController } from '../controllers/likeController';
+import { CollectionController } from '../controllers/collectionController';
 const auth = require('../middlewares/auth');
 
 export class collectionRoute {
 
-  public likeController: LikeController = new LikeController();
+  public collectionController: CollectionController = new CollectionController();
 
   public routes(app): void {
-    app.use('/api/likes', this.likeRoute());
+    app.use('/api/collections', this.likeRoute());
   }
 
   private likeRoute() {
     let router = express.Router();
 
-    router.get('/blog/:blogId', auth(false), this.likeController.getLikesByBlogId);
-    router.get('/', auth(true), this.likeController.getMyLikes);
-    router.post('/blog', auth(false), this.likeController.getLikeAmountForBlogs);
-    router.post('/blog/:blogId', auth(true), this.likeController.likeOrUnlike);
+    router.get('/', auth(true), this.collectionController.getMyCollections);
+    router.get('/:collectionId', auth(false), this.collectionController.getCollectionById);
+    router.post('/', auth(true), this.collectionController.create);
+    router.put('/:collectionId', auth(true), this.collectionController.update);
+    router.delete('/:collectionId', auth(true), this.collectionController.remove);
+    router.post('/:collectionId/blog/:blogId', auth(true), this.collectionController.addBlogToCollection);
+    router.delete('/:collectionId/blog/:blogId', auth(true), this.collectionController.removeBlogFromCollection);
 
     return router;
   }

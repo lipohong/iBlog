@@ -8,7 +8,10 @@ const CollectionSchema = new Schema({
   userId: String,
   name: String,
   description: String,
-  blogIds: [String],
+  blogIds: {
+    type: [String],
+    default: []
+  },
   status: {
     type: String,
     default: CollectionStatusEnum.private

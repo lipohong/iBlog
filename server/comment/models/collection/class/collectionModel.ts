@@ -8,7 +8,7 @@ export default class CollectionModel {
   @Expose({ groups: ['get', 'fetch'] })
   public _id: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get'] })
   public userId: string;
 
   @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
@@ -17,7 +17,7 @@ export default class CollectionModel {
   @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
   public description: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'fetch'] })
   public blogIds: string[];
 
   @Expose({ groups: ['get', 'fetch', 'put'] })
@@ -25,7 +25,7 @@ export default class CollectionModel {
   @ValidateIf(o => o.status && o.status !== null)
   public status: string;
 
-  @Expose({ groups: ['get', 'fetch', 'put'] })
+  @Expose({ groups: ['get', 'put'] })
   public isDeleted: boolean;
 
   @Expose({ groups: ['get', 'fetch'] })

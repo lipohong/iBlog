@@ -32,7 +32,7 @@ async function saveNewCollection(model: CollectionModel): Promise<CollectionMode
   try {
     const collection: any = await new Collection(model).save();
 
-    return new CollectionModel(collection, 'post');
+    return new CollectionModel(collection, 'fetch');
   }
   catch (err) {
     throw err;
@@ -43,7 +43,7 @@ async function updateCollection(expression: object, updateFields: object): Promi
   try {
     const collection = await Collection.findOneAndUpdate(expression, { $set: removeUndefinedField(updateFields) }).lean();
 
-    return new CollectionModel(await getCollection({ _id: collection._id }), 'put');
+    return new CollectionModel(await getCollection({ _id: collection._id }), 'fetch');
   }
   catch (err) {
     throw err;
