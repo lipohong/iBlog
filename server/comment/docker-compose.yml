@@ -1,7 +1,7 @@
 version: "3"
 services:
-  iblog-blog-server:
+  iblog-comment-server:
     build: .
     ports: 
-      - "8012:8012"
+      - "8013:8013"
     command: bash -c "npm run start"
