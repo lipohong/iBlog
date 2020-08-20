@@ -4,7 +4,9 @@
     "loginPage" : "登錄頁",
     "registerPage": "注冊頁",
     "forgetPasswordPage": "重置密碼頁",
-    "profilePage": "個人資料頁"
+    "profilePage": "個人資料頁",
+    "createBlogPage": "新建blog頁",
+    "editBlogPage": "編輯blog頁"
   },
   "pages": {
     "login": {

@@ -4,7 +4,9 @@
     "loginPage": "Login Page",
     "registerPage": "Register Page",
     "forgetPasswordPage": "Forget Password Page",
-    "profilePage": "Profile Page"
+    "profilePage": "Profile Page",
+    "createBlogPage": "Create Blog Page",
+    "editBlogPage": "Edit Blog Page"
   },
   "pages": {
     "login": {
