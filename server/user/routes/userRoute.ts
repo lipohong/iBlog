@@ -2,7 +2,7 @@ import * as express from 'express';
 import login from '../middlewares/login';
 import { UserController } from '../controllers/userController';
 
-import auth from '../middlewares/auth';
+const auth = require('../middlewares/auth');
 
 export class userRoute {
 
@@ -16,17 +16,17 @@ export class userRoute {
   private userRoute() {
     let router = express.Router();
 
-    router.post('/', login);
-    router.get('/emailView', this.userController.emailView);
-    router.post('/register', this.userController.sendVerifyEmail);
-    router.post('/registerVerify', this.userController.registerVerify);
-    router.post('/forgetPassword', this.userController.sendForgetPasswordEmail);
-    router.post('/newPassword', auth, this.userController.sendNewPasswordEmail);
-    router.post('/resetPassword', this.userController.resetPasswordVerify);
-    router.post('/facebook', this.userController.loginThroughFacebook);
-    router.get('/', auth, this.userController.getMyInfo);
-    router.put('/', auth, this.userController.update);
-    router.get('/:userId', this.userController.getUserById);
+    router.post('/', auth(false), login);
+    router.get('/emailView', auth(false), this.userController.emailView);
+    router.post('/register', auth(false), this.userController.sendVerifyEmail);
+    router.post('/registerVerify', auth(false), this.userController.registerVerify);
+    router.post('/forgetPassword', auth(false), this.userController.sendForgetPasswordEmail);
+    router.post('/newPassword', auth(true), this.userController.sendNewPasswordEmail);
+    router.post('/resetPassword', auth(false), this.userController.resetPasswordVerify);
+    router.post('/facebook', auth(false), this.userController.loginThroughFacebook);
+    router.get('/', auth(true), this.userController.getMyInfo);
+    router.put('/', auth(true), this.userController.update);
+    router.get('/:userId', auth(false), this.userController.getUserById);
 
     return router;
   }

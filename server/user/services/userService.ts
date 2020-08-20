@@ -41,7 +41,8 @@ async function saveNewUser(model: UserModel): Promise<Boolean> {
 
 async function updateUser(expression: object, updateFields: object): Promise<any> {
   try {
-    const user = await User.findOneAndUpdate(expression, { $set: removeUndefinedField(updateFields) }).lean();
+    let user = await User.findOneAndUpdate(expression, { $set: removeUndefinedField(updateFields) }).lean();
+    user =  await User.findOne(expression);
 
     return user;
   }

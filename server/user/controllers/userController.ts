@@ -234,7 +234,7 @@ export class UserController {
       const expression = { _id: req.state.jwtPayload.userId };
       const userInfo = await getMyInfo(expression);   
 
-      return res.success(null, userInfo);
+      return res.success(null, new UserModel(userInfo, 'fetch'));
     }
     catch (err) {
       return res.throwErr(err);
@@ -287,16 +287,15 @@ export class UserController {
 
   public update = async (req: IERequest, res: IEResponse) => {
     try {
-      const user = await getUser({ _id: req.state.jwtPayload.userId, isActived: true, isDeleted: false });
+      const expression = { _id: req.state.jwtPayload.userId, isActived: true, isDeleted: false };
+      let user = await getUser(expression);
       if (!user) {
         throw new Error('ex_user_not_exists');
       }
-      
       const model = new UserModel(req.body, 'update');
+      user = await updateUser(expression, model);
 
-      await updateUser({ _id: req.state.jwtPayload.userId }, model);
-
-      return res.success("msg_update_user_info_success", null);
+      return res.success("msg_update_user_info_success", new UserModel(user, 'fetch'));
     }
     catch (err) {
       return res.throwErr(err);
