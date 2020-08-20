@@ -15,6 +15,9 @@ export default class BlogModel {
   public title: string;
 
   @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
+  public cover: string;
+
+  @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
   public content: string;
 
   @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })

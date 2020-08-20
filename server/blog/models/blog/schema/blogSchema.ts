@@ -7,6 +7,7 @@ const Schema = mongoose.Schema;
 const BlogSchema = new Schema({
   userId: String,
   title: String,
+  cover: String,
   content: String,
   categories: {
     type: [String],
