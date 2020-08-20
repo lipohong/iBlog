@@ -52,6 +52,8 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
   const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
   const [avatar, setAvatar] = useState('');
+  const uploadImageButton = useRef(null);
+  const updateImageButton = useRef(null);
   const router = useRouter();
   const [countDown, setCountDown] = useState(60);
   const countRef = useRef(countDown);
@@ -96,6 +98,14 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
   const handleVerifyCodeChange = (event) => {
     const value = event.currentTarget.value;
     setVerifyCode(value);
+  }
+
+  const handleUploadImageButtonOnClick = () => {
+    uploadImageButton.current.click();
+  }
+
+  const handleUpdateImageButtonOnClick = () => {
+    updateImageButton.current.click();
   }
 
   const handleFileChange = async (event) => {
@@ -303,7 +313,7 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
         <title>iBlog { t('headers.profilePage') }</title>
       </Head>
       <div className='profile'>
-        <Container className="paperContainer" maxWidth="xs">
+        <Container className="paperContainer" maxWidth="sm">
           <Paper className='paperStyle'>
             <Container>
               <ValidatorForm
@@ -319,21 +329,20 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
                         {
                           !avatar &&
                           <div>
+                            <Button
+                                variant="contained"
+                                color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
+                                onClick={handleUploadImageButtonOnClick}
+                              >
+                              { t(`pages.profile.uploadImage`) }
+                            </Button>
                             <input
                               accept="image/*"
                               style={{ display: 'none' }}
-                              id="upload-image-button"
                               onChange={handleFileChange}
                               type="file"
+                              ref={uploadImageButton}
                             />
-                            <label htmlFor="upload-image-button">
-                              <Button
-                                variant="contained"
-                                color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
-                              >
-                                { t(`pages.profile.uploadImage`) }
-                              </Button>
-                            </label> 
                           </div>
                         }
                       </Avatar>
@@ -344,16 +353,18 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
                     <Grid item xs={12} style={{ textAlign: 'center' }}>
                       <Button
                         variant="contained"
-                        component="label"
+                        onClick={handleUpdateImageButtonOnClick}
                         color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                       >
                         { t(`pages.profile.updateImage`) }
-                        <input
-                          onChange={handleFileChange}
-                          style={{ display: 'none' }}
-                          type="file"
-                        />
                       </Button>
+                      <input
+                      accept="image/*"
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }}
+                        type="file"
+                        ref={updateImageButton}
+                      />
                     </Grid>
                   }
                   <Grid item xs={12}>
