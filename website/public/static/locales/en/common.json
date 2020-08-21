@@ -56,6 +56,11 @@
       "uploadImage": "Upload Image",
       "updateImage": "Update Image"
     },
+    "blog": {
+      "postBlog": "Post Blog",
+      "saveAsDraft": "Save As Draft",
+      "publish": "Publish Blog"
+    },
     "common": {
       "submit": "Submit",
       "cancel": "Cancel"
@@ -149,6 +154,18 @@
         "ex_no_password": "Password not provided.",
         "ex_no_verifyCode": "Verify code not provided.",
         "ex_wrong_verifyCode": "Wrong verify code"
+      }
+    },
+    "blog": {
+      "form": {
+        "titleRequired": "Title is required"
+      },
+      "general": {
+        "publishBlogSuccess": "Publish blog success, you can view the blog now.",
+        "saveBlogSuccess": "Save blog as draft success."
+      },
+      "errors": {
+        "ex_no_title": "Title not provided."
       }
     },
     "common": {

@@ -56,6 +56,11 @@
       "uploadImage": "上傳照片",
       "updateImage": "更新照片"
     },
+    "blog": {
+      "postBlog": "發 Blog",
+      "saveAsDraft": "保存為草稿",
+      "publish": "發佈 Blog"
+    },
     "common": {
       "submit": "提交",
       "cancel": "取消"
@@ -149,6 +154,18 @@
         "ex_no_password": "請提供密碼",
         "ex_no_verifyCode": "請提供驗證碼",
         "ex_wrong_verifyCode": "驗證碼錯誤"
+      }
+    },
+    "blog": {
+      "form": {
+        "titleRequired": "請填寫標題"
+      },
+      "general": {
+        "publishBlogSuccess": "Blog發佈成功，現在所有人可瀏覽blog",
+        "saveBlogSuccess": "Blog已存儲為草稿"
+      },
+      "errors": {
+        "ex_no_title": "請提供標題"
       }
     },
     "common": {
