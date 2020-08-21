@@ -158,6 +158,7 @@
     },
     "blog": {
       "form": {
+        "titlePlaceHolder": "Set blog title here...",
         "titleRequired": "Title is required"
       },
       "general": {

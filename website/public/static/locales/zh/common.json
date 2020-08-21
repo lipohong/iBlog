@@ -158,6 +158,7 @@
     },
     "blog": {
       "form": {
+        "titlePlaceHolder": "在此填寫標題...",
         "titleRequired": "請填寫標題"
       },
       "general": {
