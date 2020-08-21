@@ -9,6 +9,12 @@
     "editBlogPage": "Edit Blog Page"
   },
   "pages": {
+    "layout": {
+      "profileManagement": "Profile Management",
+      "postBlog": "Post Blog",
+      "blogsManagement": "Blogs Management",
+      "logOut": "Log Out"
+    },
     "login": {
       "iblogLogin": "iBlog Login",
       "email": "Email:",
@@ -56,6 +62,14 @@
     }
   },
   "messages": {
+    "layout": {
+      "switchMode": "Switch light/dark Mode Theme",
+      "chooseMainTheme": "Choose Main Theme",
+      "switchLanguage": "Switch Language",
+      "viewSourceCode": "View Source Code",
+      "action": "Action",
+      "logIn": "Login In"
+    },
     "login": {
       "form": {
         "emailRequired": "Email is required",
