@@ -9,6 +9,9 @@ import defaultNextI18Next from '../../plugins/i18n';
 const { i18n, Link, withTranslation } = defaultNextI18Next;
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
+import { useQuill } from 'react-quilljs';
+const QuillDeltaToHtmlConverter = require('quill-delta-to-html').QuillDeltaToHtmlConverter;
+
 // mui
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -19,6 +22,7 @@ import Paper from '@material-ui/core/Paper';
 import Layout from '../../components/layout';
 
 import { SeverityEnum } from '../../enums/SeverityEnum';
+import { BlogStatusEnum } from '../../enums/BlogStatusEnum';
 import { PaletteTypeEnum } from '../../enums/PaletteTypeEnum';
 
 import { setMessage, setProgressOn } from '../../store/actions/globalActions';
@@ -26,21 +30,43 @@ import { setMessage, setProgressOn } from '../../store/actions/globalActions';
 
 function CreateBlogPage(props) {
   const { dispatch, t, auth, paletteType } = props;
-  const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const inputForm = useRef('form');
-  const quillEditor = useRef(null);
   const router = useRouter();
 
-  const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
+  const theme = 'snow';
+  const modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ align: [] }],
+  
+      [{ list: 'ordered'}, { list: 'bullet' }],
+      [{ indent: '-1'}, { indent: '+1' }],
+  
+      [{ size: ['small', false, 'large', 'huge'] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['link', 'image'],
+      [{ color: [] }, { background: [] }],
+  
+      ['clean'],
+    ],
+    clipboard: {
+      matchVisual: false,
+    },
+  }
+  const formats = [
+    'bold', 'italic', 'underline', 'strike',
+    'align', 'list', 'indent',
+    'size', 'header',
+    'link', 'image',
+    'color', 'background',
+    'clean',
+  ]
+  const { quill, quillRef } = useQuill({ theme, modules, formats });
 
   const handleTitleChange = (event) => {
     const value = event.currentTarget.value;
     setTitle(value);
-  }
-
-  const handleContentChange = (value) => {
-    setContent(value);
   }
 
   const uploadImage = () => {
@@ -65,15 +91,9 @@ function CreateBlogPage(props) {
             }
           );
           const avatar = `${process.env.NEXT_PUBLIC_FILE_API}/files/${data.payload.fileId}`;
-          const quill = quillEditor.current.getEditor();
           const range = quill.getSelection();
           if (range) {
-            if (range.length == 0) {
-              console.log('User cursor is at index', range.index);
-            } else {
-              quill.insertEmbed(range.index, 'image', avatar);
-              console.log('User has highlighted: ');
-            }
+            quill.insertEmbed(range.index, 'image', avatar);
           } else {
             console.log('User cursor is not in editor');
           }
@@ -91,40 +111,47 @@ function CreateBlogPage(props) {
   }
 
   const handleSubmit = async () => {
+    const content = quill.getContents().ops;
+    const postData = {
+      title,
+      content,
+      status: BlogStatusEnum.published
+    }
+    dispatch(setProgressOn(true));
+    try {
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BLOG_API}/blogs`,
+        postData,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.success,
+        message: t(`messages.blog.general.publishBlogSuccess`)
+      }));
+      setTimeout(() => {
+        dispatch(setMessage({
+          open: false,
+          severity: SeverityEnum.success,
+          message: ''
+        }));
 
+        router.push(`/blog/${data.payload._id}`);
+      }, 3000);
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+    dispatch(setProgressOn(false));
   }
-
-  // const modules = {
-  //   toolbar: {
-  //     container: [
-  //       [{ 'header': [1, 2, false] }],
-  //       ['bold', 'italic', 'underline','strike', 'blockquote'],
-  //       [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-  //       ['link', 'image'],
-  //       ['clean']
-  //     ],
-  //     handlers: {
-  //       image: uploadImage
-  //     }
-  //   },
-  // }
-
-  const modules = {
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline','strike', 'blockquote'],
-      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-      ['link', 'image'],
-      ['clean']
-    ]
-  }
-
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image'
-  ]
 
   const init = async () => {    
     if (!(auth && auth.userId)) {
@@ -135,6 +162,12 @@ function CreateBlogPage(props) {
   useEffect(() => {
     init();
   }, []);
+
+  useEffect(() => {
+    if (quill) {
+      quill.getModule('toolbar').addHandler('image', uploadImage);
+    }
+  }, [quill]);
 
   return (
     <Layout>
@@ -162,15 +195,9 @@ function CreateBlogPage(props) {
                     />
                   </Grid>
                   <Grid item xs={12} className="editContainer">
-                    <ReactQuill
-                      ref={quillEditor}
-                      theme="snow"
-                      className="editingArea"
-                      value={content}
-                      onChange={handleContentChange}
-                      modules={modules}
-                      formats={formats}
-                    />
+                    <div>
+                      <div ref={quillRef} />
+                    </div>
                   </Grid>
                   <Grid item xs={12}>
                     <Button
