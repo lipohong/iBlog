@@ -8,7 +8,7 @@ const BlogSchema = new Schema({
   userId: String,
   title: String,
   cover: String,
-  content: String,
+  content: Object,
   categories: {
     type: [String],
     default: []
