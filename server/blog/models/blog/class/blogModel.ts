@@ -8,7 +8,7 @@ export default class BlogModel {
   @Expose({ groups: ['get', 'fetch', 'create', 'update'] })
   public _id: string;
 
-  @Expose({ groups: ['get'] })
+  @Expose({ groups: ['get', 'fetch'] })
   public userId: string;
 
   @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })

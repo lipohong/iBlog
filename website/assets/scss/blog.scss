@@ -1,8 +1,20 @@
 .blog {
   margin: 50px auto;
+  word-wrap: break-word;
   .container {
+    .title {
+      font-size: 40px;
+      font-family: medium-content-title-font, Georgia, Cambria, "Times New Roman", Times, serif;
+    }
     .ql-container {
       min-height: 400px;
+    }
+    .ql-image {
+      width: 100%;
+      height: auto;
+    }
+    .updatedDate {
+      color: #999
     }
   }
   .MuiButton-root {
