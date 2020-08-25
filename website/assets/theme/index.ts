@@ -2,14 +2,14 @@
 const themeOptions = [
   {
     primary: {
-      light: '#bbb',
-      main: '#ddd',
-      contrastText: '#000',
+      light: '#9e9e9e',
+      main: '#757575',
+      contrastText: '#fff',
     },
     secondary: {
-      light: '#ccc',
-      main: '#eee',
-      contrastText: '#000',
+      light: '#e0e0e0',
+      main: '#bdbdbd',
+      contrastText: '#fff',
     }
   },
   {

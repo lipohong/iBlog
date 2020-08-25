@@ -68,8 +68,8 @@ function Layout(props) {
     }));
     // reset user info
     dispatch(await resetUser());
-    // back to home page
-    router.push('/');
+    // refresh page
+    router.reload();
   }
 
   const switchPaletteType = () => {

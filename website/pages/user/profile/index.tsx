@@ -432,7 +432,7 @@ function Profile({ paletteType, user, auth, dispatch, t }) {
             ref={passwordForm}
             onSubmit={handlePasswordFormSubmit}
           >
-            <DialogTitle >{t(`pages.profile.setupNewPassword`)}</DialogTitle>
+            <DialogTitle>{t(`pages.profile.setupNewPassword`)}</DialogTitle>
             <DialogContent>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
