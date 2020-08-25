@@ -1,6 +1,7 @@
 import { Expose, plainToClass } from 'class-transformer';
 import { ValidateIf, validateSync, IsIn } from 'class-validator';
 import BlogStatus from '../enum/blogStatus';
+import BlogLanguage from '../enum/blogLanguage';
 import 'reflect-metadata';
 
 export default class BlogModel {
@@ -25,6 +26,11 @@ export default class BlogModel {
 
   @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
   public tags: string[];
+
+  @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
+  @IsIn(Object.values(BlogLanguage), { message: 'ex_incorrect_blog_language' })
+  @ValidateIf(o => o.language && o.language !== null)
+  public language: string;
 
   @Expose({ groups: ['get', 'fetch', 'post', 'create', 'put', 'update'] })
   @IsIn(Object.values(BlogStatus), { message: 'ex_incorrect_blog_status' })

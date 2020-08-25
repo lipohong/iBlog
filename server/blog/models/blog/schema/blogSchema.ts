@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import BlogStatus from '../enum/blogStatus';
+import BlogLanguage from '../enum/blogLanguage';
 
 const Schema = mongoose.Schema;
 
@@ -16,6 +17,10 @@ const BlogSchema = new Schema({
   tags: {
     type: [String],
     default: []
+  },
+  language: {
+    type: String,
+    default: BlogLanguage.en
   },
   status: {
     type: String,
