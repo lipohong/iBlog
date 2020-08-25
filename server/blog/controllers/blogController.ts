@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import BlogModel  from '../models/blog/class/blogModel';
 import BlogStatus from '../models/blog/enum/blogStatus';
-import { getLikeAmountForBlogs, getCommentAmountForBlogs } from '../services/commentService';
+import { getLikeAmountForBlogs, getCommentAmountForBlogs, checkLiked, checkCollected } from '../services/commentService';
 import { getBlog, getBlogPagination, saveNewBlog, updateBlog } from '../services/blogService';
 
 export class BlogController {
@@ -23,6 +23,16 @@ export class BlogController {
       const likeMap = await getLikeAmountForBlogs([blogId]);
       blog.comments = commentMap[blogId] || 0;
       blog.likes = likeMap[blogId] || 0;
+      let liked = false;
+      let collected = false;
+      if (userId) {
+        const likedResult = await checkLiked(blogId, userId);
+        liked = likedResult.liked;
+        const collectedResult = await checkCollected(blogId, userId);
+        collected = collectedResult.collected;
+      }
+      blog.liked = liked;
+      blog.collected = collected;
 
       return res.success(null, new BlogModel(blog, 'fetch'));
     }

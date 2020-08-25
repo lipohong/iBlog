@@ -73,6 +73,17 @@ export class LikeController {
     }
   }
 
+  public checkLikeByBlogIdAndUserId = async (req: IERequest, res: IEResponse) => {
+    try {
+      const like = await getLike({ blogId: req.params.blogId, userId: req.params.userId });      
+
+      return res.success(null, { liked: !!like });
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
   public likeOrUnlike = async (req: IERequest, res: IEResponse) => {
     try {
       let model = new LikeModel({}, 'post');

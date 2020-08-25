@@ -124,4 +124,19 @@ export class CollectionController {
     }
   }
 
+  public checkCollectedByUserId = async (req: IERequest, res: IEResponse) => {
+    try {
+      const expression = { userId: req.params.userId, blogIds: { $in: [req.params.blogId] }, isDeleted: false };
+      const collections = await getCollection(expression);
+      if (!collections) {
+        res.success(null, { collected: false });
+      }
+
+      return res.success(null, { collected: true });
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
 }

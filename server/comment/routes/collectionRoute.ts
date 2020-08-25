@@ -14,6 +14,7 @@ export class collectionRoute {
     let router = express.Router();
 
     router.get('/', auth(true), this.collectionController.getMyCollections);
+    router.get('/blog/:blogId/user/:userId', auth(false), this.collectionController.checkCollectedByUserId);
     router.get('/:collectionId', auth(false), this.collectionController.getCollectionById);
     router.post('/', auth(true), this.collectionController.create);
     router.put('/:collectionId', auth(true), this.collectionController.update);
