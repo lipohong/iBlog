@@ -63,7 +63,9 @@
     },
     "common": {
       "submit": "提交",
-      "cancel": "取消"
+      "cancel": "取消",
+      "close": "關閉",
+      "confirm": "確認"
     }
   },
   "messages": {
@@ -159,7 +161,8 @@
     "blog": {
       "form": {
         "titlePlaceHolder": "在此填寫標題...",
-        "titleRequired": "請填寫標題"
+        "titleRequired": "請填寫標題",
+        "collectionNameRequired": "請填寫收藏夾名"
       },
       "general": {
         "publishBlogSuccess": "Blog發佈成功，現在所有人可瀏覽blog",

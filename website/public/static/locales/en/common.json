@@ -63,7 +63,9 @@
     },
     "common": {
       "submit": "Submit",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "close": "Close",
+      "confirm": "Confirm"
     }
   },
   "messages": {
@@ -159,7 +161,8 @@
     "blog": {
       "form": {
         "titlePlaceHolder": "Set blog title here...",
-        "titleRequired": "Title is required"
+        "titleRequired": "Title is required",
+        "collectionNameRequired": "Collection name is required"
       },
       "general": {
         "publishBlogSuccess": "Publish blog success, you can view the blog now.",

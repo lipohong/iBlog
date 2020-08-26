@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as _ from 'lodash';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { compose } from 'redux';
@@ -20,6 +20,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import Checkbox from '@material-ui/core/Checkbox';
+import Divider from '@material-ui/core/Divider';
 import Container from '@material-ui/core/Container';
 import Hidden from '@material-ui/core/Hidden';
 import Grid from '@material-ui/core/Grid';
@@ -40,6 +42,7 @@ import { SeverityEnum } from '../../../enums/SeverityEnum';
 import { PaletteTypeEnum } from '../../../enums/PaletteTypeEnum';
 import { setMessage, setProgressOn } from '../../../store/actions/globalActions';
 
+import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
 function ViewBlogPage(props) {
   const { dispatch, t, auth, paletteType } = props;
@@ -48,77 +51,12 @@ function ViewBlogPage(props) {
   const [content, setContent] = useState('');
   const [collections, setCollections] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const collectionForm = useRef('collectionForm');
+  const [collectionName, setCollectionName] = useState('');
   const router = useRouter();
   const { blogId } = router.query;
 
-  const checkLogin = () => {
-    if (!(auth && auth.userId)) {
-      router.push(`/auth/login?from=blog/${blogId}`);
-
-      return false;
-    }
-
-    return true;
-  }
-
-  const handLikeButtonClick = async () => {
-    if (!checkLogin()) return;
-    try {
-      dispatch(setProgressOn(true));
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_COMMENT_API}/likes/blog/${blogId}`,
-        null,
-        {
-          headers: {
-            Authorization: 'Bearer ' + auth.jwt
-          }
-        }
-      );
-      await init();
-    } catch (err) {
-      // show error message
-      dispatch(setMessage({
-        open: true,
-        severity: SeverityEnum.error,
-        message: t(`messages.common.unknownError`)
-      }));
-    }
-    dispatch(setProgressOn(false));
-  }
-
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  }
-
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-  }
-
-  const handCollectButtonClick = async () => {
-    if (!checkLogin()) return;
-    try {
-      dispatch(setProgressOn(true));
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_COMMENT_API}/collections`,
-        {
-          headers: {
-            Authorization: 'Bearer ' + auth.jwt
-          }
-        }
-      );
-      setCollections(data.payload);
-      handleDialogOpen();
-    } catch (err) {
-      // show error message
-      dispatch(setMessage({
-        open: true,
-        severity: SeverityEnum.error,
-        message: t(`messages.common.unknownError`)
-      }));
-    }
-    dispatch(setProgressOn(false));
-  }
-
+  
   const profileSection = () => {
     return (
       <Grid container spacing={1} alignItems="center">
@@ -200,7 +138,229 @@ function ViewBlogPage(props) {
     )
   }
 
-  const init = async () => {
+  const dialogSection = () => {
+    return (
+      <Dialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        className="dialogContainer"
+      >
+        <DialogTitle>Collect Blog</DialogTitle>
+        <DialogContent>
+          <Container maxWidth="sm">
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <ValidatorForm
+                  ref={collectionForm}
+                  onSubmit={handleCollectionNameFormSubmit}
+                >
+                  <Grid container spacing={3} alignItems="center" justify="space-between">
+                    <Grid item>
+                      <TextValidator
+                        name="newCollection"
+                        value={collectionName}
+                        variant="outlined"
+                        fullWidth
+                        validators={['required']}
+                        onChange={handleCollectionNameChange}
+                        errorMessages={[t('messages.blog.form.collectionNameRequired')]}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
+                      >
+                        Add Collection
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </ValidatorForm>
+              </Grid>
+              {
+                collections.map(collection => (
+                  <Grid item xs={12} key={collection['_id']}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={10}>
+                        <div className="collectionName">{collection['name']}</div>
+                        <div className="collectionInfo">{collection['blogIds'].length} blogs collected</div>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Checkbox
+                          checked={collection['blogIds'].indexOf(blogId) !== -1}
+                          onChange={handleCheckBoxChange}
+                          value={collection['_id']}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Divider />
+                  </Grid>
+                ))
+              }
+            </Grid>
+          </Container>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={handleDialogClose} color="inherit">
+              {t(`pages.common.close`)}
+            </Button>
+          </DialogActions>
+      </Dialog>
+    )
+  }
+
+  const checkLogin = () => {
+    if (!(auth && auth.userId)) {
+      router.push(`/auth/login?from=blog/${blogId}`);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  const handLikeButtonClick = async () => {
+    if (!checkLogin()) return;
+    try {
+      dispatch(setProgressOn(true));
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_COMMENT_API}/likes/blog/${blogId}`,
+        null,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
+      await getBlog();
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+    dispatch(setProgressOn(false));
+  }
+
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  }
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  }
+
+  const handleCollectionNameChange = (event) => {
+    const value = event.currentTarget.value;
+    setCollectionName(value);
+  }
+  
+  const handCollectButtonClick = async () => {
+    if (!checkLogin()) return;
+    dispatch(setProgressOn(true));
+    getCollections();
+    dispatch(setProgressOn(false));
+  }
+
+  const getCollections = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_COMMENT_API}/collections`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
+      setCollections(data.payload);
+      handleDialogOpen();
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+  }
+
+  const handleCollectionNameFormSubmit = async () => {
+    dispatch(setProgressOn(true));
+    try {
+      const postData = {
+        name: collectionName
+      }
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_COMMENT_API}/collections`,
+        postData,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
+      setCollectionName('')
+      await getCollections();
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+    dispatch(setProgressOn(false));
+  }
+
+  const handleCheckBoxChange = async (e) => {
+    dispatch(setProgressOn(true));
+    try {
+      const collectionId = e.target.value;
+      const checked = e.target.checked;
+      if (checked) {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_COMMENT_API}/collections/${collectionId}/blog/${blogId}`,
+          null,
+          {
+            headers: {
+              Authorization: 'Bearer ' + auth.jwt
+            }
+          }
+        );
+      } else {
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_COMMENT_API}/collections/${collectionId}/blog/${blogId}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + auth.jwt
+            }
+          }
+        );
+      }
+      await getCollections();
+      await getBlog();
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+    dispatch(setProgressOn(false));
+  }
+
+  const getAuthorInfo = async () => {
+    // get author info
+    let response = await axios.get(`${process.env.NEXT_PUBLIC_USER_API}/users/${blog['userId']}`);
+    const userInfo = response.data.payload;
+    setAuthor(userInfo);
+  }
+
+  const getBlog = async () => {
     dispatch(setProgressOn(true));
     try {
       // get blog info
@@ -216,11 +376,6 @@ function ViewBlogPage(props) {
       setBlog(blogInfo);
       const converter = new QuillDeltaToHtmlConverter(blogInfo['content'], {});
       setContent(converter.convert());
-
-      // get author info
-      response = await axios.get(`${process.env.NEXT_PUBLIC_USER_API}/users/${blogInfo['userId']}`);
-      const userInfo = response.data.payload;
-      setAuthor(userInfo);
     } catch (err) {
       // show error message
       dispatch(setMessage({
@@ -236,9 +391,14 @@ function ViewBlogPage(props) {
   }
 
   useEffect(() => {
-    init();
-
+    getBlog();
   }, [auth]);
+
+  useEffect(() => {
+    if (blog['userId']) {
+      getAuthorInfo();
+    }
+  }, [blog['userId']]);
 
   return (
     <Layout>
@@ -252,9 +412,7 @@ function ViewBlogPage(props) {
               <Grid item xs={12}>
               {
                 blog['cover'] &&
-                <div>
-                  <img className="ql-image" src={`${blog['cover']}`} />
-                </div>
+                <div><img className="ql-image" src={`${blog['cover']}`} /></div>
               }
               </Grid>
               <Grid item xs={12}>
@@ -312,20 +470,7 @@ function ViewBlogPage(props) {
             </Grid>
           </div>
         </Container>
-        <Dialog
-          open={dialogOpen}
-          onClose={handleDialogClose}
-          className="dialogContainer"
-        >
-          <DialogTitle>Collect</DialogTitle>
-          <DialogContent>
-            <Container>
-              <Grid container>
-
-              </Grid>
-            </Container>
-          </DialogContent>
-        </Dialog>
+        {dialogSection()}
       </div>
     </Layout>
   )
@@ -336,8 +481,7 @@ const mapStateToProps = (state) => {
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
     message: global && global.message,
-    auth: auth && auth.auth || null,
-    user: user && user.user || null
+    auth: auth && auth.auth || null
   }
 }
 
