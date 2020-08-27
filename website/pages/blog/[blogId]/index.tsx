@@ -12,10 +12,7 @@ const { i18n, Link, withTranslation } = defaultNextI18Next;
 const QuillDeltaToHtmlConverter = require('quill-delta-to-html').QuillDeltaToHtmlConverter;
 import parse from 'html-react-parser';
 
-const moment = require( "moment" );
-
 // mui
-import Avatar from '@material-ui/core/Avatar';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -37,6 +34,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 
 // components
 import Layout from '../../../components/layout';
+import Profile from '../../../components/blog/profile';
 
 import { SeverityEnum } from '../../../enums/SeverityEnum';
 import { PaletteTypeEnum } from '../../../enums/PaletteTypeEnum';
@@ -53,58 +51,26 @@ function ViewBlogPage(props) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const collectionForm = useRef('collectionForm');
   const [collectionName, setCollectionName] = useState('');
+  const [liked, setLiked] = useState(false);
+  const [likeAmount, setLikeAmount] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [commentAmount, setCommentAmount] = useState(0);
+  const [collected, setCollected] = useState(false);
   const router = useRouter();
   const { blogId } = router.query;
 
-  
-  const profileSection = () => {
-    return (
-      <Grid container spacing={1} alignItems="center">
-        <Grid item>
-          <Link href={`/user/profile/${_.get(author, '_id')}`}>
-            <Avatar src={`${_.get(author, 'userInfo.avatar')}`} style={{ width: '50px', height: '50px', cursor: 'pointer' }}>
-              { !_.get(author, 'userInfo.avatar') && _.get(author, 'username', [])[0] }
-            </Avatar>
-          </Link>
-        </Grid>
-        <Grid item>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Link href={`/user/profile/${_.get(author, '_id')}`}>
-                <span style={{ cursor: 'pointer' }}>{_.get(author, 'username')}</span>
-              </Link>
-              {
-                _.get(author, '_id') !== _.get(auth, 'userId') &&
-                <Button
-                  size="small"
-                  variant="outlined"
-                  style={{ margin: "auto 10px" }}
-                  color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
-                >
-                  Follow
-                </Button>
-              }
-            </Grid>
-            <Grid item xs={12}>
-              <div className="updatedDate">{moment(blog['updatedDate']).format('YYYY-MM-DD')}</div>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    )
-  }
   
   const functionButtons = (textAlign) => {
     return (
       <Grid container justify={textAlign}>
         <Grid item>
-          <Tooltip title={blog['liked'] ? "Unlike" : "Like"}>
+          <Tooltip title={liked ? "Unlike" : "Like"}>
             <IconButton
               onClick={handLikeButtonClick}
               color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
             >
               {
-                blog['liked'] ?
+                liked ?
                 <FavoriteIcon /> :
                 <FavoriteBorderIcon />
               }
@@ -118,7 +84,7 @@ function ViewBlogPage(props) {
               color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
             >
               {
-                blog['collected'] ?
+                collected ?
                 <StarIcon /> :
                 <StarBorderIcon />
               }
@@ -154,22 +120,24 @@ function ViewBlogPage(props) {
                   ref={collectionForm}
                   onSubmit={handleCollectionNameFormSubmit}
                 >
-                  <Grid container spacing={3} alignItems="center" justify="space-between">
-                    <Grid item>
+                  <Grid container spacing={3} alignItems="center">
+                    <Grid item xs={6}>
                       <TextValidator
+                        errorMessages={[t('messages.blog.form.collectionNameRequired')]}
+                        fullWidth
                         name="newCollection"
+                        onChange={handleCollectionNameChange}
+                        placeholder={"Collection Name"}
+                        validators={['required']}
                         value={collectionName}
                         variant="outlined"
-                        fullWidth
-                        validators={['required']}
-                        onChange={handleCollectionNameChange}
-                        errorMessages={[t('messages.blog.form.collectionNameRequired')]}
                       />
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6} style={{ textAlign: 'right' }}>
                       <Button
                         type="submit"
                         variant="contained"
+                        size="small"
                         color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                       >
                         Add Collection
@@ -178,26 +146,28 @@ function ViewBlogPage(props) {
                   </Grid>
                 </ValidatorForm>
               </Grid>
-              {
-                collections.map(collection => (
-                  <Grid item xs={12} key={collection['_id']}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={10}>
-                        <div className="collectionName">{collection['name']}</div>
-                        <div className="collectionInfo">{collection['blogIds'].length} blogs collected</div>
+              <Grid container className="collectionListContainer">
+                {
+                  collections.map(collection => (
+                    <Grid item xs={12} key={collection['_id']}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={10}>
+                          <div className="collectionName">{collection['name']}</div>
+                          <div className="collectionInfo">{collection['blogIds'].length} blogs collected</div>
+                        </Grid>
+                        <Grid item xs={2}>
+                          <Checkbox
+                            checked={collection['blogIds'].indexOf(blogId) !== -1}
+                            onChange={handleCheckBoxChange}
+                            value={collection['_id']}
+                          />
+                        </Grid>
                       </Grid>
-                      <Grid item xs={2}>
-                        <Checkbox
-                          checked={collection['blogIds'].indexOf(blogId) !== -1}
-                          onChange={handleCheckBoxChange}
-                          value={collection['_id']}
-                        />
-                      </Grid>
+                      <Divider />
                     </Grid>
-                    <Divider />
-                  </Grid>
-                ))
-              }
+                  ))
+                }
+              </Grid>
             </Grid>
           </Container>
         </DialogContent>
@@ -220,6 +190,16 @@ function ViewBlogPage(props) {
     return true;
   }
 
+  const checkCollected = (collectionList: string[]) => {
+    for (let collection of collectionList) {
+      if (collection['blogIds'].indexOf(blogId) !== -1) {
+        setCollected(true);
+        return;
+      }
+    }
+    setCollected(false);
+  }
+
   const handLikeButtonClick = async () => {
     if (!checkLogin()) return;
     try {
@@ -233,7 +213,8 @@ function ViewBlogPage(props) {
           }
         }
       );
-      await getBlog();
+      setLiked(!liked);
+      await getLikeAmount();
     } catch (err) {
       // show error message
       dispatch(setMessage({
@@ -261,30 +242,9 @@ function ViewBlogPage(props) {
   const handCollectButtonClick = async () => {
     if (!checkLogin()) return;
     dispatch(setProgressOn(true));
-    getCollections();
+    await getCollections();
+    handleDialogOpen();
     dispatch(setProgressOn(false));
-  }
-
-  const getCollections = async () => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_COMMENT_API}/collections`,
-        {
-          headers: {
-            Authorization: 'Bearer ' + auth.jwt
-          }
-        }
-      );
-      setCollections(data.payload);
-      handleDialogOpen();
-    } catch (err) {
-      // show error message
-      dispatch(setMessage({
-        open: true,
-        severity: SeverityEnum.error,
-        message: t(`messages.common.unknownError`)
-      }));
-    }
   }
 
   const handleCollectionNameFormSubmit = async () => {
@@ -341,7 +301,6 @@ function ViewBlogPage(props) {
         );
       }
       await getCollections();
-      await getBlog();
     } catch (err) {
       // show error message
       dispatch(setMessage({
@@ -351,6 +310,81 @@ function ViewBlogPage(props) {
       }));
     }
     dispatch(setProgressOn(false));
+  }
+
+  const getComments = async () => {
+    try {
+      const commentResponse = await axios.get(`${process.env.NEXT_PUBLIC_COMMENT_API}/comments/blog/${blogId}`);
+      let commentList = commentResponse.data.payload.commentList;
+      let userIds = _.map(commentList, 'userId');
+      // get userInfo for comments
+      const postData = userIds;
+      const userResponse = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users/users`, postData);
+      const userInfoList = userResponse.data.payload;
+      const userInfoMap = _.keyBy(userInfoList, '_id');
+      commentList = commentList.map(comment => ({
+        ...comment,
+        user: userInfoMap[comment['userId']] || {}
+      }))      
+      setComments(commentList);
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+  }
+
+  const getCommentAmount = async () => {
+    try {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_COMMENT_API}/comments/blog/${blogId}/amount`);
+      setCommentAmount(data.payload);
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+  }
+
+  const getLikeAmount = async () => {
+    try {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_COMMENT_API}/likes/blog/${blogId}/amount`);
+      setLikeAmount(data.payload);
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+  }
+
+  const getCollections = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_COMMENT_API}/collections`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
+      setCollections(data.payload);
+      checkCollected(data.payload);
+    } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
   }
 
   const getAuthorInfo = async () => {
@@ -374,6 +408,7 @@ function ViewBlogPage(props) {
       );
       const blogInfo = response.data.payload;
       setBlog(blogInfo);
+      setLiked(blogInfo['liked']);
       const converter = new QuillDeltaToHtmlConverter(blogInfo['content'], {});
       setContent(converter.convert());
     } catch (err) {
@@ -392,6 +427,12 @@ function ViewBlogPage(props) {
 
   useEffect(() => {
     getBlog();
+    getComments();
+    getCommentAmount();
+    getLikeAmount();
+    if (auth.jwt) {
+      getCollections();
+    }
   }, [auth]);
 
   useEffect(() => {
@@ -420,7 +461,13 @@ function ViewBlogPage(props) {
               </Grid>
               <Hidden xsDown>
                 <Grid item xs={8}>
-                  {profileSection()}
+                  <Profile
+                    userId={_.get(author, '_id')}
+                    username={_.get(author, 'username', [])}
+                    avatar={_.get(author, 'userInfo.avatar')}
+                    updatedDate={blog['updatedDate']}
+                    showFollow={false}
+                  />
                 </Grid>
                 <Grid item xs={4}>
                   {functionButtons("flex-end")}
@@ -431,14 +478,33 @@ function ViewBlogPage(props) {
                   {functionButtons("flex-start")}
                 </Grid>
                 <Grid item xs={12}>
-                  {profileSection()}
+                  <Profile
+                    userId={_.get(author, '_id')}
+                    username={_.get(author, 'username', [])}
+                    avatar={_.get(author, 'userInfo.avatar')}
+                    updatedDate={blog['updatedDate']}
+                    showFollow={false}
+                  />
                 </Grid>
               </Hidden>
               <Grid item xs={12}>
                 <div>{parse(content)}</div>
               </Grid>
               <Grid item xs={12}>
-                {functionButtons("flex-end")}
+                <Grid container>
+                  <Grid item xs={12} sm={6}>
+                    <Profile
+                      userId={_.get(author, '_id')}
+                      username={_.get(author, 'username', [])}
+                      avatar={_.get(author, 'userInfo.avatar')}
+                      updatedDate={blog['updatedDate']}
+                      showFollow={true}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    {functionButtons("flex-end")}
+                  </Grid>
+                </Grid>
               </Grid>
               <Grid item xs={12}>
                 <Grid container spacing={3}>
@@ -448,7 +514,7 @@ function ViewBlogPage(props) {
                         <FavoriteIcon color="primary" />
                       </Grid>
                       <Grid item>
-                        {blog['likes']} Likes
+                        {likeAmount} Likes
                       </Grid>
                     </Grid>
                   </Grid>
@@ -458,14 +524,40 @@ function ViewBlogPage(props) {
                       <CommentIcon color="primary" />
                       </Grid>
                       <Grid item>
-                        {blog['comments']} comments
+                        {commentAmount} comments
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                
+                <Grid container spacing={2}>
+                  {
+                    comments.map(comment => (
+                      <Grid item xs={12} key={comment['_id']}>
+                        <Container maxWidth="sm">
+                          <Grid container>
+                            <Grid item>
+                              <Profile
+                                userId={_.get(comment, 'userId')}
+                                username={_.get(comment, 'user.username', [])}
+                                avatar={_.get(comment, 'user.userInfo.avatar')}
+                                updatedDate={comment['updatedDate']}
+                                showFollow={false}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <div style={{ background: "#aaa" }}>
+                                {comment['comment']}
+                              </div>
+                            </Grid>
+                          </Grid>
+                        </Container>
+                        <Divider />
+                      </Grid>
+                    ))
+                  }
+                </Grid>
               </Grid>
             </Grid>
           </div>
@@ -477,11 +569,11 @@ function ViewBlogPage(props) {
 }
 
 const mapStateToProps = (state) => {
-  const { global, auth, user } = state;
+  const { global, auth } = state;
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
     message: global && global.message,
-    auth: auth && auth.auth || null
+    auth: auth && auth.auth
   }
 }
 

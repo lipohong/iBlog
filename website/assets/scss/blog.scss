@@ -30,4 +30,9 @@
     font-size: 18px;
     color: #999;
   }
+  .collectionListContainer {
+    max-height: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
 }
