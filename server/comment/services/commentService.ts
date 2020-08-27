@@ -53,6 +53,17 @@ async function getCommentPagination(expression: object, pageObj: IPageModel, opt
   }
 }
 
+async function getCommentAmount(expression: object): Promise<Number> {
+  try {
+    const total: number = await Comment.countDocuments(expression).lean();
+
+    return total;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
 async function saveNewComment(model: CommentModel): Promise<CommentModel> {
   try {
     const comment: any = await new Comment(model).save();
@@ -75,4 +86,4 @@ async function updateComment(expression: object, updateFields: object): Promise<
   }
 }
 
-export { getComment, getCommentPagination, saveNewComment, updateComment }
+export { getComment, getCommentPagination, saveNewComment, updateComment, getCommentAmount }

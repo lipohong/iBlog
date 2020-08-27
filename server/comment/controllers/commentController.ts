@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import CommentModel  from '../models/comment/class/commentModel';
 import CommentStatus from '../models/comment/enum/commentStatus';
-import { getComment, getCommentPagination, saveNewComment, updateComment } from '../services/commentService';
+import { getComment, getCommentPagination, saveNewComment, updateComment, getCommentAmount } from '../services/commentService';
 
 export class CommentController {
 
@@ -44,6 +44,18 @@ export class CommentController {
       const resultObject = await getCommentPagination(expression, pageObject, null);
 
       return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getCommentAmountByBlogId = async (req: IERequest, res: IEResponse) => {
+    try {
+      let expression: object = { blogId: req.params.blogId, status: CommentStatus.published };
+      const commentAmount = await getCommentAmount(expression);
+
+      return res.success(null, commentAmount);
     }
     catch (err) {
       return res.throwErr(err);

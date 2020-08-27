@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import LikeModel  from '../models/like/class/likeModel';
-import { getLike, getLikePagination, saveNewLike, removeLike } from '../services/likeService';
+import { getLike, getLikePagination, saveNewLike, removeLike, getLikeAmount } from '../services/likeService';
 
 export class LikeController {
 
@@ -21,6 +21,18 @@ export class LikeController {
       resultObject.likeList = resultObject.likeList.map(like => (new LikeModel(like, 'getLikesByBlogId')))
 
       return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getLikesAmountByBlogId = async (req: IERequest, res: IEResponse) => {
+    try {
+      let expression: object = { blogId: req.params.blogId };
+      const likeAmount = await getLikeAmount(expression);
+
+      return res.success(null, likeAmount);
     }
     catch (err) {
       return res.throwErr(err);
