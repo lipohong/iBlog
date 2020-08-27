@@ -5,7 +5,7 @@ import * as nodemailer from 'nodemailer';
 import { IERequest, IEResponse, IJWTSignModel } from '../models/commonModel';
 import globVars from '../models/globalVars';
 import FacebookLoginModel from '../models/user/class/facebookLoginModel';
-import { getUser, getMyInfo, saveNewUser, updateUser } from '../services/userService';
+import { getUser, getMyInfo, saveNewUser, updateUser, getUsers } from '../services/userService';
 import UserModel from '../models/user/class/userModel';
 import Auth from '../utils/auth';
 
@@ -250,6 +250,18 @@ export class UserController {
       }
 
       return res.success(null, new UserModel(userInfo, 'fetch'));
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getUserByIds = async (req: IERequest, res: IEResponse) => {
+    try {
+      const expression = { _id: { $in: req.body } };
+      const userInfoList = await getUsers(expression);
+
+      return res.success(null, userInfoList.map(userInfo => (new UserModel(userInfo, 'fetch'))));
     }
     catch (err) {
       return res.throwErr(err);

@@ -27,6 +27,7 @@ export class userRoute {
     router.get('/', auth(true), this.userController.getMyInfo);
     router.put('/', auth(true), this.userController.update);
     router.get('/:userId', auth(false), this.userController.getUserById);
+    router.post('/users', auth(false), this.userController.getUserByIds);
 
     return router;
   }

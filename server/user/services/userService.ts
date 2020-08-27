@@ -17,6 +17,17 @@ async function getUser(expression: object): Promise<UserModel> {
   }
 }
 
+async function getUsers(expression: object): Promise<UserModel[]> {
+  try {
+    const users: any = await User.find(expression).lean();
+
+    return users;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
 async function getMyInfo(expression: object): Promise<UserModel> {
   try {
     const user: any = await getUser(expression);
@@ -51,4 +62,4 @@ async function updateUser(expression: object, updateFields: object): Promise<any
   }
 }
 
-export { getUser, getMyInfo, saveNewUser, updateUser }
+export { getUser, getMyInfo, saveNewUser, updateUser, getUsers }

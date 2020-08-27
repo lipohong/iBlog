@@ -11,13 +11,13 @@ export default class CommentModel {
   @Expose({ groups: ['get', 'fetch', 'blogIdReturn', 'post', 'put'] })
   public blogId: string;
 
-  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'blogIdReturn', 'post', 'put'] })
   public userId: string;
 
   @Expose({ groups: ['get', 'fetch', 'blogIdReturn', 'post', 'put'] })
   public comment: string;
 
-  @Expose({ groups: ['get', 'fetch', 'blogIdReturn', 'post', 'put'] })
+  @Expose({ groups: ['get', 'fetch', 'post', 'put'] })
   @IsIn(Object.values(CommentStatus), { message: 'ex_incorrect_comment_status' })
   @ValidateIf(o => o.status && o.status !== null)
   public status: string;
