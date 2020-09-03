@@ -20,7 +20,13 @@ const UserSchema = new Schema({
     default: false,
   },
   verifyCode: String,
-  userInfo: UserInfo,
+  userInfo: {
+    type: UserInfo,
+    default: {
+      avatar: '',
+      description: ''
+    }
+  },
 }, { versionKey: false, timestamps: { createdAt: 'createdDate', updatedAt: 'updatedDate' } });
 
 export default UserSchema;
