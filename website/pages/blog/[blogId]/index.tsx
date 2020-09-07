@@ -25,6 +25,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -43,17 +44,19 @@ import { setMessage, setProgressOn } from '../../../store/actions/globalActions'
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
 function ViewBlogPage(props) {
-  const { dispatch, t, auth, paletteType } = props;
+  const { dispatch, t, auth, user, paletteType } = props;
   const [blog, setBlog] = useState({});
   const [author, setAuthor] = useState({});
   const [content, setContent] = useState('');
   const [collections, setCollections] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const collectionForm = useRef('collectionForm');
+  const commentForm = useRef('commentForm');
   const [collectionName, setCollectionName] = useState('');
   const [liked, setLiked] = useState(false);
   const [likeAmount, setLikeAmount] = useState(0);
   const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
   const [commentAmount, setCommentAmount] = useState(0);
   const [collected, setCollected] = useState(false);
   const router = useRouter();
@@ -104,7 +107,7 @@ function ViewBlogPage(props) {
     )
   }
 
-  const dialogSection = () => {
+  const collectionSection = () => {
     return (
       <Dialog
         open={dialogOpen}
@@ -180,6 +183,90 @@ function ViewBlogPage(props) {
     )
   }
 
+  const commentSection = () => {
+    
+    return (
+      <Grid container spacing={2}>
+        {
+          comments.map(comment => (
+            <Grid item xs={12} key={comment['_id']}>
+              <Container maxWidth="sm">
+                <Grid container>
+                  <Grid item>
+                    <Profile
+                      userId={_.get(comment, 'userId')}
+                      username={_.get(comment, 'user.username', [])}
+                      avatar={_.get(comment, 'user.userInfo.avatar')}
+                      updatedDate={comment['updatedDate']}
+                      showFollow={false}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <div style={{ background: "#aaa" }}>
+                      {comment['comment']}
+                    </div>
+                  </Grid>
+                </Grid>
+                <Divider style={{ marginTop: '20px' }} />
+              </Container>
+            </Grid>
+          ))
+        }
+      </Grid>
+    )
+  }
+
+  const newCommentSection = () => {
+    
+    return (
+      <Container maxWidth="sm">
+        {
+          user && user._id &&
+          <Grid container alignItems="center">
+            <Grid item xs={4}>
+              <Profile
+                userId={_.get(user, 'userId')}
+                username={_.get(user, 'username', [])}
+                avatar={_.get(user, 'userInfo.avatar')}
+                showFollow={false}
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <ValidatorForm
+                ref={commentForm}
+                onSubmit={handleNewCommentSubmit}
+              >
+                <TextValidator
+                  value={newComment}
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={5}
+                  onChange={handlenewCommentChange}
+                  validators={['required']}
+                  errorMessages={['Comment shall not be empty']}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Button variant="outlined" type="submit" color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }>Submit</Button>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              </ValidatorForm>
+            </Grid>
+          </Grid>
+        }
+        {
+          !(user && user._id) &&
+          <div>
+            <span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={checkLogin}>Log in</span> and leave your comment here.
+          </div>
+        }
+      </Container>
+    )
+  }
+ 
   const checkLogin = () => {
     if (!(auth && auth.userId)) {
       router.push(`/auth/login?from=blog/${blogId}`);
@@ -302,6 +389,42 @@ function ViewBlogPage(props) {
       }
       await getCollections();
     } catch (err) {
+      // show error message
+      dispatch(setMessage({
+        open: true,
+        severity: SeverityEnum.error,
+        message: t(`messages.common.unknownError`)
+      }));
+    }
+    dispatch(setProgressOn(false));
+  }
+
+  const handlenewCommentChange = (event) => {
+    const value = event.currentTarget.value;
+    setNewComment(value);
+  }
+
+  const handleNewCommentSubmit = async () => {
+    dispatch(setProgressOn(true));
+    try {
+      const postData = {
+        comment: newComment,
+        blogId
+      }
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_COMMENT_API}/comments`,
+        postData,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.jwt
+          }
+        }
+      );
+      // reset new comment value
+      setNewComment('');
+      // refresh comments
+      await getComments();
+    } catch {
       // show error message
       dispatch(setMessage({
         open: true,
@@ -449,7 +572,7 @@ function ViewBlogPage(props) {
       <div className="blog">
         <Container maxWidth="md" className="container">
           <div>
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
               <Grid item xs={12}>
               {
                 blog['cover'] &&
@@ -531,49 +654,27 @@ function ViewBlogPage(props) {
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <Grid container spacing={2}>
-                  {
-                    comments.map(comment => (
-                      <Grid item xs={12} key={comment['_id']}>
-                        <Container maxWidth="sm">
-                          <Grid container>
-                            <Grid item>
-                              <Profile
-                                userId={_.get(comment, 'userId')}
-                                username={_.get(comment, 'user.username', [])}
-                                avatar={_.get(comment, 'user.userInfo.avatar')}
-                                updatedDate={comment['updatedDate']}
-                                showFollow={false}
-                              />
-                            </Grid>
-                            <Grid item>
-                              <div style={{ background: "#aaa" }}>
-                                {comment['comment']}
-                              </div>
-                            </Grid>
-                          </Grid>
-                        </Container>
-                        <Divider />
-                      </Grid>
-                    ))
-                  }
-                </Grid>
+                {commentSection()}
+              </Grid>
+              <Grid item xs={12}>
+                {newCommentSection()}
               </Grid>
             </Grid>
           </div>
         </Container>
-        {dialogSection()}
+        {collectionSection()}
       </div>
     </Layout>
   )
 }
 
 const mapStateToProps = (state) => {
-  const { global, auth } = state;
+  const { global, auth, user } = state;
   return {
     paletteType: global && global.paletteType || PaletteTypeEnum.light,
     message: global && global.message,
-    auth: auth && auth.auth
+    auth: auth && auth.auth,
+    user: user && user.user || null
   }
 }
 

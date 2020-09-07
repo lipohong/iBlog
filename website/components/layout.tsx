@@ -1,4 +1,4 @@
-// import Link from 'next/link';
+import * as _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
@@ -254,8 +254,8 @@ function Layout(props) {
               {
                 user && user._id ?
                 <IconButton onClick={handleProfileMenuOpen} color="inherit">
-                  <Avatar alt="t" src={`${user.userInfo.avatar}`} style={{ width: '30px', height: '30px' }} >
-                    { !user.userInfo.avatar && user.username[0] }
+                  <Avatar src={`${_.get(user, 'userInfo.avatar')}`} style={{ width: '30px', height: '30px' }} >
+                    { !_.get(user, 'userInfo.avatar') && user.username[0] }
                   </Avatar>
                 </IconButton> :
                 <Link href="/auth/login">

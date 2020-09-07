@@ -34,7 +34,7 @@ function AuthorProfile(props) {
           </Grid>
           <Grid item xs={12}>
             {
-              (!showFollow ||( showFollow && userId === _.get(auth, 'userId'))) &&
+              (!showFollow && updatedDate ||( showFollow && userId === _.get(auth, 'userId') && updatedDate)) &&
               <div className="updatedDate">{moment(updatedDate).format('YYYY-MM-DD HH:mm:ss')}</div>
             }
             {
