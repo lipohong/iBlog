@@ -59,7 +59,18 @@
     "blog": {
       "postBlog": "發 Blog",
       "saveAsDraft": "保存為草稿",
-      "publish": "發佈 Blog"
+      "publish": "發佈 Blog",
+      "like": "讚這 blog",
+      "disLike": "取消讚 blog",
+      "collect": "收藏",
+      "forwardToFacebook": "轉發到 facebook",
+      "collectBlog": "收藏 Blog",
+      "collectionName": "收藏夾名稱",
+      "addCollection": "新增收藏",
+      "commentLogin": "登錄",
+      "leaveComment": "之後方可留下評論",
+      "likes": "個讚",
+      "comments": "個評論"
     },
     "common": {
       "submit": "提交",
@@ -162,7 +173,8 @@
       "form": {
         "titlePlaceHolder": "在此填寫標題...",
         "titleRequired": "請填寫標題",
-        "collectionNameRequired": "請填寫收藏夾名"
+        "collectionNameRequired": "請填寫收藏夾名",
+        "commentRequired": "請輸入評論内容"
       },
       "general": {
         "publishBlogSuccess": "Blog發佈成功，現在所有人可瀏覽blog",

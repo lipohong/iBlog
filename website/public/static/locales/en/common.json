@@ -59,7 +59,18 @@
     "blog": {
       "postBlog": "Post Blog",
       "saveAsDraft": "Save As Draft",
-      "publish": "Publish Blog"
+      "publish": "Publish Blog",
+      "like": "Like the blog",
+      "disLike": "Cancel like the blog",
+      "collect": "Collect",
+      "forwardToFacebook": "Forward to facebook",
+      "collectBlog": "Collect Blog",
+      "collectionName": "Collection Name",
+      "addCollection": "Add Collection",
+      "commentLogin": "Log in",
+      "leaveComment": "and leave your comment here.",
+      "likes": "likes",
+      "comments": "comments"
     },
     "common": {
       "submit": "Submit",
@@ -162,7 +173,8 @@
       "form": {
         "titlePlaceHolder": "Set blog title here...",
         "titleRequired": "Title is required",
-        "collectionNameRequired": "Collection name is required"
+        "collectionNameRequired": "Collection name is required",
+        "commentRequired": "Comment shall not be empty"
       },
       "general": {
         "publishBlogSuccess": "Publish blog success, you can view the blog now.",

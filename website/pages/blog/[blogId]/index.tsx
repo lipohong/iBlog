@@ -67,7 +67,7 @@ function ViewBlogPage(props) {
     return (
       <Grid container justify={textAlign}>
         <Grid item>
-          <Tooltip title={liked ? "Unlike" : "Like"}>
+          <Tooltip title={liked ? t('pages.blog.disLike') : t('pages.blog.like')}>
             <IconButton
               onClick={handLikeButtonClick}
               color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
@@ -81,7 +81,7 @@ function ViewBlogPage(props) {
           </Tooltip>
         </Grid>
         <Grid item>
-          <Tooltip title="Collect">
+          <Tooltip title={t('pages.blog.collect')}>
             <IconButton
               onClick={handCollectButtonClick}
               color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
@@ -95,7 +95,7 @@ function ViewBlogPage(props) {
           </Tooltip>
         </Grid>
         <Grid item>
-          <Tooltip title="Forward to facebook">
+          <Tooltip title={t('pages.blog.forwardToFacebook')}>
            <IconButton
               color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
             >
@@ -114,7 +114,7 @@ function ViewBlogPage(props) {
         onClose={handleDialogClose}
         className="dialogContainer"
       >
-        <DialogTitle>Collect Blog</DialogTitle>
+        <DialogTitle>{t('pages.blog.collectBlog')}</DialogTitle>
         <DialogContent>
           <Container maxWidth="sm">
             <Grid container spacing={2}>
@@ -130,7 +130,7 @@ function ViewBlogPage(props) {
                         fullWidth
                         name="newCollection"
                         onChange={handleCollectionNameChange}
-                        placeholder={"Collection Name"}
+                        placeholder={t('pages.blog.collectionName')}
                         validators={['required']}
                         value={collectionName}
                         variant="outlined"
@@ -143,7 +143,7 @@ function ViewBlogPage(props) {
                         size="small"
                         color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                       >
-                        Add Collection
+                       {t('pages.blog.addCollection')}
                       </Button>
                     </Grid>
                   </Grid>
@@ -156,7 +156,7 @@ function ViewBlogPage(props) {
                       <Grid container spacing={2}>
                         <Grid item xs={10}>
                           <div className="collectionName">{collection['name']}</div>
-                          <div className="collectionInfo">{collection['blogIds'].length} blogs collected</div>
+                          <div className="collectionInfo">{collection['blogIds'].length} blog(s)</div>
                         </Grid>
                         <Grid item xs={2}>
                           <Checkbox
@@ -191,8 +191,8 @@ function ViewBlogPage(props) {
           comments.map(comment => (
             <Grid item xs={12} key={comment['_id']}>
               <Container maxWidth="sm">
-                <Grid container>
-                  <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item xs={4}>
                     <Profile
                       userId={_.get(comment, 'userId')}
                       username={_.get(comment, 'user.username', [])}
@@ -201,10 +201,10 @@ function ViewBlogPage(props) {
                       showFollow={false}
                     />
                   </Grid>
-                  <Grid item>
-                    <div style={{ background: "#aaa" }}>
+                  <Grid item xs={8}>
+                    <pre style={{ fontSize: "16px", margin: 0, background: paletteType === PaletteTypeEnum.light ? '#ddd' : '#666' }}>
                       {comment['comment']}
-                    </div>
+                    </pre>
                   </Grid>
                 </Grid>
                 <Divider style={{ marginTop: '20px' }} />
@@ -244,11 +244,11 @@ function ViewBlogPage(props) {
                   rows={5}
                   onChange={handlenewCommentChange}
                   validators={['required']}
-                  errorMessages={['Comment shall not be empty']}
+                  errorMessages={[t('messages.blog.form.commentRequired')]}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Button variant="outlined" type="submit" color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }>Submit</Button>
+                        <Button variant="outlined" type="submit" color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }>{t('pages.common.submit')}</Button>
                       </InputAdornment>
                     )
                   }}
@@ -259,8 +259,8 @@ function ViewBlogPage(props) {
         }
         {
           !(user && user._id) &&
-          <div>
-            <span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={checkLogin}>Log in</span> and leave your comment here.
+          <div style={{ textAlign: "center" }}>
+            <span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={checkLogin}>{t('pages.blog.commentLogin')}</span> {t('pages.blog.leaveComment')}
           </div>
         }
       </Container>
@@ -424,6 +424,7 @@ function ViewBlogPage(props) {
       setNewComment('');
       // refresh comments
       await getComments();
+      await getCommentAmount();
     } catch {
       // show error message
       dispatch(setMessage({
@@ -637,7 +638,7 @@ function ViewBlogPage(props) {
                         <FavoriteIcon color="primary" />
                       </Grid>
                       <Grid item>
-                        {likeAmount} Likes
+                        {likeAmount} {t('pages.blog.likes')}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -647,7 +648,7 @@ function ViewBlogPage(props) {
                       <CommentIcon color="primary" />
                       </Grid>
                       <Grid item>
-                        {commentAmount} comments
+                        {commentAmount} {t('pages.blog.comments')}
                       </Grid>
                     </Grid>
                   </Grid>
