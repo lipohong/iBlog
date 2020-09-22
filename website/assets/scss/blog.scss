@@ -12,6 +12,7 @@
     .ql-image {
       width: 100%;
       height: auto;
+      min-width: 35px;
     }
     .updatedDate {
       color: #999
@@ -19,6 +20,9 @@
   }
   .MuiButton-root {
     text-transform: none;
+  }
+  .ql-toolbar {
+    background-color: #ddd;
   }
 }
 .dialogContainer {

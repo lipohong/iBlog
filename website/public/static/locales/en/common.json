@@ -58,6 +58,7 @@
     },
     "blog": {
       "postBlog": "Post Blog",
+      "discard": "Discard",
       "saveAsDraft": "Save As Draft",
       "publish": "Publish Blog",
       "like": "Like the blog",

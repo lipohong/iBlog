@@ -45,9 +45,9 @@ function CreateBlogPage(props) {
   
       [{ size: ['small', false, 'large', 'huge'] }],
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ['link', 'image'],
+      ['link'],
+      ['image'],
       [{ color: [] }, { background: [] }],
-  
       ['clean'],
     ],
     clipboard: {
@@ -199,10 +199,19 @@ function CreateBlogPage(props) {
                       <div ref={quillRef} />
                     </div>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} style={{ textAlign: 'right' }}>
+                    <Button
+                        variant="outlined"
+                        type="submit"
+                        style={{ marginLeft: '10px' }}
+                        color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
+                      >
+                      {t('pages.blog.discard')}
+                    </Button>
                     <Button
                       variant="contained"
                       type="submit"
+                      style={{ marginLeft: '10px' }}
                       color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
                     >
                       {t('pages.blog.saveAsDraft')}
@@ -210,6 +219,7 @@ function CreateBlogPage(props) {
                     <Button
                       variant="contained"
                       type="submit"
+                      style={{ marginLeft: '10px' }}
                       color={ paletteType === PaletteTypeEnum.light ? 'primary' : 'default' }
                     >
                       {t('pages.blog.publish')}

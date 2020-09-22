@@ -58,6 +58,7 @@
     },
     "blog": {
       "postBlog": "發 Blog",
+      "discard": "丟棄",
       "saveAsDraft": "保存為草稿",
       "publish": "發佈 Blog",
       "like": "讚這 blog",
