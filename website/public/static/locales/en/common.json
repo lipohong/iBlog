@@ -58,6 +58,21 @@
     },
     "blog": {
       "postBlog": "Post Blog",
+      "categories": {
+        "categories": "Categories",
+        "dataStructure": "Data Structure",
+        "algorithm": "Algorithm",
+        "designPattern": "Design Pattern",
+        "programming": "Programming",
+        "frontend": "Frontend",
+        "framework": "Framework",
+        "UIlibrary": "UI Library",
+        "backend": "Backend",
+        "devOps": "Dev Ops",
+        "networking": "Networking",
+        "life": "Life",
+        "other": "Other"
+      },
       "discard": "Discard",
       "saveAsDraft": "Save As Draft",
       "publish": "Publish Blog",

@@ -17,6 +17,11 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import Chip from '@material-ui/core/Chip';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 // components
 import Layout from '../../components/layout';
@@ -30,7 +35,8 @@ import { setMessage, setProgressOn } from '../../store/actions/globalActions';
 
 function CreateBlogPage(props) {
   const { dispatch, t, auth, paletteType } = props;
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState<string>('');
+  const [categories, setCategories] = useState<string[]>([]);
   const inputForm = useRef('form');
   const router = useRouter();
 
@@ -64,9 +70,28 @@ function CreateBlogPage(props) {
   ]
   const { quill, quillRef } = useQuill({ theme, modules, formats });
 
-  const handleTitleChange = (event) => {
+  const categoriesOptions = [
+    t('pages.blog.categories.dataStructure'),
+    t('pages.blog.categories.algorithm'),
+    t('pages.blog.categories.designPattern'),
+    t('pages.blog.categories.programming'),
+    t('pages.blog.categories.frontend'),
+    t('pages.blog.categories.framework'),
+    t('pages.blog.categories.UIlibrary'),
+    t('pages.blog.categories.backend'),
+    t('pages.blog.categories.devOps'),
+    t('pages.blog.categories.networking'),
+    t('pages.blog.categories.life'),
+    t('pages.blog.categories.other')
+  ];
+
+  const handleTitleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const value = event.currentTarget.value;
-    setTitle(value);
+    setTitle(value as string);
+  }
+
+  const handleCategoriesChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setCategories(event.target.value as string[]);
   }
 
   const uploadImage = () => {
@@ -199,11 +224,33 @@ function CreateBlogPage(props) {
                       <div ref={quillRef} />
                     </div>
                   </Grid>
+                  <Grid item xs={12} sm={8} md={6}>
+                    <FormControl fullWidth>
+                      {t('pages.blog.categories.categories')}
+                      <Select
+                        multiple
+                        value={categories}
+                        onChange={handleCategoriesChange}
+                        input={<OutlinedInput id="select-multiple-chip" />}
+                        renderValue={(selected) => (
+                          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                            {(selected as string[]).map((value) => (
+                              <Chip key={value} label={value} style={{ margin: 2 }} />
+                            ))}
+                          </div>
+                        )}
+                      >
+                        {categoriesOptions.map((category) => (
+                          <MenuItem key={category} value={category}>
+                            {category}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
                   <Grid item xs={12} style={{ textAlign: 'right' }}>
                     <Button
                         variant="outlined"
-                        type="submit"
-                        style={{ marginLeft: '10px' }}
                         color={ paletteType === PaletteTypeEnum.light ? 'secondary' : 'default' }
                       >
                       {t('pages.blog.discard')}

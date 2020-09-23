@@ -58,6 +58,21 @@
     },
     "blog": {
       "postBlog": "發 Blog",
+      "categories": {
+        "categories": "分類",
+        "dataStructure": "資料結構",
+        "algorithm": "演算法",
+        "designPattern": "設計模式",
+        "programming": "程式語言",
+        "frontend": "前端",
+        "framework": "框架",
+        "UIlibrary": "使用者界面程式庫",
+        "backend": "後端",
+        "devOps": "開發維運",
+        "networking": "網絡",
+        "life": "程式員生活",
+        "other": "無分類"
+      },
       "discard": "丟棄",
       "saveAsDraft": "保存為草稿",
       "publish": "發佈 Blog",
