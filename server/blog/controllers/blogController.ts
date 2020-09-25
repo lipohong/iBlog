@@ -14,7 +14,7 @@ export class BlogController {
       const blog = await getBlog(expression);
       const userId = _.get(req, 'state.jwtPayload.userId');
       const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
-      if (blog.userId !== userId || !isAdmin) {
+      if (blog.userId !== userId && !isAdmin) {
         if (blog.status !== BlogStatus.published) {
           throw new Error('ex_cannot_find_blog');
         }
