@@ -1,0 +1,11 @@
+// global style setting and import file
+
+@import './home.scss';
+
+body {
+    margin: 0;
+    padding: 0;
+    .v-btn {
+        text-transform: none;
+    }
+}

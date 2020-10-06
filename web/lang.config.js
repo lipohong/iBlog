@@ -1,9 +1,9 @@
-import zh from './assets/locales/zh/zh-tc.ts';
+import zh from './assets/locales/zh/zh-hk.ts';
 import en from './assets/locales/en/en-us.ts';
 
 export default {
   locales: ['en', 'zh'],
-  strategy: 'prefix_and_default',
+  strategy: 'prefix',
   defaultLocale: 'en',
   vueI18n: {
     fallbackLocale: 'en',
