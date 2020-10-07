@@ -7,10 +7,25 @@
                 <v-menu open-on-hover bottom offset-y>
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn v-bind="attrs" v-on="on" icon>
+                            <v-icon>mdi-translate</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list :color="secondaryColor">
+                        <v-list-item link @click="changeLanguage" data-language="en">
+                            <v-list-item-title style="color: #fff">English</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="changeLanguage" data-language="zh">
+                            <v-list-item-title style="color: #fff">中文繁體</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <v-menu open-on-hover bottom offset-y>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn v-bind="attrs" v-on="on" icon>
                             <v-icon>mdi-palette</v-icon>
                         </v-btn>
                     </template>
-                    <v-list color="default">
+                    <v-list :color="secondaryColor">
                         <v-list-item
                             link
                             v-for="(item, index) in light"
@@ -31,7 +46,7 @@
                     <v-icon>mdi-dots-vertical</v-icon>
                 </v-btn>
             </v-app-bar>
-            <v-progress-linear indeterminate :color="secondaryColor"></v-progress-linear>
+            <v-progress-linear indeterminate :color="secondaryColor" :active="$store.state.global.progressBar"></v-progress-linear>
         </div>
         <Nuxt />
     </v-app>
@@ -58,6 +73,10 @@
                 this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
                 Cookies.set('mode', this.$vuetify.theme.dark ? 'dark' : 'light');
                 this.$store.dispatch('mode/setMode', { mode: this.$vuetify.theme.dark ? 'dark' : 'light' });
+            },
+            changeLanguage(e) {
+                const language = e.currentTarget.dataset.language;
+                this.$i18n.setLocale(language);
             }
         },
         computed: {
