@@ -1,11 +1,10 @@
 <template>
     <div class="home">
-        <v-btn color="primary" @click="jump">Hello World {{ $t(`welcome`) }}</v-btn>
+        <v-btn color="error" @click="jump">Hello World {{ $t(`welcome`) }}</v-btn>
+        <v-btn color="warning">Change</v-btn>
     </div>
 </template>
 <script>
-    import themes from '../assets/style/themes/themes';
-
     export default {
         methods: {
             jump() {
@@ -13,11 +12,6 @@
                     name: `user-profile___${this.$i18n.locale}`
                 })
             }
-        },
-        mounted() {
-            this.$vuetify.theme.themes = themes[2]
-            console.log(themes[2]);
-            console.log(this.$vuetify.theme.themes);
         }
     }
 </script>

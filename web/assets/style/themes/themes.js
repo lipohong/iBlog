@@ -1,38 +1,31 @@
-import colors from 'vuetify/lib/util/colors';
-
-const dark = {
-    primary: colors.grey.darken1,
-    secondary: colors.grey.lighten1,
-    accent: colors.shades.white,
-    error: colors.red.accent4,
+const defaultSettings = {
+    success: "#4CAF50",  // green
+    warning: "#FB8C00",  // orange darken-1
+    error: "#FF5252",  // red accent-2
+    info: "#2196F3",  // blue
+    accent: "#82B1FF"  // blue accent-1
 }
 
-export default [
+export const dark = {
+    primary: "#424242",  // grey darken-3
+    secondary: "#757575",  // grey darken-1
+    ...defaultSettings
+}
+
+export const light = [
     {
-        light: {
-            primary: colors.blue.darken1,
-            secondary: colors.blue.lighten1,
-            accent: colors.shades.black,
-            error: colors.red.accent3,
-        },
-        dark
+        primary: "#1565C0",  // blue darken-3
+        secondary: "#1E88E5"  // blue darken-1
     },
     {
-        light: {
-            primary: colors.green.darken1,
-            secondary: colors.green.lighten1,
-            accent: colors.shades.black,
-            error: colors.red.accent3,
-        },
-        dark
+        primary: "#00695C",  // teal darken-3
+        secondary: "#00897B"  // teal darken-1
     },
     {
-        light: {
-            primary: colors.orange.darken1,
-            secondary: colors.orange.lighten1,
-            accent: colors.shades.black,
-            error: colors.red.accent3,
-        },
-        dark
-    }
-]
+        primary: "#4E342E",  // brown darken-3
+        secondary: "#6D4C41"  // brown darken-1
+    },
+].map((item) => ({
+    ...item,
+    ...defaultSettings
+}))
