@@ -50,9 +50,10 @@
         </div>
         <Nuxt />
         <v-snackbar
-            v-model="$store.state.global.snackBarOpen"
+            :value="$store.state.global.snackBarOpen"
             :color="$store.state.global.snackBarColor"
             timeout="4000"
+            @input="closeSnackBar"
         >
             {{ $store.state.global.snackBarMessage }}
         </v-snackbar>
@@ -92,6 +93,15 @@
                         from: this.$route.path
                     }
                 })
+            },
+            closeSnackBar() {
+                this.$store.dispatch('global/setSnackBar', {
+                    snackBar:{
+                        open: false,
+                        color: '',
+                        message: ''
+                    }
+                });
             }
         },
         computed: {
