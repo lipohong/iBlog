@@ -1,11 +1,19 @@
 // global style setting and import file
-
-@import './home.scss';
-
 body {
     margin: 0;
     padding: 0;
     .v-btn {
         text-transform: none;
     }
+    .title-1 {
+        font-size: x-large;
+        font-weight: bolder;
+    }
+    .title-2 {
+        font-size: large;;
+    }
 }
+
+@import './home.scss';
+@import './auth.scss';
+

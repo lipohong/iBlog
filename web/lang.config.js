@@ -1,5 +1,5 @@
-import zh from './assets/locales/zh/zh-hk.ts';
-import en from './assets/locales/en/en-us.ts';
+import zh from './assets/locales/zh/zh-hk.js';
+import en from './assets/locales/en/en-us.js';
 
 export default {
   locales: ['en', 'zh'],

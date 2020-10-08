@@ -1,5 +1,5 @@
-export default function ( { store, redirect } ) {
-    if ( !store.state.auth.accessToken ) {
-        return redirect( `/` )
+export default function ( { store, redirect, app, route } ) {
+    if (!store.state.authentication.jwt) {
+        return redirect( `/${app.i18n.locale}/auth/login?from=${route.path}` )
     }
 }

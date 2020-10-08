@@ -1,4 +1,5 @@
 import I18N from './lang.config';
+require('dotenv').config();
 
 export default {
     modules: [
@@ -18,8 +19,15 @@ export default {
     },
     head: {
         meta: [
-          { charset: 'utf-8' },
-          { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui' },
+            { charset: 'utf-8' },
+            { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui' },
         ]
-      }
+    },
+    env: {
+        aesSecrect: process.env.AES_SECRECT,
+        userApi: process.env.USER_API,
+        fileApi: process.env.FILE_API,
+        blogApi: process.env.BLOG_API,
+        commentApi: process.env.COMMENT_API,
+    }
 }

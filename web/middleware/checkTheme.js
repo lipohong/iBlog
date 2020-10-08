@@ -1,6 +1,6 @@
 const cookie = require('cookie');
 
-export default function ({ req, res, store, $vuetify }) {
+export default function ({ req, res, store }) {
     if (process.server) {
         const { theme } = cookie.parse(req.headers.cookie || '');
         if (!theme) {

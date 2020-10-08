@@ -1,8 +1,8 @@
 <template>
     <v-app>
         <div>
-            <v-app-bar :color="primaryColor" dense flat dark>
-                <v-toolbar-title>iBlog</v-toolbar-title>
+            <v-app-bar :color="primaryColor" flat dark>
+                <v-toolbar-title style="cursor: pointer" @click="$router.push({ path: `/${$i18n.locale}` })">iBlog</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-menu open-on-hover bottom offset-y>
                     <template v-slot:activator="{ on, attrs }">
@@ -42,13 +42,20 @@
                     <v-icon v-if="$store.state.mode.mode === 'light'">mdi-brightness-5</v-icon>
                     <v-icon v-else>mdi-brightness-4</v-icon>
                 </v-btn>
-                <v-btn icon>
-                    <v-icon>mdi-dots-vertical</v-icon>
+                <v-btn icon @click="redirectToLogin">
+                    <v-icon>mdi-account-circle</v-icon>
                 </v-btn>
             </v-app-bar>
             <v-progress-linear indeterminate :color="secondaryColor" :active="$store.state.global.progressBar"></v-progress-linear>
         </div>
         <Nuxt />
+        <v-snackbar
+            v-model="$store.state.global.snackBarOpen"
+            :color="$store.state.global.snackBarColor"
+            timeout="4000"
+        >
+            {{ $store.state.global.snackBarMessage }}
+        </v-snackbar>
     </v-app>
 </template>
 <script>
@@ -77,6 +84,14 @@
             changeLanguage(e) {
                 const language = e.currentTarget.dataset.language;
                 this.$i18n.setLocale(language);
+            },
+            redirectToLogin() {
+                this.$router.push({
+                    name: `auth-login___${this.$i18n.locale}`,
+                    query: {
+                        from: this.$route.path
+                    }
+                })
             }
         },
         computed: {
