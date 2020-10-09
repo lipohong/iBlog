@@ -7,6 +7,7 @@ export default {
         '@nuxtjs/axios',
         ['nuxt-i18n', I18N]
     ],
+    plugins: ['@/plugins/axios.js'],
     css: [
         './assets/style/scss/index.scss'
     ],

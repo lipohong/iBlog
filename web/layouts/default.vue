@@ -42,7 +42,28 @@
                     <v-icon v-if="$store.state.mode.mode === 'light'">mdi-brightness-5</v-icon>
                     <v-icon v-else>mdi-brightness-4</v-icon>
                 </v-btn>
-                <v-btn icon @click="redirectToLogin">
+                <v-menu open-on-hover bottom offset-y v-if="$store.state.user.user._id" >
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-avatar v-bind="attrs" v-on="on" size="35">
+                            <img :src="$store.state.user.user.userInfo.avatar" :alt="$store.state.user.user.username[0]">
+                        </v-avatar>
+                    </template>
+                    <v-list :color="secondaryColor">
+                        <v-list-item link @click="redirectToUserProfile">
+                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.profileManagement`) }}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="redirectToBlogCreate">
+                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.postBlog`) }}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="redirectToBlogManagement">
+                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.blogsManagement`) }}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link @click="logOut">
+                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.logOut`) }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <v-btn v-else icon @click="redirectToLogin">
                     <v-icon>mdi-account-circle</v-icon>
                 </v-btn>
             </v-app-bar>
@@ -92,7 +113,26 @@
                     query: {
                         from: this.$route.path
                     }
-                })
+                });
+            },
+            redirectToUserProfile() {
+                this.$router.push({ name: `user-profile___${this.$i18n.locale}` })
+            },
+            redirectToBlogCreate() {
+                this.$router.push({ name: `blog-create___${this.$i18n.locale}` })
+            },
+            redirectToBlogManagement() {
+                this.$router.push({ name: `blog___${this.$i18n.locale}` })
+            },
+            logOut() {
+                this.$store.dispatch('authentication/resetAuth');   // reset auth info
+                this.$store.dispatch('user/resetUser');  // reset user info
+                this.$router.push({
+                    name: `auth-login___${this.$i18n.locale}`,
+                    query: {
+                        from: this.$route.path
+                    }
+                });
             },
             closeSnackBar() {
                 this.$store.dispatch('global/setSnackBar', {

@@ -36,7 +36,7 @@
 <script>
     import * as crypto from 'crypto-js';
     import * as _ from 'lodash';
-    import axios from 'axios';
+    import * as Cookies from 'js-cookie';
 
     export default {
         data() {
@@ -81,9 +81,8 @@
                 return encryptedPassword;
             },
             async decryptAES (encryptedPassword) {
-                const bytes = crypto.AES.decrypt(encryptedPassword, process.env.NEXT_PUBLIC_AES_SECRECT);
+                const bytes = crypto.AES.decrypt(encryptedPassword, process.env.aesSecrect);
                 const decryptPassword = bytes.toString(crypto.enc.Utf8);
-
                 if (!decryptPassword) {
                     throw new Error('ex_incorrect_password');
                 }
@@ -91,16 +90,21 @@
                 return decryptPassword;
             },
             async sumbitLoginForm () {
+                if (!this.$refs.loginForm.validate()) return
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });
                 try {
                     const postData = {
-                        email,
-                        password: await this.encryptAES(password)
+                        email: this.email,
+                        password: await this.encryptAES(this.password)
                     }
-                    const { data } = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/users`, postData);
-                    const auth = {
-                        userId: data.payload.userId,
-                        jwt: data.payload.jwt
+                    await this.$store.dispatch('authentication/logIn', { postData });  // login
+                    await this.$store.dispatch('user/getAndSetUserInfo', { userId: this.$store.state.authentication.userId });  // get user info
+                    
+                    // save logIn data to cookies if rememberMe checked
+                    if (this.rememberMe) {
+                        Cookies.set('rememberMe', JSON.stringify(postData), { path: '/' });
+                    } else {
+                        Cookies.remove('rememberMe');
                     }
 
                     // login success tips
@@ -137,6 +141,15 @@
             },
             secondaryColor() {
                 return this.$store.state.mode.mode === 'light' ? 'secondary' : 'primary';
+            }
+        },
+        async mounted() {
+            let postData = Cookies.get('rememberMe');
+            if (postData) {
+                postData = JSON.parse(postData);
+                this.rememberMe = true;
+                this.email = postData.email;
+                this.password = await this.decryptAES(postData.password);
             }
         }
     }
