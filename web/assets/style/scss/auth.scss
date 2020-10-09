@@ -1,12 +1,19 @@
 .login {
-    display: flex;
-    justify-content: center;
     .loginFormTitle {
         text-align: center;
     }
     .rememberMeForegetPasswordContainer {
         display: flex;
         justify-content: space-between;
-        align-items: center
+        align-items: center;
+    }
+}
+.forgetPassword {
+    .forgetPasswordFormTitle {
+        text-align: center;
+    }
+    .verifyCodeContainer {
+        display: flex;
+        justify-content: space-between;
     }
 }

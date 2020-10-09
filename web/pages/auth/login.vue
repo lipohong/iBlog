@@ -22,7 +22,7 @@
                             <span @click="redirectToForgetPassword" style="cursor: pointer">{{$t('pages.login.forgetPassword')}}</span>
                         </div>
                         <div class="my-8">
-                            <v-btn @click="sumbitLoginForm" :color="primaryColor" block>{{ $t('pages.login.submit') }}</v-btn>
+                            <v-btn @click="sumbitLoginForm" :color="primaryColor" block>{{ $t('pages.common.submit') }}</v-btn>
                         </div>
                         <div style="text-align: center">
                             <span @click="redirectToRegister" style="cursor: pointer">{{$t('pages.login.createAccount')}}</span>
