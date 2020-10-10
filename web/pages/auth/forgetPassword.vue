@@ -1,7 +1,7 @@
 <template>
     <div class="forgetPassword mt-5 mb-10">
         <v-container :style="`max-width: ${thresholds.xs}px`">
-            <v-sheet color="defualt" elevation="1" rounded class="loginForm">
+            <v-sheet color="defualt" elevation="1" rounded>
                 <div class="pa-5">
                     <v-form ref="forgetPasswordForm" v-model="valid" lazy-validation>
                         <div class="forgetPasswordFormTitle title-1">iBlog {{ $t('headers.forgetPasswordPage') }}</div>
@@ -32,6 +32,7 @@
 </template>
 <script>
     import * as crypto from 'crypto-js';
+    import * as _ from 'lodash';
 
     export default {
         data() {
@@ -85,7 +86,7 @@
                 } catch (err) {
                     let errMessage;
                     const message = _.get(err, 'response.data.message');
-                    errMessage = !!message ? this.$t(`messages.login.errors.${message}`) : this.$t(`messages.common.unknownError`);
+                    errMessage = !!message ? this.$t(`messages.forgetPassword.errors.${message}`) : this.$t(`messages.common.unknownError`);
 
                     // show error message
                     this.$store.dispatch('global/setSnackBar', {
@@ -126,7 +127,7 @@
                 } catch (err) {
                     let errMessage;
                     const message = _.get(err, 'response.data.message');
-                    errMessage = !!message ? this.$t(`messages.login.errors.${message}`) : this.$t(`messages.common.unknownError`);
+                    errMessage = !!message ? this.$t(`messages.forgetPassword.errors.${message}`) : this.$t(`messages.common.unknownError`);
 
                     // show error message
                     this.$store.dispatch('global/setSnackBar', {

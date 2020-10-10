@@ -1,7 +1,7 @@
 <template>
     <div class="login mt-5 mb-10">
         <v-container :style="`max-width: ${thresholds.xs}px`">
-            <v-sheet color="defualt" elevation="1" rounded class="loginForm">
+            <v-sheet color="defualt" elevation="1" rounded>
                 <div class="pa-5">
                     <v-form ref="loginForm" v-model="valid" lazy-validation>
                         <div class="loginFormTitle title-1">iBlog {{ $t('headers.loginPage') }}</div>
