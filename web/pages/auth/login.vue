@@ -57,6 +57,9 @@
             }
         },
         methods: {
+            redirectToHomePage() {
+                this.$router.push({ path: `/${this.$i18n.locale}` })
+            },
             redirectToForgetPassword() {
                 this.$router.push({
                     name: `auth-forgetPassword___${this.$i18n.locale}`
@@ -143,6 +146,11 @@
                 return this.$store.state.mode.mode === 'light' ? 'secondary' : 'primary';
             }
         },
+        head() {
+            return {
+                title: this.$t('headers.loginPage')
+            }
+        },
         async mounted() {
             let postData = Cookies.get('rememberMe');
             if (postData) {
@@ -151,6 +159,11 @@
                 this.email = postData.email;
                 this.password = await this.decryptAES(postData.password);
             }
+        },
+        created() {
+            if (this.$store.state.authentication.jwt) {
+                this.redirectToHomePage();
+            }    
         }
     }
 </script>

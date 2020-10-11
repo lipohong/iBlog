@@ -86,7 +86,7 @@
     import Cookies from 'js-cookie';
 
     export default {
-        middleware: ['checkTheme', 'checkMode'],
+        middleware: ['checkTheme', 'checkMode', 'checkAuthentication'],
         data() {
             return {
                 light
@@ -128,6 +128,7 @@
             logOut() {
                 this.$store.dispatch('authentication/resetAuth');   // reset auth info
                 this.$store.dispatch('user/resetUser');  // reset user info
+                Cookies.remove('authentication');
                 this.$router.push({
                     name: `auth-login___${this.$i18n.locale}`,
                     query: {

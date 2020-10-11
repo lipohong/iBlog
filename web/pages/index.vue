@@ -16,6 +16,11 @@
                 this.$store.dispatch('global/setProgressBar', { progressBar: !this.$store.state.global.progressBar })
                 this.$axios.post(`${process.env.blogApi}/blogs`)
             }
-        }
+        },
+        head() {
+            return {
+                title: this.$t('headers.homePage')
+            }
+        },
     }
 </script>
