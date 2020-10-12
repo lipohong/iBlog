@@ -98,6 +98,7 @@ export default {
           submit: "提交",
           cancel: "取消",
           close: "關閉",
+          reject: "拒絕",
           confirm: "確認"
         }
       },
@@ -195,6 +196,7 @@ export default {
           form: {
             titlePlaceHolder: "在此填寫標題...",
             titleRequired: "請填寫標題",
+            contentPlaceHolder: "在此輸入blog内容...",
             collectionNameRequired: "請填寫收藏夾名",
             commentRequired: "請輸入評論内容"
           },

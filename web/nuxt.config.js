@@ -7,9 +7,15 @@ export default {
         '@nuxtjs/axios',
         ['nuxt-i18n', I18N]
     ],
-    plugins: ['@/plugins/axios.js'],
+    plugins: [
+        '@/plugins/axios.js',
+        { src: '~plugins/nuxt-quill-plugin', ssr: false }
+    ],
     css: [
-        './assets/style/scss/index.scss'
+        './assets/style/scss/index.scss',
+        'quill/dist/quill.core.css',
+        'quill/dist/quill.snow.css',
+        'quill/dist/quill.bubble.css'
     ],
     build: {
         transpile: ['vuetify/lib']

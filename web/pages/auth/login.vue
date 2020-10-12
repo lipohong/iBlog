@@ -58,17 +58,17 @@
         },
         methods: {
             redirectToHomePage() {
-                this.$router.push({ path: `/${this.$i18n.locale}` })
+                this.$router.push({ path: `/${this.$i18n.locale}` });
             },
             redirectToForgetPassword() {
                 this.$router.push({
                     name: `auth-forgetPassword___${this.$i18n.locale}`
-                })
+                });
             },
             redirectToRegister() {
                 this.$router.push({
                     name: `auth-register___${this.$i18n.locale}`
-                })
+                });
             },
             redirectToPreviousPage() {
                 const from = this.$route.query.from;

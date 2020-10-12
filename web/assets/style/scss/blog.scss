@@ -1,3 +1,22 @@
 .blog {
-    
+    .editorContainer {
+        .ql-container {
+            min-height: 400px;
+        }
+        .ql-image {
+            width: 100%;
+            height: auto;
+            min-width: 35px;
+        }
+        .categoriesActionContainer {
+            display: flex;
+            justify-content: space-between;
+            .action {
+                min-width: 200px;
+            }
+        }
+    }
+    .ql-toolbar {
+        background-color: #ddd;
+    }
 }
