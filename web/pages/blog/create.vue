@@ -31,12 +31,14 @@
                         <v-btn :color="primaryColor" @click="handleDiscard" outlined>{{ $t('pages.blog.discard') }}</v-btn>
                         <v-btn :color="primaryColor" @click="handleSubmit">{{ $t('pages.common.submit') }}</v-btn>
                     </div>
+                    <componetDialog :open="dialogOpen" :title="dialogTitle" :text="dialogText" :handdleDialogConfirm="handdleDialogConfirm" />
                 </div>
             </v-sheet>
         </v-container>
     </div>
 </template>
 <script>
+    import ComponetDialog from '../../components/componetDialog';
     export default {
         data () {
             return {
@@ -106,7 +108,11 @@
                     }
                 ],
                 valid: true,
-                thresholds: this.$vuetify.breakpoint.thresholds
+                thresholds: this.$vuetify.breakpoint.thresholds,
+                dialogOpen: false,
+                dialogTitle: '',
+                dialogText: '',
+                handdleDialogConfirm: null
             }
         },
         methods: {
@@ -190,8 +196,18 @@
                 }
                 this.$store.dispatch('global/setProgressBar', { progressBar: false });
             },
-            handleDiscard() {
-                this.$store.dispatch('global/setDialog', { dialog: { dialogOpen: true } })
+            async handleDiscard() {
+                this.dialogOpen = true;
+                this.dialogTitle = this.$t('messages.common.dialogTitleWarning'),
+                this.dialogText= this.$t('messages.blog.general.discardBlogWarning'),
+                this.handdleDialogConfirm = () => {
+                    const from = this.$route.query.from;
+                    if (!!from && from !== '/zh/auth/login' && from !== '/en/auth/login') {
+                        this.$router.push({ path: `${from}` });
+                    } else {
+                        this.$router.push({ path: `/${this.$i18n.locale}` });
+                    }
+                }
             }
         },
         computed: {
@@ -202,6 +218,7 @@
                 return this.$store.state.mode.mode === 'light' ? 'secondary' : 'primary';
             }
         },
+        components: { ComponetDialog },
         head() {
             return {
                 title: this.$t('headers.createBlogPage')

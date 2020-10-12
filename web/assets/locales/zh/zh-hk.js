@@ -211,7 +211,8 @@ export default {
           }
         },
         common: {
-          unknownError: "發生未知錯誤"
+          unknownError: "發生未知錯誤",
+          dialogTitleWarning: "注意!"
         }
       }
 }

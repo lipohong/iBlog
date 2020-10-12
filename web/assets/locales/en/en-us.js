@@ -203,7 +203,7 @@ export default {
           general: {
             publishBlogSuccess: "Publish blog success, you can view the blog now.",
             saveBlogSuccess: "Save blog as draft success.",
-            discardBlogSuccess: "Discard blog as draft success.",
+            discardBlogSuccess: "Discard blog success.",
             discardBlogWarning: "Are you sure to discard the blog?"
           },
           errors: {
@@ -211,7 +211,8 @@ export default {
           }
         },
         common: {
-          unknownError: "Unknown Error."
+          unknownError: "Unknown Error.",
+          dialogTitleWarning: "Warning!"
         }
       }
 }

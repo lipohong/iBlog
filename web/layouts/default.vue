@@ -79,20 +79,6 @@
         >
             {{ $store.state.global.snackBarMessage }}
         </v-snackbar>
-        <v-dialog :value="true" persistent max-width="400">
-            <v-card>
-                <v-card-title class="headline">
-                    Use Google's location service?
-                </v-card-title>
-                <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="default" outlined @click="handdleDialogClose">{{ $t('pages.common.reject') }}</v-btn>
-                    <v-btn color="error" @click="handdleDialogReject">{{ $t('pages.common.reject') }}</v-btn>
-                    <v-btn color="success" @click="handdleDialogConfirm">Confirm</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
     </v-app>
 </template>
 <script>
@@ -158,19 +144,6 @@
                         message: ''
                     }
                 });
-            },
-            handdleDialogClose() {
-                this.$store.dispatch('global/setDialog', {
-                    dialog: {
-                        open: false
-                    }
-                })
-            },
-            handdleDialogReject() {
-                
-            },
-            handdleDialogConfirm() {
-                
             }
         },
         computed: {

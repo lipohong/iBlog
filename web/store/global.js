@@ -6,9 +6,7 @@ export const state = () => ({
     dialogOpen: false,
     dialogTitle: '',
     dialogText: '',
-    dialogCancelButtonText: '',
-    dialogRejectButtonText: '',
-    dialogConfirmButtonText: '',
+    dialogRejectButtonShow: false,
 });
 
 export const mutations = {
@@ -24,20 +22,18 @@ export const mutations = {
         state.dialogOpen = dialog.open;
         state.dialogTitle = dialog.title;
         state.dialogText = dialog.text;
-        state.dialogCancelButtonText = dialog.cancelButtonText;
-        state.dialogRejectButtonText = dialog.rejectButtonText;
-        state.dialogConfirmButtonText = dialog.confirmButtonText;
+        state.dialogRejectButtonShow = dialog.dialogRejectButtonShow;
     },
 };
 
 export const actions = {
-    setProgressBar: ({ commit }, { progressBar }) => {
+    setProgressBar({ commit }, { progressBar }) {
         commit('setProgressBar', progressBar);
     },
-    setSnackBar: ({ commit }, { snackBar }) => {
+    setSnackBar({ commit }, { snackBar }) {
         commit('setSnackBar', snackBar);
     },
-    setDialog: ({ commit }, { dialog }) => {
+    async setDialog({ commit }, { dialog }) {
         commit('setDialog', dialog);
     }
 }
