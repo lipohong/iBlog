@@ -117,13 +117,18 @@
                 });
             },
             redirectToUserProfile() {
-                this.$router.push({ name: `user-profile___${this.$i18n.locale}` })
+                this.$router.push({ name: `user-profile___${this.$i18n.locale}` });
             },
             redirectToBlogCreate() {
-                this.$router.push({ name: `blog-create___${this.$i18n.locale}` })
+                this.$router.push({
+                    name: `blog-create___${this.$i18n.locale}`,
+                    query: {
+                        from: this.$route.path
+                    }
+                });
             },
             redirectToBlogManagement() {
-                this.$router.push({ name: `blog___${this.$i18n.locale}` })
+                this.$router.push({ name: `blog___${this.$i18n.locale}` });
             },
             logOut() {
                 this.$store.dispatch('authentication/resetAuth');   // reset auth info

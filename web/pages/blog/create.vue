@@ -22,7 +22,6 @@
                             :items="categoriesOptions"
                             :label="$t('pages.blog.categories.categories')"
                             multiple
-                            chips
                             outlined
                         />
                         <v-select class="ml-2 action" v-model="action" :items="actionOptions" :label="$t('pages.blog.action')" outlined />
