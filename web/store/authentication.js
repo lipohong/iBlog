@@ -22,7 +22,7 @@ export const actions = {
             // set cookies for auto log in
             Cookies.set('authentication', JSON.stringify({ userId, jwt }), { path: '/' });
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     },
     async setAuth({ commit }, { authentication }) {

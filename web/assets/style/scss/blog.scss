@@ -1,4 +1,5 @@
 .blog {
+    word-wrap: break-word;
     .editorContainer {
         .ql-container {
             min-height: 400px;
@@ -8,6 +9,9 @@
             height: auto;
             min-width: 35px;
         }
+        .ql-toolbar {
+            background-color: #ddd;
+        }
         .categoriesActionContainer {
             display: flex;
             justify-content: space-between;
@@ -16,7 +20,25 @@
             }
         }
     }
-    .ql-toolbar {
-        background-color: #ddd;
+    .viewBlogContainer {
+        .ql-image {
+            width: 100%;
+            height: auto;
+            min-width: 35px;
+        }
+        .coverContainer {
+            text-align: center;
+            .cover {
+                width: 80%;
+                height: auto;
+            }
+            .updatedDate {
+                color: #999
+            }
+        }
+        .blogTitle {
+            font-size: 40px;
+            font-family: medium-content-title-font, Georgia, Cambria, "Times New Roman", Times, serif;
+        }
     }
 }

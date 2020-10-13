@@ -38,7 +38,7 @@ export const actions = {
             const user = { _id, username, email, userInfo };
             commit('setUser', user);
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 }

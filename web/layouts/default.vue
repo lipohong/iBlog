@@ -45,7 +45,7 @@
                 <v-menu open-on-hover bottom offset-y v-if="$store.state.user.user._id" >
                     <template v-slot:activator="{ on, attrs }">
                         <v-avatar v-bind="attrs" v-on="on" size="35" :color="secondaryColor">
-                            <img v-if="$store.state.user.user.userInfo.avatar" :src="$store.state.user.user.userInfo.avatar" :alt="$store.state.user.user.username[0]" style="object-fit: cover;">
+                            <img v-if="$store.state.user.user.userInfo.avatar" :src="$store.state.user.user.userInfo.avatar" style="object-fit: cover;">
                             <span v-else>{{ $store.state.user.user.username[0] }}</span>
                         </v-avatar>
                     </template>
