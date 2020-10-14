@@ -1,18 +1,34 @@
 <template>
     <div class="blog mt-5 mb-10">
         <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
-            <div class="coverContainer" v-if="blog['cover']">
+            <div class="coverContainer mb-5" v-if="blog['cover']">
                 <img class="cover" :src="blog['cover']" />
             </div>
-            <div class="blogTitle mt-5" v-text="blog['title']"></div>
-            <div>
-                <v-avatar v-bind="attrs" v-on="on" size="35" :color="secondaryColor">
-                    <img v-if="author.avatar" :src="author.avatar" style="object-fit: cover;">
-                    <span v-else>{{ author.username[0] }}</span>
-                </v-avatar>
+            <div class="blogTitle" v-text="blog['title']"></div>
+            <div style="display: flex; align-items: center">
+                <v-menu open-on-hover bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-avatar size="40" v-bind="attrs" v-on="on" :color="secondaryColor">
+                            <img v-if="author.avatar" :src="author.avatar" style="object-fit: cover;">
+                            <span class="white--text" v-else>{{ author.username[0] }}</span>
+                        </v-avatar>
+                    </template>
+                    <v-list :color="secondaryColor">
+                        <v-list-item link @click="followAndUnfollow">
+                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.blog.follow`) }}</v-list-item-title>
+                        </v-list-item>
+                        <v-divider />
+                        <v-list-item link @click="redirectToAuthorProfile">
+                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.blog.viewProfile`) }}</v-list-item-title>
+                        </v-list-item>
+                        <v-divider />
+                    </v-list>
+                </v-menu>
+                <div class="ma-2" >
+                    <div style="cursor: pointer; wordBreak: break-word">{{ author.username }}</div>
+                    <div class="updatedDate">{{ dayjs(blog['updatedDate']).format('YYYY-MM-DD HH:mm:ss') }}</div>
+                </div>
             </div>
-            <div style="cursor: pointer; wordBreak: break-word">{{ author.username }}</div>
-            <div className="updatedDate">{{ dayjs(blog['updatedDate']).format('YYYY-MM-DD HH:mm:ss') }}</div>
             <div class="mt-5" v-html="blog['content']"></div>
         </v-container>
     </div>
@@ -26,7 +42,7 @@
             try {
                 // get blog
                 let headers = null;
-                if (store && store.state.authentication.jwt ) {
+                if (store && store.state.authentication.jwt) {
                     headers = { Authorization: 'Bearer ' + store.state.authentication.jwt };
                 }
                 let response = await $axios.get( `${process.env.blogApi}/blogs/${params.blogId}`, { headers });
@@ -47,6 +63,14 @@
             return {
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 dayjs,
+            }
+        },
+        methods: {
+            followAndUnfollow() {
+
+            },
+            redirectToAuthorProfile() {
+
             }
         },
         computed: {

@@ -6,9 +6,10 @@ export default {
         forgetPasswordPage: "Forget Password Page",
         profilePage: "Profile Page",
         createBlogPage: "Create Blog Page",
-        editBlogPage: "Edit Blog Page"
-      },
-      pages: {
+        editBlogPage: "Edit Blog Page",
+        manageBlogPage: "Manage Blog Page"
+    },
+    pages: {
         layout: {
             profileManagement: "Profile Management",
             postBlog: "Post Blog",
@@ -77,22 +78,25 @@ export default {
                 networking: "Networking",
                 life: "Life",
                 other: "Other"
-          },
-          action: "Action",
-          discard: "Discard",
-          saveAsDraft: "Save As Draft",
-          publish: "Publish Blog",
-          like: "Like the blog",
-          disLike: "Cancel like the blog",
-          collect: "Collect",
-          forwardToFacebook: "Forward to facebook",
-          collectBlog: "Collect Blog",
-          collectionName: "Collection Name",
-          addCollection: "Add Collection",
-          commentLogin: "Log in",
-          leaveComment: "and leave your comment here.",
-          likes: "likes",
-          comments: "comments"
+            },
+            action: "Action",
+            discard: "Discard",
+            saveAsDraft: "Save As Draft",
+            publish: "Publish Blog",
+            follow: "Follow",
+            unFollow: "Unfollow",
+            viewProfile: "View author profile",
+            like: "Like the blog",
+            disLike: "Cancel like the blog",
+            collect: "Collect",
+            forwardToFacebook: "Forward to facebook",
+            collectBlog: "Collect Blog",
+            collectionName: "Collection Name",
+            addCollection: "Add Collection",
+            commentLogin: "Log in",
+            leaveComment: "and leave your comment here.",
+            likes: "likes",
+            comments: "comments"
         },
         common: {
             submit: "Submit",
@@ -101,118 +105,118 @@ export default {
             reject: "Reject",
             confirm: "Confirm"
         }
-      },
-      messages: {
+    },
+    messages: {
         layout: {
             switchMode: "Switch light/dark Mode Theme",
-          chooseMainTheme: "Choose Main Theme",
-          switchLanguage: "Switch Language",
-          viewSourceCode: "View Source Code",
-          action: "Action",
-          logIn: "Login In"
+            chooseMainTheme: "Choose Main Theme",
+            switchLanguage: "Switch Language",
+            viewSourceCode: "View Source Code",
+            action: "Action",
+            logIn: "Login In"
         },
         login: {
-          form: {
-            emailRequired: "Email is required",
-            emailNotValid: "Email is not valid",
-            passwordRequired: "Password is required"
-          },
-          general: {
-            loginSuccess: "Login Success."
-          },
-          errors: {
-            ex_incorrect_password: "Wrong password.",
-            ex_cannot_find_user: "No user record, please create an account first.",
-            ex_user_not_exists: "No user record, please create an account first.",
-            ex_not_authenticated: "Not authenticated yet. Please try later."
-          }
+            form: {
+                emailRequired: "Email is required",
+                emailNotValid: "Email is not valid",
+                passwordRequired: "Password is required"
+            },
+            general: {
+                loginSuccess: "Login Success."
+            },
+            errors: {
+                ex_incorrect_password: "Wrong password.",
+                ex_cannot_find_user: "No user record, please create an account first.",
+                ex_user_not_exists: "No user record, please create an account first.",
+                ex_not_authenticated: "Not authenticated yet. Please try later."
+            }
         },
         register: {
-          form: {
-            usernameRequired: "Username is required",
-            emailRequired: "Email is required",
-            emailNotValid: "Email is not valid",
-            passwordRequired: "Password is required",
-            confirmPasswordRequired: "Confirm password is required",
-            passwordMissmatch: "Confirm password not match password"
-          },
-          general: {
-            registerSuccess: "Register success, you can activate the account via the link from the email you get.",
-            activatingAccount: "Activating account, please wait.",
-            activateSuccess: "Account activated, please login with the account."
-          },
-          errors: {
-            ex_no_email: "Email not provided.",
-            ex_no_password: "Password not provided.",
-            ex_no_username: "Username not provided.",
-            ex_user_already_exists: "User already exists, please login.",
-            ex_wrong_verifyCode: "Wrong verify code",
-            activateFail: "Account activate fail, please try it later."
-          }
+            form: {
+                usernameRequired: "Username is required",
+                emailRequired: "Email is required",
+                emailNotValid: "Email is not valid",
+                passwordRequired: "Password is required",
+                confirmPasswordRequired: "Confirm password is required",
+                passwordMissmatch: "Confirm password not match password"
+            },
+            general: {
+                registerSuccess: "Register success, you can activate the account via the link from the email you get.",
+                activatingAccount: "Activating account, please wait.",
+                activateSuccess: "Account activated, please login with the account."
+            },
+            errors: {
+                ex_no_email: "Email not provided.",
+                ex_no_password: "Password not provided.",
+                ex_no_username: "Username not provided.",
+                ex_user_already_exists: "User already exists, please login.",
+                ex_wrong_verifyCode: "Wrong verify code",
+                activateFail: "Account activate fail, please try it later."
+            }
         },
         forgetPassword: {
-          form: {
-            usernameRequired: "Username is required",
-            emailRequired: "Email is required",
-            emailNotValid: "Email is not valid",
-            verifyCodeRequired: "Verify Code is required",
-            passwordRequired: "Password is required",
-            confirmPasswordRequired: "Confirm password is required",
-            passwordMissmatch: "Confirm password not match password"
-          },
-          general: {
-            resetPasswordSuccess: "Reset password success, you can login with the new password now.",
-            sendVerifyCodeSuccess: "Verify code is sent to your register email, please check it out.",
-            sendEmailCountdown: "sec to resend email."
-          },
-          errors: {
-            ex_no_email: "Email not provided.",
-            ex_no_password: "Password not provided.",
-            ex_no_verifyCode: "Verify code not provided.",
-            ex_wrong_verifyCode: "Wrong verify code",
-            ex_user_not_exists: "No user record, please create the account first."
-          }
+            form: {
+                usernameRequired: "Username is required",
+                emailRequired: "Email is required",
+                emailNotValid: "Email is not valid",
+                verifyCodeRequired: "Verify Code is required",
+                passwordRequired: "Password is required",
+                confirmPasswordRequired: "Confirm password is required",
+                passwordMissmatch: "Confirm password not match password"
+            },
+            general: {
+                resetPasswordSuccess: "Reset password success, you can login with the new password now.",
+                sendVerifyCodeSuccess: "Verify code is sent to your register email, please check it out.",
+                sendEmailCountdown: "sec to resend email."
+            },
+            errors: {
+                ex_no_email: "Email not provided.",
+                ex_no_password: "Password not provided.",
+                ex_no_verifyCode: "Verify code not provided.",
+                ex_wrong_verifyCode: "Wrong verify code",
+                ex_user_not_exists: "No user record, please create the account first."
+            }
         },
         profile: {
-          form: {
-            usernameRequired: "Username is required",
-            passwordRequired: "Password is required",
-            verifyCodeRequired: "Verify Code is required"
-          },
-          general: {
-            resetPasswordSuccess: "Reset password success, you can login with the new password now.",
-            sendVerifyCodeSuccess: "Verify code is sent, please check it out.",
-            sendEmailCountdown: "sec to resend email.",
-            updateProfileSuccess: "Update profile success."
-          },
-          errors: {
-            ex_no_email: "Email not provided.",
-            ex_no_password: "Password not provided.",
-            ex_no_verifyCode: "Verify code not provided.",
-            ex_wrong_verifyCode: "Wrong verify code"
-          }
+            form: {
+                usernameRequired: "Username is required",
+                passwordRequired: "Password is required",
+                verifyCodeRequired: "Verify Code is required"
+            },
+            general: {
+                resetPasswordSuccess: "Reset password success, you can login with the new password now.",
+                sendVerifyCodeSuccess: "Verify code is sent, please check it out.",
+                sendEmailCountdown: "sec to resend email.",
+                updateProfileSuccess: "Update profile success."
+            },
+            errors: {
+                ex_no_email: "Email not provided.",
+                ex_no_password: "Password not provided.",
+                ex_no_verifyCode: "Verify code not provided.",
+                ex_wrong_verifyCode: "Wrong verify code"
+            }
         },
         blog: {
-          form: {
-            titlePlaceHolder: "Set blog title here...",
-            titleRequired: "Title is required",
-            contentPlaceHolder: "Input blog content title here...",
-            collectionNameRequired: "Collection name is required",
-            commentRequired: "Comment shall not be empty"
-          },
-          general: {
-            publishBlogSuccess: "Publish blog success, you can view the blog now.",
-            saveBlogSuccess: "Save blog as draft success.",
-            discardBlogSuccess: "Discard blog success.",
-            discardBlogWarning: "Are you sure to discard the blog?"
-          },
-          errors: {
-            ex_no_title: "Title not provided."
-          }
+            form: {
+                titlePlaceHolder: "Set blog title here...",
+                titleRequired: "Title is required",
+                contentPlaceHolder: "Input blog content title here...",
+                collectionNameRequired: "Collection name is required",
+                commentRequired: "Comment shall not be empty"
+            },
+            general: {
+                publishBlogSuccess: "Publish blog success, you can view the blog now.",
+                saveBlogSuccess: "Save blog as draft success.",
+                discardBlogSuccess: "Discard blog success.",
+                discardBlogWarning: "Are you sure to discard the blog?"
+            },
+            errors: {
+                ex_no_title: "Title not provided."
+            }
         },
         common: {
-          unknownError: "Unknown Error.",
-          dialogTitleWarning: "Warning!"
+            unknownError: "Unknown Error.",
+            dialogTitleWarning: "Warning!"
         }
-      }
+    }
 }

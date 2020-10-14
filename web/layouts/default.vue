@@ -14,6 +14,7 @@
                         <v-list-item link @click="changeLanguage" data-language="en">
                             <v-list-item-title style="color: #fff">English</v-list-item-title>
                         </v-list-item>
+                        <v-divider />
                         <v-list-item link @click="changeLanguage" data-language="zh">
                             <v-list-item-title style="color: #fff">中文繁體</v-list-item-title>
                         </v-list-item>
@@ -53,12 +54,15 @@
                         <v-list-item link @click="redirectToUserProfile">
                             <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.profileManagement`) }}</v-list-item-title>
                         </v-list-item>
+                        <v-divider />
                         <v-list-item link @click="redirectToBlogCreate">
                             <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.postBlog`) }}</v-list-item-title>
                         </v-list-item>
+                        <v-divider />
                         <v-list-item link @click="redirectToBlogManagement">
                             <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.blogsManagement`) }}</v-list-item-title>
                         </v-list-item>
+                        <v-divider />
                         <v-list-item link @click="logOut">
                             <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.logOut`) }}</v-list-item-title>
                         </v-list-item>
