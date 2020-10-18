@@ -7,7 +7,8 @@ export default {
         profilePage: "個人資料頁",
         createBlogPage: "新建blog頁",
         editBlogPage: "編輯blog頁",
-        manageBlogPage: "管理Blog頁"
+        manageBlogPage: "管理Blog頁",
+        viewBlogPage: "瀏覽Blog頁"
     },
     pages: {
         layout: {

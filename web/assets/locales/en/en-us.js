@@ -7,7 +7,8 @@ export default {
         profilePage: "Profile Page",
         createBlogPage: "Create Blog Page",
         editBlogPage: "Edit Blog Page",
-        manageBlogPage: "Manage Blog Page"
+        manageBlogPage: "Manage Blog Page",
+        viewBlogPage: "View Blog Page"
     },
     pages: {
         layout: {
