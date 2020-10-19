@@ -73,13 +73,14 @@
                                     :items="collectionList"
                                     item-key="_id"
                                     show-select
-                                    style="max-width: 250px;"
+                                    disable-sort
+                                    style="max-width: 350px; min-width: 250px"
                                     :items-per-page="100"
                                     hide-default-footer
-                                    :single-select="true"
-                                    @item-selected="handleCheckBoxClick"
-                                >
-                                </v-data-table>
+                                    @item-selected="handleSellectOneCollection"
+                                    @toggle-select-all="handleSellectAllCollection"
+                                    :value="selected"
+                                />
                             </div>
                         </div>
                     </v-container>
@@ -132,6 +133,7 @@
                 liked: false,
                 collectionName: '',
                 collectionNameRequiredMessage: null,
+                selected: [],
                 headers: [
                     {
                         text: this.$t('pages.blog.oldCollectionName'),
@@ -157,6 +159,12 @@
                 try {
                     const { data } = await this.$axios.get(`${process.env.commentApi}/collections`);
                     this.collectionList = data.payload;
+                    this.selected = [];
+                    for (let collection of this.collectionList) {
+                        if (collection['blogIds'].indexOf(this.$route.params.blogId) !== -1) {
+                            this.selected.push(collection);
+                        }
+                    }
                 } catch (err) {
                     // show error message
                     this.$store.dispatch('global/setSnackBar', {
@@ -191,7 +199,7 @@
                 }
                 this.$store.dispatch('global/setProgressBar', { progressBar: false });
             },
-            async handleCheckBoxClick(e) {
+            async handleSellectOneCollection(e) {
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });
                 try {
                     const { item, value } = e;
@@ -201,6 +209,53 @@
                     } else {
                         // discollect
                         await this.$axios.delete(`${process.env.commentApi}/collections/${item['_id']}/blog/${this.$route.params.blogId}`);
+                    }
+                    await this.getCollections();
+                } catch(err) {
+                    // show error message
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'error',
+                            message: this.$t(`messages.common.unknownError`)
+                        }
+                    });
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
+            async handleSellectAllCollection(e) {
+                this.$store.dispatch('global/setProgressBar', { progressBar: true });
+                try {
+                    const { items, value } = e;
+                    if (value) {
+                        // collect
+                        const promise = items.map((item) => {
+
+                            return new Promise(async (resolve, reject) => {
+                                try {
+                                    await this.$axios.post(`${process.env.commentApi}/collections/${item['_id']}/blog/${this.$route.params.blogId}`, null);
+                                    resolve(true);
+                                } catch (err) {
+                                    reject(err);
+                                }
+                            })
+                        });
+                        await Promise.all(promise);
+                    } else {
+                        // discollect
+                        const promise = items.map((item) => {
+
+                            return new Promise(async (resolve, reject) => {
+                                try {
+                                    await this.$axios.delete(`${process.env.commentApi}/collections/${item['_id']}/blog/${this.$route.params.blogId}`);
+                                    resolve(true);
+                                } catch (err) {
+                                    reject(err);
+                                }
+                            })
+                        });
+                        
+                        await Promise.all(promise);
                     }
                     await this.getCollections();
                 } catch(err) {
