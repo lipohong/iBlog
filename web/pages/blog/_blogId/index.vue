@@ -37,15 +37,53 @@
             <div class="updatedDate mt-2">Last Updated: {{ dayjs(blog['updatedDate']).format('YYYY-MM-DD HH:mm:ss') }}</div>
             <div class="mt-5" v-html="blog['content']"></div>
             <AuthorProfile :author="author" />
-            <v-overlay :absolute="true" :value="collectionOverlay">
-                <v-container :style="`max-width: ${thresholds.xs}px`">
-                    <v-sheet :color="secondaryColor" elevation="1" rounded>
-                        <div>
-                            <span>Collection Management</span>
+            <v-overlay :value="collectionOverlay">
+                <v-sheet rounded :light="!$vuetify.theme.dark">
+                    <v-container>
+                        <div style="text-align: right">
+                            <v-btn icon small  @click="collectionOverlay = false">
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
                         </div>
-                        <v-btn @click="collectionOverlay = false">{{ $t('pages.common.cancel') }}</v-btn>
-                    </v-sheet>
-                </v-container>
+                        <div class="text-h6 text-center font-weight-bold">
+                            <span>{{ $t('pages.blog.collectBlog') }}</span>
+                        </div>
+                        <div>
+                            <span class="text-subtitle-2">{{ $t('pages.blog.addCollection') }}</span>
+                        </div>
+                        <div style="display: flex">
+                            <v-text-field
+                                v-model="collectionName"
+                                outlined
+                                dense
+                                :placeholder="$t('pages.blog.collectionName')"
+                                :error-messages="collectionNameRequiredMessage"
+                                append-icon="mdi-folder-plus-outline"
+                                @click:append="handleAddCollectButtonClick"
+                            />
+                        </div>
+                        <div class="pb-4" v-if="collectionList">
+                            <span class="text-subtitle-2">{{ $t('pages.blog.collectionList') }}</span>
+                            <div class="mt-2">
+                                <div class="text-center" v-if="collectionList.length === 0">
+                                    {{ $t('pages.blog.noCollection') }}
+                                </div>
+                                <v-data-table
+                                    :headers="headers"
+                                    :items="collectionList"
+                                    item-key="_id"
+                                    show-select
+                                    style="max-width: 250px;"
+                                    :items-per-page="100"
+                                    hide-default-footer
+                                    :single-select="true"
+                                    @item-selected="handleCheckBoxClick"
+                                >
+                                </v-data-table>
+                            </div>
+                        </div>
+                    </v-container>
+                </v-sheet>
             </v-overlay>
         </v-container>
     </div>
@@ -92,10 +130,24 @@
                 dayjs,
                 collectionOverlay: false,
                 liked: false,
+                collectionName: '',
+                collectionNameRequiredMessage: null,
+                headers: [
+                    {
+                        text: this.$t('pages.blog.oldCollectionName'),
+                        value: 'name',
+                        width: '100px',
+                        align: 'left'
+                    }
+                ]
             }
         },
         methods: {
             async handleCollectButtonClick() {
+                if (!this.$store.state.authentication.jwt) {
+                    this.redirectToLogin();
+                    return
+                }
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });
                 await this.getCollections();
                 this.collectionOverlay = true;
@@ -116,7 +168,58 @@
                     });
                 }
             },
+            async handleAddCollectButtonClick() {
+                if (!this.collectionName) {
+                    this.collectionNameRequiredMessage = this.$t('messages.blog.form.collectionNameRequired');
+                    return
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: true });
+                try {
+                    const postData = { name: this.collectionName }
+                    await this.$axios.post(`${process.env.commentApi}/collections`, postData);
+                    this.collectionName = '';
+                    await this.getCollections();
+                } catch(err) {
+                    // show error message
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'error',
+                            message: this.$t(`messages.common.unknownError`)
+                        }
+                    });
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
+            async handleCheckBoxClick(e) {
+                this.$store.dispatch('global/setProgressBar', { progressBar: true });
+                try {
+                    const { item, value } = e;
+                    if (value) {
+                        // collect
+                        await this.$axios.post(`${process.env.commentApi}/collections/${item['_id']}/blog/${this.$route.params.blogId}`, null);
+                    } else {
+                        // discollect
+                        await this.$axios.delete(`${process.env.commentApi}/collections/${item['_id']}/blog/${this.$route.params.blogId}`);
+                    }
+                    await this.getCollections();
+                } catch(err) {
+                    // show error message
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'error',
+                            message: this.$t(`messages.common.unknownError`)
+                        }
+                    });
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
             async handLikeButtonClick() {
+                if (!this.$store.state.authentication.jwt) {
+                    this.redirectToLogin();
+                    return
+                }
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });
                 try {
                     await this.$axios.post(`${process.env.commentApi}/likes/blog/${this.$route.params.blogId}`);
@@ -133,7 +236,15 @@
                     });
                 }
                 this.$store.dispatch('global/setProgressBar', { progressBar: false });
-            }
+            },
+            redirectToLogin() {
+                this.$router.push({
+                    name: `auth-login___${this.$i18n.locale}`,
+                    query: {
+                        from: this.$route.path
+                    }
+                });
+            },
         },
         computed: {
             primaryColor() {
@@ -158,6 +269,11 @@
         },
         beforeMount() {
             this.liked = this.blog['liked'];
+        },
+        watch: {
+            collectionName() {
+                this.collectionNameRequiredMessage = null;
+            }
         }
     }
 </script>
