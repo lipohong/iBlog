@@ -74,7 +74,11 @@ async function saveNewBlog(model: BlogModel): Promise<BlogModel> {
 
 async function updateBlog(expression: object, updateFields: object): Promise<BlogModel> {
   try {
-    const blog = await Blog.findOneAndUpdate(expression, { $set: removeUndefinedField(updateFields) }).lean();
+    updateFields = removeUndefinedField(updateFields);
+    if (!updateFields['cover']) {
+      updateFields['cover'] = '';
+    }
+    const blog = await Blog.findOneAndUpdate(expression, { $set: updateFields }).lean();
 
     return new BlogModel(await getBlog({ _id: blog._id }), 'update');
   }
