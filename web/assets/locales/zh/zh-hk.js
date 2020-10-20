@@ -15,7 +15,8 @@ export default {
             profileManagement: "個人資料管理",
             postBlog: "發Blog",
             blogsManagement: "管理Blog",
-            logOut: "登出"
+            logOut: "登出",
+            theme: "主題"
         },
         login: {
             iblogLogin: "iBlog 登錄",
@@ -84,6 +85,7 @@ export default {
             discard: "丟棄",
             cover: "封面",
             uploadCover: "上載封面",
+            removeCover: "移除封面",
             saveAsDraft: "保存為草稿",
             publish: "發佈 Blog",
             follow: "關注",
@@ -105,14 +107,22 @@ export default {
             commentLogin: "登錄",
             leaveComment: "之後方可留下評論",
             likes: "個讚",
-            comments: "個評論"
+            comments: "個評論",
+            blogList: "Blog 列表",
+            title: "Blog 標題",
+            lastUpdateAt: "最後更新時間",
+            status: "狀態",
+            viewOrEdit: "瀏覽/編輯 Blog",
+            search: "搜尋"
         },
         common: {
             submit: "提交",
             cancel: "取消",
             close: "關閉",
             reject: "拒絕",
-            confirm: "確認"
+            confirm: "確認",
+            published: "已發佈",
+            draft: "草稿"
         }
     },
     messages: {

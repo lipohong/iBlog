@@ -15,7 +15,8 @@ export default {
             profileManagement: "Profile Management",
             postBlog: "Post Blog",
             blogsManagement: "Blogs Management",
-            logOut: "Log Out"
+            logOut: "Log Out",
+            theme: "Theme"
         },
         login: {
             iblogLogin: "iBlog Login",
@@ -84,6 +85,7 @@ export default {
             discard: "Discard",
             cover: "Cover",
             uploadCover: "Upload Cover",
+            removeCover: "Remove this cover",
             saveAsDraft: "Save As Draft",
             publish: "Publish Blog",
             follow: "Follow",
@@ -105,14 +107,22 @@ export default {
             commentLogin: "Log in",
             leaveComment: "and leave your comment here.",
             likes: "likes",
-            comments: "comments"
+            comments: "comments",
+            blogList: "Blog List",
+            title: "Title",
+            lastUpdateAt: "Last Update At",
+            status: "Stauts",
+            viewOrEdit: "View / Edit Blog",
+            search: "Search"
         },
         common: {
             submit: "Submit",
             cancel: "Cancel",
             close: "Close",
             reject: "Reject",
-            confirm: "Confirm"
+            confirm: "Confirm",
+            published: "Published",
+            draft: "Draft"
         }
     },
     messages: {

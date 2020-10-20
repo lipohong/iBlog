@@ -35,7 +35,7 @@
                             :data-theme="index"
                             @click="changeTheme"
                         >
-                            <v-list-item-title style="color: #fff" v-text="`Theme ${index + 1}`"></v-list-item-title>
+                            <v-list-item-title style="color: #fff" v-text="`${ $t('pages.layout.theme') } ${index + 1}`"></v-list-item-title>
                         </v-list-item>
                     </v-list>
                 </v-menu>

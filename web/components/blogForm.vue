@@ -27,11 +27,21 @@
                 </div>
                 <div>
                     <span>{{ $t('pages.blog.cover') }}</span>
+                    
                     <div style="display: flex; justify-content: center">
                         <div @click="uploadCover" class="text-center" style="width: 480px; height: 270px; border: dashed 2px #aaa; cursor: pointer; line-height: 270px">
                             <img v-if="cover" :src="cover" style="height: 100%; object-fit: cover;" />
                             <div v-else>{{ $t('pages.blog.uploadCover') }} <v-icon>mdi-cloud-upload</v-icon></div>
                         </div>
+                        <v-tooltip v-if="cover" bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn v-bind="attrs" v-on="on" @click="handleRemoveCoverButtonClick" icon small>
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                            </template>
+                            {{ $t('pages.blog.removeCover') }}
+                        </v-tooltip>
+                        
                     </div>
                 </div>
                 <div class="mt-4 text-right">
@@ -218,6 +228,9 @@
                         this.$store.dispatch('global/setProgressBar', { progressBar: false });
                     }
                 }
+            },
+            handleRemoveCoverButtonClick() {
+                this.cover = '';
             },
             async handleSubmit() {
                 if (!this.$refs.title.validate()) return

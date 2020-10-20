@@ -3,12 +3,12 @@
         <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
             <v-card>
                 <v-card-title>
-                    Blog List
+                    {{ $t('pages.blog.blogList') }}
                     <v-spacer></v-spacer>
                     <v-text-field
                         v-model="search"
                         append-icon="mdi-magnify"
-                        label="Search"
+                        :label="$t('pages.blog.search')"
                         single-line
                         hide-details
                     />
@@ -25,7 +25,7 @@
                             <tr v-for="item in items" :key="item._id">
                                 <td style="max-width: 200px">{{ item.title }}</td>
                                 <td>{{ dayjs(item.updatedDate).format('YYYY/MM/DD HH:mm') }}</td>
-                                <td class="text-capitalize">{{ item.status }}</td>
+                                <td class="text-capitalize">{{ $t(`pages.common.${item.status}`) }}</td>
                                 <td class="text-center">
                                      <v-tooltip bottom>
                                         <template v-slot:activator="{ on, attrs }">
@@ -87,25 +87,25 @@
                 page: 1,
                 headers: [
                     {
-                        text: 'Title',
+                        text: this.$t('pages.blog.title'),
                         align: 'start',
                         sortable: false,
                         value: 'title',
                     },
                     {
-                        text: 'Last Update At',
+                        text: this.$t('pages.blog.lastUpdateAt'),
                         align: 'start',
                         sortable: false,
                         value: 'updatedDate',
                     },
                     {
-                        text: 'Status',
+                        text: this.$t('pages.blog.status'),
                         align: 'start',
                         sortable: false,
                         value: 'status',
                     },
                     {
-                        text: 'View / Edit Blog',
+                        text: this.$t('pages.blog.viewOrEdit'),
                         align: 'center',
                         sortable: false,
                         value: '_id',
@@ -120,7 +120,7 @@
             search: {
                 handler: _.debounce(function() {
                     this.getBlogList()
-                }, 500),
+                }, 300),
                 immediate: false
             }
         },
