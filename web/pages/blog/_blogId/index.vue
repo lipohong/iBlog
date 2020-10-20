@@ -9,9 +9,9 @@
                 <AuthorProfile :author="author" />
                 <div class="updatedDate">{{ dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</div>
             </div>
-            <FunctionButton :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
+            <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
             <div class="mt-5" v-html="blog['content']"></div>
-            <FunctionButton :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
+            <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
             <v-overlay :value="collectionOverlay">
                 <v-sheet rounded :light="!$vuetify.theme.dark">
                     <v-container>
@@ -126,12 +126,11 @@
                     this.redirectToLogin();
                     return
                 }
-                this.$store.dispatch('global/setProgressBar', { progressBar: true });
                 await this.getCollections();
                 this.collectionOverlay = true;
-                this.$store.dispatch('global/setProgressBar', { progressBar: false });
             },
             async getCollections() {
+                this.$store.dispatch('global/setProgressBar', { progressBar: true });
                 try {
                     const { data } = await this.$axios.get(`${process.env.commentApi}/collections`);
                     this.collectionList = data.payload;
@@ -151,6 +150,7 @@
                         }
                     });
                 }
+                this.$store.dispatch('global/setProgressBar', { progressBar: false });
             },
             async handleAddCollectButtonClick() {
                 if (!this.collectionName) {

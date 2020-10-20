@@ -1,6 +1,6 @@
 <template>
     <div class="text-right">
-        <v-tooltip bottom>
+        <v-tooltip v-if="$store.state.authentication.userId !== blog['userId']" bottom>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" icon @click="handleCollectButtonClick">
                     <v-icon v-if="collected">mdi-star</v-icon>
@@ -9,7 +9,7 @@
             </template>
             {{ $t('pages.blog.collectBlog') }}
         </v-tooltip>
-        <v-tooltip bottom>
+        <v-tooltip v-if="$store.state.authentication.userId !== blog['userId']" bottom>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" icon @click="handLikeButtonClick">
                     <v-icon v-if="liked">mdi-cards-heart</v-icon>
@@ -17,6 +17,14 @@
                 </v-btn>
             </template>
             {{ liked ? $t('pages.blog.disLike') : $t('pages.blog.like') }}
+        </v-tooltip>
+        <v-tooltip v-else bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" icon @click="handleEditBlogClick">
+                    <v-icon>mdi-pencil-outline</v-icon>
+                </v-btn>
+            </template>
+            {{ $t('pages.blog.editBlog') }}
         </v-tooltip>
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
@@ -30,7 +38,7 @@
 </template>
 <script>
     export default {
-        props: ['collected', 'liked', 'handleCollectButtonClick', 'handLikeButtonClick'],
+        props: ['blog', 'collected', 'liked', 'handleCollectButtonClick', 'handLikeButtonClick'],
         methods: {
             copyLink() {
                 const textarea = document.createElement("textarea");
@@ -57,6 +65,14 @@
                 finally {
                     document.body.removeChild(textarea);
                 }
+            },
+            handleEditBlogClick() {
+                this.$router.push({
+                    name: `blog-blogId-edit___${this.$i18n.locale}`,
+                    params: {
+                        blogId: this.blog['_id']
+                    }
+                });
             }
         }
     }
