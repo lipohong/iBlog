@@ -43,11 +43,7 @@ export class BlogController {
 
   public search = async (req: IERequest, res: IEResponse) => {
     try {
-      let expression: object = { status: BlogStatus.published };
-      const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
-      if (!isAdmin) {
-        expression['isDeleted'] = false;
-      }
+      let expression: object = { status: BlogStatus.published, isDeleted: false  };
       if (req.query.search) {
         expression['$or'] = [];
         expression['$or'].push({ title: new RegExp(req.query.search.toString(), 'ig') });
@@ -81,11 +77,7 @@ export class BlogController {
 
   public getMyBlogs = async (req: IERequest, res: IEResponse) => {
     try {
-      let expression: object = { userId: req.state.jwtPayload.userId };
-      const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
-      if (!isAdmin) {
-        expression['isDeleted'] = false;
-      }
+      let expression: object = { userId: req.state.jwtPayload.userId, isDeleted: false };
       if (req.query.search) {
         expression['$or'] = [];
         expression['$or'].push({ title: new RegExp(req.query.search.toString(), 'ig') });
