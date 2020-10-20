@@ -5,38 +5,13 @@
                 <img class="cover" :src="blog['cover']" />
             </div>
             <div class="blogTitle" v-text="blog['title']"></div>
-            <AuthorProfile :author="author" />
-            <div>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn v-bind="attrs" v-on="on" icon @click="handleCollectButtonClick">
-                            <v-icon v-if="collected">mdi-star</v-icon>
-                            <v-icon v-else>mdi-star-outline</v-icon>
-                        </v-btn>
-                    </template>
-                    {{ $t('pages.blog.collectBlog') }}
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn v-bind="attrs" v-on="on" icon @click="handLikeButtonClick">
-                            <v-icon v-if="liked">mdi-cards-heart</v-icon>
-                            <v-icon v-else>mdi-heart-outline</v-icon>
-                        </v-btn>
-                    </template>
-                    {{ blog['liked'] ? $t('pages.blog.disLike') : $t('pages.blog.like') }}
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn v-bind="attrs" v-on="on" icon>
-                            <v-icon>mdi-share</v-icon>
-                        </v-btn>
-                    </template>
-                    {{ $t('pages.blog.forwardToFacebook') }}
-                </v-tooltip>
+            <div style="display: flex; align-items: center">
+                <AuthorProfile :author="author" />
+                <div class="updatedDate">{{ dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</div>
             </div>
-            <div class="updatedDate mt-2">Last Updated: {{ dayjs(blog['updatedDate']).format('YYYY-MM-DD HH:mm:ss') }}</div>
+            <FunctionButton :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
             <div class="mt-5" v-html="blog['content']"></div>
-            <AuthorProfile :author="author" />
+            <FunctionButton :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
             <v-overlay :value="collectionOverlay">
                 <v-sheet rounded :light="!$vuetify.theme.dark">
                     <v-container>
@@ -91,12 +66,13 @@
 </template>
 <script>
     import AuthorProfile from '../../../components/authorProfile';
+    import FunctionButton from '../../../components/functionButton';
     const QuillDeltaToHtmlConverter = require('quill-delta-to-html').QuillDeltaToHtmlConverter;
     const dayjs = require('dayjs');
 
     export default {
         components: {
-            AuthorProfile
+            AuthorProfile, FunctionButton
         },
         async asyncData({ params, $axios, store, redirect, app }) {
             try {

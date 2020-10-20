@@ -90,7 +90,7 @@ export default {
             like: "Like the blog",
             disLike: "Cancel like the blog",
             collect: "Collect",
-            forwardToFacebook: "Forward to facebook",
+            share: "Share this blog",
             collectBlog: "Collect Blog",
             collectionName: "Collection Name",
             addCollection: "Add Collection",
@@ -213,7 +213,8 @@ export default {
                 publishBlogSuccess: "Publish blog success, you can view the blog now.",
                 saveBlogSuccess: "Save blog as draft success.",
                 discardBlogSuccess: "Discard blog success.",
-                discardBlogWarning: "Are you sure to discard the blog?"
+                discardBlogWarning: "Are you sure to discard the blog?",
+                copyLinkSuccess: "Blog link copied to clipboard, you can share the blog elsewhere now."
             },
             errors: {
                 ex_no_title: "Title not provided."

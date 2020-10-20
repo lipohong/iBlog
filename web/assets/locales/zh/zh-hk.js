@@ -87,10 +87,10 @@ export default {
             follow: "關注",
             unFollow: "取消關注",
             viewProfile: "查看作者資料",
-            like: "讚這 blog",
-            disLike: "取消讚 blog",
+            like: "為 blog 點贊",
+            disLike: "取消讚",
             collect: "收藏",
-            forwardToFacebook: "轉發到 facebook",
+            share: "分享 blog",
             collectBlog: "收藏 Blog",
             collectionName: "收藏夾名稱",
             addCollection: "新增收藏",
@@ -213,7 +213,8 @@ export default {
                 publishBlogSuccess: "Blog發佈成功，現在所有人可瀏覽blog",
                 saveBlogSuccess: "Blog已存儲為草稿",
                 discardBlogSuccess: "Blog已丟棄",
-                discardBlogWarning: "要丟棄這篇Blog嗎?"
+                discardBlogWarning: "要丟棄這篇Blog嗎?",
+                copyLinkSuccess: "Blog 地址已經拷貝到剪貼簿，歡迎分享"
             },
             errors: {
             ex_no_title: "請提供標題"
