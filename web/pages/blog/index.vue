@@ -23,7 +23,7 @@
                     <template v-slot:body="{ items }">
                         <tbody>
                             <tr v-for="item in items" :key="item._id">
-                                <td>{{ item.title }}</td>
+                                <td style="max-width: 200px">{{ item.title }}</td>
                                 <td>{{ dayjs(item.updatedDate).format('YYYY/MM/DD HH:mm') }}</td>
                                 <td class="text-capitalize">{{ item.status }}</td>
                                 <td class="text-center">
@@ -53,6 +53,7 @@
     </div>
 </template>
 <script>
+    import * as _ from 'lodash';
     const dayjs = require('dayjs');
 
     export default {
@@ -115,6 +116,12 @@
         watch: {
             page() {
                 this.getBlogList();
+            },
+            search: {
+                handler: _.debounce(function() {
+                    this.getBlogList()
+                }, 500),
+                immediate: false
             }
         },
         methods: {
