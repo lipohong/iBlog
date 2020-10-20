@@ -89,6 +89,7 @@ export default {
             follow: "Follow",
             unFollow: "Unfollow",
             viewProfile: "View author profile",
+            viewBlog: "View this blog",
             editBlog: "Edit this blog",
             like: "Like the blog",
             disLike: "Cancel like the blog",
