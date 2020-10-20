@@ -231,20 +231,35 @@
                 }
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });
                 try {
-                    const { data } = await this.$axios.post(`${process.env.blogApi}/blogs`, postData);
-                    this.$store.dispatch('global/setSnackBar', {
-                        snackBar:{
-                            open: true,
-                            color: 'success',
-                            message: this.action === 'published' ? this.$t(`messages.blog.general.publishBlogSuccess`) : this.$t(`messages.blog.general.saveBlogSuccess`) 
-                        }
-                    });
-                    this.$router.push({
-                        name: `blog-blogId___${this.$i18n.locale}`,
-                        params: {
-                            blogId: data.payload._id
-                        }
-                    });
+                    if (this.$route.params.blogId) {
+                        // update blog
+                        await this.$axios.put(`${process.env.blogApi}/blogs/${this.$route.params.blogId}`, postData);
+                        this.$store.dispatch('global/setSnackBar', {
+                            snackBar:{
+                                open: true,
+                                color: 'success',
+                                message: this.action === 'published' ? this.$t(`messages.blog.general.publishBlogSuccess`) : this.$t(`messages.blog.general.saveBlogSuccess`) 
+                            }
+                        });
+                        this.$router.push({ name: `blog___${this.$i18n.locale}` });
+                    } else {
+                        // create blog
+                        const { data } = await this.$axios.post(`${process.env.blogApi}/blogs`, postData);
+                        this.$store.dispatch('global/setSnackBar', {
+                            snackBar:{
+                                open: true,
+                                color: 'success',
+                                message: this.action === 'published' ? this.$t(`messages.blog.general.publishBlogSuccess`) : this.$t(`messages.blog.general.saveBlogSuccess`) 
+                            }
+                        });
+                        this.$router.push({
+                            name: `blog-blogId___${this.$i18n.locale}`,
+                            params: {
+                                blogId: data.payload._id
+                            }
+                        });
+                    }
+                    
                 } catch (err) {
                     // show error message
                     this.$store.dispatch('global/setSnackBar', {

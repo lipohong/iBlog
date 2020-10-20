@@ -89,6 +89,7 @@ export default {
             follow: "關注",
             unFollow: "取消關注",
             viewProfile: "查看作者資料",
+            viewBlog: "瀏覽 blog",
             editBlog: "編輯 blog",
             like: "為 blog 點贊",
             disLike: "取消讚",
