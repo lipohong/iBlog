@@ -8,7 +8,8 @@ export default {
         createBlogPage: "Create Blog Page",
         editBlogPage: "Edit Blog Page",
         manageBlogPage: "Manage Blog Page",
-        viewBlogPage: "View Blog Page"
+        viewBlogPage: "View Blog Page",
+        authorProfilePage: "Author Profile Page"
     },
     pages: {
         layout: {
@@ -113,7 +114,10 @@ export default {
             lastUpdateAt: "Last Update At",
             status: "Stauts",
             viewOrEdit: "View / Edit Blog",
-            search: "Search"
+            search: "Search blog",
+            noDescriptionMessage: "I am too lazy to write my description here.",
+            blogsAmount: "Blogs amount",
+            fans: "Fans amount"
         },
         common: {
             submit: "Submit",
@@ -228,7 +232,9 @@ export default {
                 saveBlogSuccess: "Save blog as draft success.",
                 discardBlogSuccess: "Discard blog success.",
                 discardBlogWarning: "Are you sure to discard the blog?",
-                copyLinkSuccess: "Blog link copied to clipboard, you can share the blog elsewhere now."
+                copyLinkSuccess: "Blog link copied to clipboard, you can share the blog elsewhere now.",
+                followSuccess: "Follow author success.",
+                unFollowSuccess: "Unfollow author success."
             },
             errors: {
                 ex_no_title: "Title not provided."

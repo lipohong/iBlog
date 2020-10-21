@@ -131,8 +131,9 @@
                     page: this.page,
                     categories: this.categories
                 }
-                const blogList = await this.$store.dispatch('blog/searchBlog', postData);
+                const { blogList, pagination } = await this.$store.dispatch('blog/searchBlog', postData);
                 this.blogList = blogList;
+                this.pagination = pagination;
             },
             redirectToBlogViewingPage(e) {
                 const blogId = e.currentTarget.dataset.blogId;

@@ -13,11 +13,8 @@ export const mutations = {
 };
 
 export const actions = {
-    async searchBlog({ commit, state }, postData) {
+    async searchBlog({}, postData) {
         let { page, search, categories } = postData;
-        page = page || state.page;
-        search = search || state.search;
-        categories = categories || state.search;
         let queries;
         if (page) {
             queries = `page=${page}&perPage=10`;
@@ -28,12 +25,34 @@ export const actions = {
         if (categories && categories.length > 0) {
             queries = queries + `&categories=${categories.join(',')}`;
         }
-        const { data } = await this.$axios.get(`${process.env.blogApi}/blogs/myBlogs?${queries}`);
-        const { blogList, pagination } = data.payload;
-        commit('setPage', pagination.currentPage);
-        commit('setSearch', pagination.search);
-        commit('setCategories', pagination.categories);
+        try {
+            const { data } = await this.$axios.get(`${process.env.blogApi}/blogs/myBlogs?${queries}`);
+            const { blogList, pagination } = data.payload;
 
-        return blogList;
+            return { blogList, pagination };
+        } catch(err) {
+            throw err;
+        }  
+    },
+    async searchAuthorBlog({}, postData) {
+        let { page, search, categories, userId } = postData;
+        let queries;
+        if (page) {
+            queries = `page=${page}&perPage=10`;
+        }
+        if (search) {
+            queries = queries + `&search=${search}`;
+        }
+        if (categories && categories.length > 0) {
+            queries = queries + `&categories=${categories.join(',')}`;
+        }
+        try {
+            const { data } = await this.$axios.get(`${process.env.blogApi}/blogs/user/${userId}?${queries}`);
+            const { blogList, pagination } = data.payload;
+
+            return { blogList, pagination };
+        } catch(err) {
+            throw err;
+        }  
     }
 }

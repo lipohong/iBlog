@@ -1,15 +1,18 @@
 <template>
-    <div>
-        <div v-if="author" style="display: flex; align-items: center">
-            <v-avatar @click="redirectToAuthorProfile" style="cursor: pointer;" size="35" :color="secondaryColor">
-                <img v-if="author.avatar" :src="author.avatar" style="object-fit: cover;">
-                <span class="white--text" v-else>{{ author.username[0] }}</span>
-            </v-avatar>
-            <div class="ma-2" >
-                <div @click="redirectToAuthorProfile" style="cursor: pointer; wordBreak: break-word">{{ author.username }}</div>
+    <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+            <div v-if="author" style="display: flex; align-items: center">
+                <v-avatar @click="redirectToAuthorProfile" style="cursor: pointer;" size="35" :color="secondaryColor" v-bind="attrs" v-on="on">
+                    <img v-if="author.avatar" :src="author.avatar" style="object-fit: cover;">
+                    <span class="white--text" v-else>{{ author.username[0] }}</span>
+                </v-avatar>
+                <div class="ma-2" v-bind="attrs" v-on="on">
+                    <div @click="redirectToAuthorProfile" style="cursor: pointer; wordBreak: break-word">{{ author.username }}</div>
+                </div>
             </div>
-        </div>
-    </div>
+        </template>
+        {{ $t('pages.blog.viewProfile') }}
+    </v-tooltip>
 </template>
 <script>
     const dayjs = require('dayjs');
@@ -24,7 +27,7 @@
         methods: {
             redirectToAuthorProfile() {
                 this.$router.push({
-                    name: `user-profile-userId___${this.$i18n.locale}`,
+                    name: `blog-user-userId___${this.$i18n.locale}`,
                     params: {
                         userId: this.author._id
                     }

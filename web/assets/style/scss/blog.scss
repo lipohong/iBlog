@@ -41,4 +41,12 @@
             color: #999
         }
     }
+    .viewUserBlogsContainer {
+        .blogContainer {
+            cursor: pointer;
+            &:hover {
+                background: #aaa;
+            }
+        }
+    }
 }

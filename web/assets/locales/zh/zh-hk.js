@@ -8,7 +8,8 @@ export default {
         createBlogPage: "新建blog頁",
         editBlogPage: "編輯blog頁",
         manageBlogPage: "管理Blog頁",
-        viewBlogPage: "瀏覽Blog頁"
+        viewBlogPage: "瀏覽Blog頁",
+        authorProfilePage: "作者資料頁"
     },
     pages: {
         layout: {
@@ -113,7 +114,10 @@ export default {
             lastUpdateAt: "最後更新時間",
             status: "狀態",
             viewOrEdit: "瀏覽/編輯 Blog",
-            search: "搜尋"
+            search: "搜尋 blog",
+            noDescriptionMessage: "我太懶了，不想自我介紹",
+            blogsAmount: "Blog 發佈數量",
+            fans: "粉絲數量"
         },
         common: {
             submit: "提交",
@@ -228,7 +232,9 @@ export default {
                 saveBlogSuccess: "Blog已存儲為草稿",
                 discardBlogSuccess: "Blog已丟棄",
                 discardBlogWarning: "要丟棄這篇Blog嗎?",
-                copyLinkSuccess: "Blog 地址已經拷貝到剪貼簿，歡迎分享"
+                copyLinkSuccess: "Blog 地址已經拷貝到剪貼簿，歡迎分享",
+                followSuccess: "關注作者成功",
+                unFollowSuccess: "取消關注作者成功"
             },
             errors: {
             ex_no_title: "請提供標題"
