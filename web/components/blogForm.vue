@@ -41,7 +41,6 @@
                             </template>
                             {{ $t('pages.blog.removeCover') }}
                         </v-tooltip>
-                        
                     </div>
                 </div>
                 <div class="mt-4 text-right">
@@ -163,7 +162,7 @@
                     if (newImage) {
                         this.$store.dispatch('global/setProgressBar', { progressBar: true });
                         try {
-                            const postData =  new FormData();
+                            const postData = new FormData();
                             postData.append("image", newImage);
                             const { data } = await this.$axios.post(
                                 `${process.env.fileApi}/files`,

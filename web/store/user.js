@@ -40,5 +40,15 @@ export const actions = {
         } catch (err) {
             throw err;
         }
+    },
+    async updateUserInfo({ commit }, { postData }) {
+        try {
+            const { data } = await this.$axios.put(`${process.env.userApi}/users`, postData);
+            const { _id, username, email, userInfo } = data.payload;
+            const user = { _id, username, email, userInfo };
+            commit('setUser', user);
+        } catch (err) {
+            throw err;
+        }
     }
 }

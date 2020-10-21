@@ -119,6 +119,13 @@ export default {
             blogsAmount: "Blog 發佈數量",
             fans: "粉絲數量"
         },
+        user: {
+            uploadAvatar: "上載頭像",
+            removeAvatar: "移除頭像",
+            email: "電郵:",
+            username: "用戶名:",
+            description: "個人簡介:",
+        },
         common: {
             submit: "提交",
             cancel: "取消",
@@ -237,7 +244,15 @@ export default {
                 unFollowSuccess: "取消關注作者成功"
             },
             errors: {
-            ex_no_title: "請提供標題"
+                ex_no_title: "請提供標題"
+            }
+        },
+        user: {
+            form: {
+                usernameRequired: "請填好用戶名",
+            },
+            general: {
+                updateUserProfileSuccess: "更新用戶信息成功",
             }
         },
         common: {

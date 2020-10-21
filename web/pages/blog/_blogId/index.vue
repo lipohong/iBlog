@@ -16,7 +16,7 @@
                 <v-sheet rounded :light="!$vuetify.theme.dark">
                     <v-container>
                         <div style="text-align: right">
-                            <v-btn icon small  @click="collectionOverlay = false">
+                            <v-btn icon small @click="collectionOverlay = false">
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </div>

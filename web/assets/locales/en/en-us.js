@@ -119,6 +119,13 @@ export default {
             blogsAmount: "Blogs amount",
             fans: "Fans amount"
         },
+        user: {
+            uploadAvatar: "Upload Avatar",
+            removeAvatar: "Remove Avatar",
+            email: "Email:",
+            username: "Username:",
+            description: "Description:"
+        },
         common: {
             submit: "Submit",
             cancel: "Cancel",
@@ -238,6 +245,14 @@ export default {
             },
             errors: {
                 ex_no_title: "Title not provided."
+            }
+        },
+        user: {
+            form: {
+                usernameRequired: "Username is required"
+            },
+            general: {
+                updateUserProfileSuccess: "Update user profile success",
             }
         },
         common: {

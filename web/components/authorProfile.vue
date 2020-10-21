@@ -3,7 +3,7 @@
         <template v-slot:activator="{ on, attrs }">
             <div v-if="author" style="display: flex; align-items: center">
                 <v-avatar @click="redirectToAuthorProfile" style="cursor: pointer;" size="35" :color="secondaryColor" v-bind="attrs" v-on="on">
-                    <img v-if="author.avatar" :src="author.avatar" style="object-fit: cover;">
+                    <img v-if="author.userInfo.avatar" :src="author.userInfo.avatar" style="object-fit: cover;">
                     <span class="white--text" v-else>{{ author.username[0] }}</span>
                 </v-avatar>
                 <div class="ma-2" v-bind="attrs" v-on="on">
