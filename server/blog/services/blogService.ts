@@ -87,4 +87,14 @@ async function updateBlog(expression: object, updateFields: object): Promise<Blo
   }
 }
 
-export { getBlog, getBlogPagination, saveNewBlog, updateBlog }
+async function getBlogsAmount(expression: object): Promise<Number> {
+  try {
+
+    return await Blog.countDocuments(expression).lean();
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
+export { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount }

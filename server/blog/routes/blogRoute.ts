@@ -15,6 +15,8 @@ export class blogRoute {
 
     router.get('/', auth(false), this.blogController.search);
     router.get('/myBlogs', auth(true), this.blogController.getMyBlogs);
+    router.get('/user/:userId', auth(false), this.blogController.getUserBlogs);
+    router.get('/user/:userId/amount', auth(false), this.blogController.getUserBlogsAmount);
     router.get('/:blogId', auth(false), this.blogController.getBlogById);
     router.post('/', auth(true), this.blogController.create);
     router.put('/:blogId', auth(true), this.blogController.update);

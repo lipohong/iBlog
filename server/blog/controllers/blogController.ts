@@ -3,7 +3,7 @@ import { IERequest, IEResponse } from '../models/commonModel';
 import BlogModel  from '../models/blog/class/blogModel';
 import BlogStatus from '../models/blog/enum/blogStatus';
 import { getLikeAmountForBlogs, getCommentAmountForBlogs, checkLiked, checkCollected } from '../services/commentService';
-import { getBlog, getBlogPagination, saveNewBlog, updateBlog } from '../services/blogService';
+import { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount } from '../services/blogService';
 
 export class BlogController {
 
@@ -103,6 +103,51 @@ export class BlogController {
       const resultObject = await getBlogPagination(expression, pageObject, null);
 
       return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getUserBlogs = async (req: IERequest, res: IEResponse) => {
+    try {
+      let expression: object = { userId: req.params.userId, status: BlogStatus.published, isDeleted: false };
+      if (req.query.search) {
+        expression['$or'] = [];
+        expression['$or'].push({ title: new RegExp(req.query.search.toString(), 'ig') });
+        expression['$or'].push({ content: new RegExp(req.query.search.toString(), 'g') });
+      }
+      if (req.query.categories) {
+        const categoriesList = req.query.categories.toString().split(',');
+        expression['categories'] = { $in: categoriesList }
+      }
+      if (req.query.tags) {
+        const tagsList = req.query.tags.toString().split(',');
+        expression['tags'] = { $in: tagsList }
+      }
+      const page = req.query.page;
+      const perPage = req.query.perPage;
+      let pageObject = null;
+      if (page && perPage) {
+        pageObject = {
+          page: Number(page),
+          perPage: Number(perPage)
+        }
+      }
+      const resultObject = await getBlogPagination(expression, pageObject, null);
+
+      return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getUserBlogsAmount = async (req: IERequest, res: IEResponse) => {
+    try {
+      let expression: object = { userId: req.params.userId, status: BlogStatus.published, isDeleted: false };
+
+      return res.success(null, { amount: await getBlogsAmount(expression) });
     }
     catch (err) {
       return res.throwErr(err);
