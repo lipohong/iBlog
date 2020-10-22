@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import BlogModel  from '../models/blog/class/blogModel';
 import BlogStatus from '../models/blog/enum/blogStatus';
-import { getLikeAmountForBlogs, getCommentAmountForBlogs, checkLiked, checkCollected } from '../services/commentService';
 import { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount } from '../services/blogService';
 
 export class BlogController {
@@ -11,28 +10,14 @@ export class BlogController {
     try {
       const blogId = req.params.blogId;
       const expression = { _id: blogId, isDeleted: false };
-      const blog = await getBlog(expression);
+      let blog = await getBlog(expression);
       const userId = _.get(req, 'state.jwtPayload.userId');
-      const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
-      if (blog.userId !== userId && !isAdmin) {
-        if (blog.status !== BlogStatus.published) {
-          throw new Error('ex_cannot_find_blog');
-        }
+      if (blog.userId !== userId && blog.status !== BlogStatus.published) {
+        throw new Error('ex_cannot_find_blog');
       }
-      const commentMap = await getCommentAmountForBlogs([blogId]);
-      const likeMap = await getLikeAmountForBlogs([blogId]);
-      blog.comments = commentMap[blogId] || 0;
-      blog.likes = likeMap[blogId] || 0;
-      let liked = false;
-      let collected = false;
-      if (userId) {
-        const likedResult = await checkLiked(blogId, userId);
-        liked = likedResult.liked;
-        const collectedResult = await checkCollected(blogId, userId);
-        collected = collectedResult.collected;
-      }
-      blog.liked = liked;
-      blog.collected = collected;
+      // view amount + 1
+      blog.viewed = blog.viewed ? blog.viewed + 1 : 1;
+      await updateBlog(expression, { viewed: blog.viewed });
 
       return res.success(null, new BlogModel(blog, 'fetch'));
     }

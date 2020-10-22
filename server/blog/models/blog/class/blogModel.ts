@@ -43,11 +43,8 @@ export default class BlogModel {
   @Expose({ groups: ['fetch'] })
   public comments: number;
 
-  @Expose({ groups: ['fetch'] })
-  public liked: boolean;
-
-  @Expose({ groups: ['fetch'] })
-  public collected: boolean;
+  @Expose({ groups: ['fetch', 'put'] })
+  public viewed: number;
 
   @Expose({ groups: ['get', 'put'] })
   public isDeleted: boolean;

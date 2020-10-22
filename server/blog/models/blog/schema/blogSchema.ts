@@ -22,6 +22,10 @@ const BlogSchema = new Schema({
     type: String,
     default: BlogLanguage.en
   },
+  viewed: {
+    type: Number,
+    default: 0
+  },
   status: {
     type: String,
     default: BlogStatus.private
