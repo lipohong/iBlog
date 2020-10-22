@@ -1,6 +1,6 @@
 <template>
-    <div class="blog mt-5 mb-10">
-        <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
+    <div class="blog ql-snow mt-5 mb-10">
+        <v-container class="viewBlogContainer ql-editor" :style="`max-width: ${thresholds.sm}px`">
             <div class="coverContainer mb-5" v-if="blog['cover']">
                 <img class="cover" :src="blog['cover']" />
             </div>
@@ -12,6 +12,17 @@
             <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
             <div class="mt-5" v-html="blog['content']"></div>
             <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
+            <div class="mt-1 body-2">
+                <v-icon>mdi-eye-outline</v-icon>
+                <span>{{ blog.viewed || 0 }}</span>
+                <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
+                <span>{{ comments }}</span>
+                <v-icon class="ml-2">mdi-heart-outline</v-icon>
+                <span>{{ likes }}</span>
+            </div>
+            <div class="mt-2">
+
+            </div>
             <v-overlay :value="collectionOverlay">
                 <v-sheet rounded :light="!$vuetify.theme.dark">
                     <v-container>
@@ -67,7 +78,6 @@
 <script>
     import AuthorProfile from '../../../components/authorProfile';
     import FunctionButton from '../../../components/functionButton';
-    const QuillDeltaToHtmlConverter = require('quill-delta-to-html').QuillDeltaToHtmlConverter;
     const dayjs = require('dayjs');
 
     export default {
@@ -83,8 +93,6 @@
                 }
                 let response = await $axios.get( `${process.env.blogApi}/blogs/${params.blogId}`, { headers });
                 let blog = response.data.payload;
-                const converter = new QuillDeltaToHtmlConverter(blog.content, {});
-                blog.content = converter.convert();
                 // get author info
                 response = await $axios.get(`${process.env.userApi}/users/${blog['userId']}`);
                 const author = response.data.payload;
@@ -94,8 +102,14 @@
                     response = await $axios.get(`${process.env.commentApi}/collections`, { headers });
                     collectionList = response.data.payload;
                 }
+                // get comments amount
+                response = await $axios.get(`${process.env.commentApi}/comments/blog/${params.blogId}/amount`);
+                const comments = response.data.payload;
+                // get likes amount
+                response = await $axios.get(`${process.env.commentApi}/likes/blog/${params.blogId}/amount`);
+                const likes = response.data.payload;
                 return {
-                    blog, author, collectionList
+                    blog, author, collectionList, comments, likes
                 }
             } catch (err) {
                 redirect(`/${app.i18n.locale}/auth/login`);
@@ -255,7 +269,41 @@
                 try {
                     await this.$axios.post(`${process.env.commentApi}/likes/blog/${this.$route.params.blogId}`);
                     this.liked = !this.liked;
-                    // await getLikeAmount();
+                    await this.getLikesAmount();
+                } catch (err) {
+                    // show error message
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'error',
+                            message: this.$t(`messages.common.unknownError`)
+                        }
+                    });
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
+            async getCommentsAmount() {
+                this.$store.dispatch('global/setProgressBar', { progressBar: true });
+                try {
+                    const response = await this.$axios.get(`${process.env.commentApi}/comments/blog/${this.$route.params.blogId}/amount`);
+                    this.comments = response.data.payload;
+                } catch (err) {
+                    // show error message
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'error',
+                            message: this.$t(`messages.common.unknownError`)
+                        }
+                    });
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
+            async getLikesAmount() {
+                this.$store.dispatch('global/setProgressBar', { progressBar: true });
+                try {
+                    const response = await this.$axios.get(`${process.env.commentApi}/likes/blog/${this.$route.params.blogId}/amount`);
+                    this.likes = response.data.payload;
                 } catch (err) {
                     // show error message
                     this.$store.dispatch('global/setSnackBar', {

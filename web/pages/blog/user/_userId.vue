@@ -64,7 +64,7 @@
                         />
                     </div>
                 </div>
-                <div class="ma-1" style="flex-grow: 9">
+                <div class="ma-1" style="flex-grow: 3">
                     <v-sheet class="blogContainer mb-2" v-for="blog in blogList" :key="blog._id" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
                         <v-container>
                             <div style="display: flex">
@@ -76,9 +76,19 @@
                                 </div>
                                 <div class="ml-2">
                                     <div class="text-h5">{{ blog.title }}</div>
-                                    <div class="mt-1 caption text--secondary">{{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}</div>
                                     <div class="mt-1 body-1 text--secondary">
                                         <span>{{ String(blog.content).slice(0, 30) }}</span>
+                                    </div>
+                                    <div class="mt-1 caption text--secondary">
+                                        {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
+                                    </div>
+                                    <div class="mt-1 body-2">
+                                        <v-icon>mdi-eye-outline</v-icon>
+                                        <span>{{ blog.viewed || 0 }}</span>
+                                        <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
+                                        <span>{{ blog.comments }}</span>
+                                        <v-icon class="ml-2">mdi-heart-outline</v-icon>
+                                        <span>{{ blog.likes }}</span>
                                     </div>
                                 </div>
                             </div>

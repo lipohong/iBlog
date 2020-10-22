@@ -8,7 +8,7 @@
                         <div class="mt-3 text-center">
                             <v-avatar @click="uploadAvatar" style="cursor: pointer;" size="150" :color="secondaryColor">
                                 <img v-if="avatar" :src="avatar" style="object-fit: cover;">
-                                <v-btn v-else small>{{ $t('pages.user.uploadAvatar') }}</v-btn>
+                                <v-btn v-else small>{{ $t('pages.user.uploadAvatar') }} <v-icon>mdi-cloud-upload</v-icon></v-btn>
                             </v-avatar>
                             <v-tooltip v-if="avatar" bottom>
                                 <template v-slot:activator="{ on, attrs }">

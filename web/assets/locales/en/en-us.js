@@ -230,7 +230,7 @@ export default {
             form: {
                 titlePlaceHolder: "Set blog title here...",
                 titleRequired: "Title is required",
-                contentPlaceHolder: "Input blog content title here...",
+                contentPlaceHolder: "Input blog content here...",
                 collectionNameRequired: "Collection name is required",
                 commentRequired: "Comment shall not be empty"
             },

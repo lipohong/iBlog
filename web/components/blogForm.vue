@@ -147,7 +147,7 @@
                 if (this.blog) {
                     this.cover = this.blog['cover'];
                     this.title = this.blog['title'];
-                    this.quill.setContents(this.blog['content']);
+                    this.content = this.blog['content'];
                     this.categories = this.blog['categories'];
                     this.action = this.blog['status'];
                 }
@@ -232,12 +232,11 @@
                 this.cover = '';
             },
             async handleSubmit() {
-                if (!this.$refs.title.validate()) return
-                const content = this.quill.getContents().ops;
+                if (!this.$refs.title.validate()) return;
                 const postData = {
                     cover: this.cover,
                     title: this.title,
-                    content,
+                    content: this.content,
                     categories: this.categories,
                     status: this.action
                 }
