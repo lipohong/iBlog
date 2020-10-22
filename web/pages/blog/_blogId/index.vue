@@ -5,12 +5,19 @@
                 <img class="cover" :src="blog['cover']" />
             </div>
             <div class="blogTitle" v-text="blog['title']"></div>
-            <div style="display: flex; align-items: center">
+            <div class="updatedDate" style="display: flex; flex-wrap: wrap; align-items: center">
                 <AuthorProfile :author="author" />
-                <div class="updatedDate">{{ dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</div>
+                <v-icon>mdi-update</v-icon>
+                <span>{{ dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</span>
+                <v-icon class="ml-4">mdi-eye-outline</v-icon>
+                <span>{{ blog.viewed || 0 }}</span>
+                <v-icon class="ml-4">mdi-comment-processing-outline</v-icon>
+                <span>{{ comments }}</span>
+                <v-icon class="ml-4">mdi-heart-outline</v-icon>
+                <span>{{ likes }}</span>
             </div>
             <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
-            <div class="mt-5" v-html="blog['content']"></div>
+            <div v-html="blog['content']"></div>
             <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
             <div class="mt-1 body-2">
                 <v-icon>mdi-eye-outline</v-icon>

@@ -77,7 +77,7 @@
                                 <div class="ml-2">
                                     <div class="text-h5">{{ blog.title }}</div>
                                     <div class="mt-1 body-1 text--secondary">
-                                        <span>{{ String(blog.content).slice(0, 30) }}</span>
+                                        <span v-text="String(blog.content).slice(0, 30)"></span>
                                     </div>
                                     <div class="mt-1 caption text--secondary">
                                         {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
@@ -103,6 +103,7 @@
 <script>
     import * as _ from 'lodash';
     const dayjs = require('dayjs');
+    const htmlToText = require('html-to-text');
 
     export default {
         async asyncData({ params, $axios, redirect, app }) {
@@ -117,12 +118,8 @@
                 response = await $axios.get(`${process.env.blogApi}/blogs/user/${params.userId}?page=1&perPage=10`);
                 let { blogList, pagination } = response.data.payload;
                 blogList = blogList.map(blog => {
-                    // conver delta to plain string
-                    blog.content = blog.content.reduce(function (text, op) {
-                        if (!op.insert) return text;
-                        if (typeof op.insert !== 'string') return text + ' ';
-                        return text + op.insert;
-                    }, '');
+                    // conver html to plain string
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false });
 
                     return blog
                 })
