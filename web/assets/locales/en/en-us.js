@@ -232,7 +232,11 @@ export default {
                 titleRequired: "Title is required",
                 contentPlaceHolder: "Input blog content here...",
                 collectionNameRequired: "Collection name is required",
-                commentRequired: "Comment shall not be empty"
+            },
+            view: {
+                noCommentYet: "No Comment For This Blog Yet",
+                commentRequired: "Comment shall not be empty",
+                commentPlaceHolder: "Leave your comment here..."
             },
             general: {
                 publishBlogSuccess: "Publish blog success, you can view the blog now.",

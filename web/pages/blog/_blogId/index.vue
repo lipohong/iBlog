@@ -1,6 +1,6 @@
 <template>
-    <div class="blog ql-snow mt-5 mb-10">
-        <v-container class="viewBlogContainer ql-editor" :style="`max-width: ${thresholds.sm}px`">
+    <div class="blog mt-5 mb-10">
+        <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
             <div class="coverContainer mb-5" v-if="blog['cover']">
                 <img class="cover" :src="blog['cover']" />
             </div>
@@ -17,7 +17,9 @@
                 <span>{{ likes }}</span>
             </div>
             <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
-            <div v-html="blog['content']"></div>
+            <div class="ql-snow">
+                <div class="ql-editor" v-html="blog['content']"></div>
+            </div>
             <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
             <div class="mt-1 body-2">
                 <v-icon>mdi-eye-outline</v-icon>
@@ -27,8 +29,21 @@
                 <v-icon class="ml-2">mdi-heart-outline</v-icon>
                 <span>{{ likes }}</span>
             </div>
-            <div class="mt-2">
-
+            <div>
+                <div v-if="commentList.length > 0">
+                    
+                </div>
+                <div class="mt-2 text-center" v-else>
+                    {{ $t('messages.blog.view.noCommentYet') }}
+                </div>
+                <v-container>
+                    <div style="display: flex; flex-wrap: wrap">
+                        <div style="flex-grow: 1; width: 150px">1234</div>
+                        <div style="flex-grow: 3; width: 320px;">
+                            <v-textarea filled :placeholder="$t('messages.blog.view.commentPlaceHolder')"></v-textarea>
+                        </div>
+                    </div>
+                </v-container>
             </div>
             <v-overlay :value="collectionOverlay">
                 <v-sheet rounded :light="!$vuetify.theme.dark">
@@ -109,6 +124,10 @@
                     response = await $axios.get(`${process.env.commentApi}/collections`, { headers });
                     collectionList = response.data.payload;
                 }
+                // get comments list
+                response = await $axios.get(`${process.env.commentApi}/comments/blog/${params.blogId}?page=1&perPage=10`);
+                const commentList = response.data.payload.commentList;
+                const commentListPagination = response.data.payload.pagination;
                 // get comments amount
                 response = await $axios.get(`${process.env.commentApi}/comments/blog/${params.blogId}/amount`);
                 const comments = response.data.payload;
@@ -116,7 +135,7 @@
                 response = await $axios.get(`${process.env.commentApi}/likes/blog/${params.blogId}/amount`);
                 const likes = response.data.payload;
                 return {
-                    blog, author, collectionList, comments, likes
+                    blog, author, collectionList, commentList, commentListPagination, comments, likes
                 }
             } catch (err) {
                 redirect(`/${app.i18n.locale}/auth/login`);
@@ -131,6 +150,7 @@
                 collectionName: '',
                 collectionNameRequiredMessage: null,
                 selected: [],
+                comment: '',
                 headers: [
                     {
                         text: this.$t('pages.blog.oldCollectionName'),

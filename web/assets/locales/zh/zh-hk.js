@@ -231,8 +231,12 @@ export default {
                 titlePlaceHolder: "在此填寫標題...",
                 titleRequired: "請填寫標題",
                 contentPlaceHolder: "在此輸入blog内容...",
-                collectionNameRequired: "請填寫收藏夾名",
-                commentRequired: "請輸入評論内容"
+                collectionNameRequired: "請填寫收藏夾名"
+            },
+            view: {
+                noCommentYet: "該 Blog 尚未有評論",
+                commentRequired: "請輸入評論内容",
+                commentPlaceHolder: "在此輸入你的評論..."
             },
             general: {
                 publishBlogSuccess: "Blog發佈成功，現在所有人可瀏覽blog",
