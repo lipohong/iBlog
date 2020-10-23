@@ -1,7 +1,6 @@
 <template>
     <div class="blog mt-5 mb-10">
         <BlogForm :blog="blog" />
-        <!-- <BlogFormDialog :open="dialogOpen" :text="$t('messages.blog.general.unsaveBlogWarning')" :closeDialogCallback="handleCloseDialogCallback" :callbackFunction="redirectToBlogManagement" /> -->
     </div>
 </template>
 <script>

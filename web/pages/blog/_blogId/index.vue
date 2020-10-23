@@ -49,6 +49,11 @@
                             </div>
                         </div>
                     </div>
+                    <div class="mt-5" v-if="commentListPagination.totalPage > 1">
+                        <div style="display: flex; justify-content: flex-end">
+                            <v-pagination v-model="page" :length="commentListPagination.totalPage" />
+                        </div>
+                    </div>
                 </div>
                 <div class="text-center" v-else>
                     {{ $t('messages.blog.view.noCommentYet') }}
@@ -471,6 +476,9 @@
             },
             comment() {
                 this.commentRequiredMessage = null;
+            },
+            page() {
+                this.getCommentList();
             }
         }
     }

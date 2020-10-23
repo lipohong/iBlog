@@ -287,7 +287,6 @@
                             }
                         });
                     }
-                    
                 } catch (err) {
                     // show error message
                     this.$store.dispatch('global/setSnackBar', {

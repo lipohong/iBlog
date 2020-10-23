@@ -44,10 +44,7 @@
                             </tbody>
                     </template>
                 </v-data-table>
-                <v-pagination
-                    v-model="page"
-                    :length="pagination.totalPage"
-                />
+                <v-pagination v-model="page" :length="pagination.totalPage" />
             </v-card>
         </v-container>
     </div>
