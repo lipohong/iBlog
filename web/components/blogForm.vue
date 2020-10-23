@@ -35,7 +35,7 @@
                         </div>
                         <v-tooltip v-if="cover" bottom>
                             <template v-slot:activator="{ on, attrs }">
-                                <v-btn v-bind="attrs" v-on="on" @click="handleRemoveCoverButtonClick" icon small>
+                                <v-btn v-bind="attrs" v-on="on" @click="cover = ''" icon small>
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
                             </template>
@@ -45,15 +45,15 @@
                 </div>
                 <div class="mt-4 text-right">
                     <v-btn :color="primaryColor" @click="handleDiscardButtonClick" outlined>{{ $t('pages.blog.discard') }}<v-icon>mdi-delete</v-icon></v-btn>
+                    <v-btn :color="secondaryColor" @click="redirect">{{ $t('pages.blog.leave') }}<v-icon>mdi-cancel</v-icon></v-btn>
                     <v-btn :color="primaryColor" @click="handleSubmit">{{ $t('pages.common.submit') }}<v-icon>mdi-upload</v-icon></v-btn>
                 </div>
-                <DicardBlogDialog :open="dialogOpen" />
             </div>
         </v-sheet>
     </v-container>
 </template>
 <script>
-    import DicardBlogDialog from './dicardBlogDialog';
+
     export default {
         props: ['blog'],
         data () {
@@ -128,8 +128,7 @@
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 dialogOpen: false,
                 dialogTitle: '',
-                dialogText: '',
-                handdleDialogConfirm: null
+                dialogText: ''
             }
         },
         computed: {
@@ -140,7 +139,23 @@
                 return this.$store.state.mode.mode === 'light' ? 'secondary' : 'primary';
             }
         },
-        components: { DicardBlogDialog },
+        watch: {
+            cover() {
+                this.$parent.updated = true;
+            },
+            title() {
+                this.$parent.updated = true;
+            },
+            content() {
+                this.$parent.updated = true;
+            },
+            categories() {
+                this.$parent.updated = true;
+            },
+            action() {
+                this.$parent.updated = true;
+            }
+        },
         methods: {
             onEditorReady(quill) {
                 this.quill = quill;
@@ -151,6 +166,9 @@
                     this.categories = this.blog['categories'];
                     this.action = this.blog['status'];
                 }
+                this.$nextTick(() => {
+                    this.$parent.updated = false;
+                });
             },
             async uploadImage() {
                 const input = document.createElement('input');
@@ -228,9 +246,6 @@
                     }
                 }
             },
-            handleRemoveCoverButtonClick() {
-                this.cover = '';
-            },
             async handleSubmit() {
                 if (!this.$refs.title.validate()) return;
                 const postData = {
@@ -245,6 +260,7 @@
                     if (this.$route.params.blogId) {
                         // update blog
                         await this.$axios.put(`${process.env.blogApi}/blogs/${this.$route.params.blogId}`, postData);
+                        this.$parent.updated = false;
                         this.$store.dispatch('global/setSnackBar', {
                             snackBar:{
                                 open: true,
@@ -252,10 +268,11 @@
                                 message: this.action === 'published' ? this.$t(`messages.blog.general.publishBlogSuccess`) : this.$t(`messages.blog.general.saveBlogSuccess`) 
                             }
                         });
-                        this.$router.push({ name: `blog___${this.$i18n.locale}` });
+                        this.redirectToBlogManagement();
                     } else {
                         // create blog
                         const { data } = await this.$axios.post(`${process.env.blogApi}/blogs`, postData);
+                        this.$parent.updated = false;
                         this.$store.dispatch('global/setSnackBar', {
                             snackBar:{
                                 open: true,
@@ -284,7 +301,69 @@
                 this.$store.dispatch('global/setProgressBar', { progressBar: false });
             },
             handleDiscardButtonClick() {
-                this.dialogOpen = true;
+                this.$store.dispatch('global/setDialog', {
+                    dialog: {
+                        open: true,
+                        title: this.$t('messages.common.dialogTitleWarning'),
+                        text: this.$t('messages.blog.general.discardBlogWarning'),
+                        callbackFunction: () => {
+                            this.discardBlog();
+                        }
+                    }
+                });
+            },
+            async discardBlog() {
+                if (this.$route.params.blogId) {
+                    try {
+                        await this.$axios.delete(`${process.env.blogApi}/blogs/${this.$route.params.blogId}`);
+                        // show delete blog success tips
+                        this.$store.dispatch('global/setSnackBar', {
+                            snackBar:{
+                                open: true,
+                                color: 'success',
+                                message: this.$t(`messages.blog.general.discardBlogSuccess`)
+                            }
+                        });
+                    } catch (err) {
+                        // show error message
+                        this.$store.dispatch('global/setSnackBar', {
+                            snackBar:{
+                                open: true,
+                                color: 'error',
+                                message: this.$t(`messages.common.unknownError`)
+                            }
+                        });
+                    }
+                }
+                this.$parent.updated = false;
+                // close dialog
+                this.$store.dispatch('global/setDialog', {
+                    dialog: {
+                        open: false,
+                        title: '',
+                        text: '',
+                        callbackFunction: () => {}
+                    }
+                });
+                this.redirect();
+            },
+            redirect() {
+                if (this.$route.params.blogId) {
+                    this.redirectToBlogManagement();
+                } else {
+                    this.redirectToPreviousPage()
+                }
+            },
+            redirectToBlogManagement() {
+                this.$router.push({ name: `blog___${this.$i18n.locale}` });
+            },
+            redirectToPreviousPage() {
+                const from = this.$route.query.from;
+                if (!!from && from !== '/zh/auth/login' && from !== '/en/auth/login') {
+                    this.$router.push({ path: `${from}` });
+                } else {
+                    this.$router.push({ path: `/${this.$i18n.locale}` });
+                }
             }
         }
     }

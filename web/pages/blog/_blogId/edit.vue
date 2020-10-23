@@ -1,6 +1,7 @@
 <template>
     <div class="blog mt-5 mb-10">
         <BlogForm :blog="blog" />
+        <!-- <BlogFormDialog :open="dialogOpen" :text="$t('messages.blog.general.unsaveBlogWarning')" :closeDialogCallback="handleCloseDialogCallback" :callbackFunction="redirectToBlogManagement" /> -->
     </div>
 </template>
 <script>
@@ -26,6 +27,42 @@
         },
         components: { BlogForm },
         middleware: ['auth'],
+        data() {
+            return {
+                updated: false
+            }
+        },
+        methods: {
+            redirectToBlogManagement() {
+                this.updated = false;
+                this.$store.dispatch('global/setDialog', {
+                    dialog: {
+                        open: false,
+                        title: '',
+                        text: '',
+                        callbackFunction: () => {}
+                    }
+                });
+                this.$router.push({ name: `blog___${this.$i18n.locale}` });
+            },
+        },
+        beforeRouteLeave(to, from, next) {
+            if (this.updated) {
+                this.$store.dispatch('global/setDialog', {
+                    dialog: {
+                        open: true,
+                        title: this.$t('messages.common.dialogTitleWarning'),
+                        text: this.$t('messages.blog.general.unsaveBlogWarning'),
+                        callbackFunction: () => {
+                            this.redirectToBlogManagement();
+                        }
+                    }
+                });
+                next(false);
+            } else {
+                next(true);
+            }
+        },
         head() {
             return {
                 title: this.$t('headers.editBlogPage')

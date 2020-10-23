@@ -6,7 +6,7 @@ export const state = () => ({
     dialogOpen: false,
     dialogTitle: '',
     dialogText: '',
-    dialogRejectButtonShow: false,
+    dialogCallbackFunction: () => {}
 });
 
 export const mutations = {
@@ -22,7 +22,7 @@ export const mutations = {
         state.dialogOpen = dialog.open;
         state.dialogTitle = dialog.title;
         state.dialogText = dialog.text;
-        state.dialogRejectButtonShow = dialog.dialogRejectButtonShow;
+        state.dialogCallbackFunction = dialog.callbackFunction;
     },
 };
 
@@ -33,7 +33,7 @@ export const actions = {
     setSnackBar({ commit }, { snackBar }) {
         commit('setSnackBar', snackBar);
     },
-    async setDialog({ commit }, { dialog }) {
+    setDialog({ commit }, { dialog }) {
         commit('setDialog', dialog);
     }
 }
