@@ -14,6 +14,9 @@ export default class CommentModel {
   @Expose({ groups: ['get', 'fetch', 'blogIdReturn', 'post', 'put'] })
   public userId: string;
 
+  @Expose({ groups: ['get', 'fetch', 'blogIdReturn'] })
+  public user: string;
+
   @Expose({ groups: ['get', 'fetch', 'blogIdReturn', 'post', 'put'] })
   public comment: string;
 

@@ -3,6 +3,7 @@ import { IERequest, IEResponse } from '../models/commonModel';
 import CommentModel  from '../models/comment/class/commentModel';
 import CommentStatus from '../models/comment/enum/commentStatus';
 import { getComment, getCommentPagination, saveNewComment, updateComment, getCommentAmount } from '../services/commentService';
+import { getUserList } from '../services/userService';
 
 export class CommentController {
 
@@ -41,7 +42,15 @@ export class CommentController {
           perPage: Number(perPage)
         }
       }
-      const resultObject = await getCommentPagination(expression, pageObject, null);
+      let resultObject = await getCommentPagination(expression, pageObject, null);
+      const { commentList } = resultObject;
+      const userIds = _.map(commentList, 'userId');
+      const userList = await getUserList(userIds);
+      const userListMap = _.keyBy(userList, '_id');
+      resultObject.commentList = commentList.map(comment => ({
+        ...comment,
+        user: userListMap[comment.userId]
+      }))
 
       return res.success(null, resultObject);
     }
@@ -100,7 +109,15 @@ export class CommentController {
           perPage: Number(perPage)
         }
       }
-      const resultObject = await getCommentPagination(expression, pageObject, null);
+      let resultObject = await getCommentPagination(expression, pageObject, null);
+      const { commentList } = resultObject;
+      const userIds = _.map(commentList, 'userId');
+      const userList = await getUserList(userIds);
+      const userListMap = _.keyBy(userList, '_id');
+      resultObject.commentList = commentList.map(comment => ({
+        ...comment,
+        user: userListMap[comment.userId]
+      }))
 
       return res.success(null, resultObject);
     }
