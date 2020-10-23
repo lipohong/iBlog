@@ -1,5 +1,5 @@
 <template>
-    <div class="blog mt-5 mb-10">
+    <div class="blog mt-5 mb-15">
         <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
             <div class="coverContainer mb-5" v-if="blog['cover']">
                 <img class="cover" :src="blog['cover']" />
@@ -29,21 +29,52 @@
                 <v-icon class="ml-2">mdi-heart-outline</v-icon>
                 <span>{{ likes }}</span>
             </div>
-            <div>
+            <div class="mt-10">
                 <div v-if="commentList.length > 0">
-                    
-                </div>
-                <div class="mt-2 text-center" v-else>
-                    {{ $t('messages.blog.view.noCommentYet') }}
-                </div>
-                <v-container>
-                    <div style="display: flex; flex-wrap: wrap">
-                        <div style="flex-grow: 1; width: 150px">1234</div>
-                        <div style="flex-grow: 3; width: 320px;">
-                            <v-textarea filled :placeholder="$t('messages.blog.view.commentPlaceHolder')"></v-textarea>
+                    <div class="mt-8" v-for="comment in commentList" :key="comment._id">
+                        <div style="display: flex; flex-wrap: wrap">
+                            <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
+                                <div>
+                                    <AuthorProfile :author="comment.user" />
+                                    <v-icon>mdi-update</v-icon>
+                                    <span class="text-caption">{{ dayjs(comment.updatedDate).format('YYYY/MM/DD HH:mm') }}</span>
+                                </div>
+                            </div>
+                            <div style="flex-grow: 3; width: 320px;">
+                                <v-sheet color="defualt" elevation="1" rounded>
+                                    <v-container>
+                                        <pre style="white-space: pre-wrap; word-wrap: break-word">{{ comment.comment }}</pre>
+                                    </v-container>
+                                </v-sheet>
+                            </div>
                         </div>
                     </div>
-                </v-container>
+                </div>
+                <div class="text-center" v-else>
+                    {{ $t('messages.blog.view.noCommentYet') }}
+                </div>
+                <div class="mt-10">
+                    <div style="display: flex; flex-wrap: wrap" v-if="$store.state.authentication.jwt">
+                        <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
+                            <AuthorProfile :author="$store.state.user.user" />
+                        </div>
+                        <div style="flex-grow: 3; width: 320px;">
+                            <v-textarea
+                                v-model="comment"
+                                rows="4"
+                                append-icon="mdi-send"
+                                outlined
+                                auto-grow
+                                @click:append="handleSendCommentButtonClick"
+                                :error-messages="commentRequiredMessage"
+                                :placeholder="$t('messages.blog.view.commentPlaceHolder')"
+                            />
+                        </div>
+                    </div>
+                    <div class="text-center" v-else>
+                        <span class="font-weight-black" style="cursor: pointer" @click="redirectToLogin">{{ $t('pages.blog.commentLogin') }}</span> {{ $t('pages.blog.leaveComment') }}
+                    </div>
+                </div>
             </div>
             <v-overlay :value="collectionOverlay">
                 <v-sheet rounded :light="!$vuetify.theme.dark">
@@ -151,6 +182,8 @@
                 collectionNameRequiredMessage: null,
                 selected: [],
                 comment: '',
+                commentRequiredMessage: null,
+                page: 1,
                 headers: [
                     {
                         text: this.$t('pages.blog.oldCollectionName'),
@@ -309,6 +342,62 @@
                 }
                 this.$store.dispatch('global/setProgressBar', { progressBar: false });
             },
+            async handleSendCommentButtonClick() {
+                const comment = String(this.comment).trim();
+                if (!comment) {
+                    this.commentRequiredMessage = this.$t('messages.blog.form.commentRequired');
+                    return
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: true });
+                try {
+                    const postData = {
+                        comment,
+                        blogId: this.$route.params.blogId
+                    }
+                    await this.$axios.post(`${process.env.commentApi}/comments`, postData);
+                    // reset data
+                    this.page = 1;
+                    this.comment = '';
+                    await this.getCommentList();
+                    await this.getCommentsAmount();
+                    // show comment sent tip
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'success',
+                            message: this.$t(`messages.blog.general.leaveCommentSuccess`)
+                        }
+                    });
+                } catch (err) {
+                    // show error message
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'error',
+                            message: this.$t(`messages.common.unknownError`)
+                        }
+                    });
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
+            async getCommentList() {
+                this.$store.dispatch('global/setProgressBar', { progressBar: true });
+                try {
+                    const response = await this.$axios.get(`${process.env.commentApi}/comments/blog/${this.$route.params.blogId}?page=${this.page}&perPage=10`);
+                    this.commentList = response.data.payload.commentList;
+                    this.commentListPagination = response.data.payload.pagination;
+                } catch (err) {
+                    // show error message
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'error',
+                            message: this.$t(`messages.common.unknownError`)
+                        }
+                    });
+                }
+                this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
             async getCommentsAmount() {
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });
                 try {
@@ -379,6 +468,9 @@
         watch: {
             collectionName() {
                 this.collectionNameRequiredMessage = null;
+            },
+            comment() {
+                this.commentRequiredMessage = null;
             }
         }
     }

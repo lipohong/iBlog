@@ -91,7 +91,7 @@ export default {
             publish: "發佈 Blog",
             follow: "關注",
             unFollow: "取消關注",
-            viewProfile: "查看作者資料",
+            viewProfile: "查看資料",
             viewBlog: "瀏覽 blog",
             editBlog: "編輯 blog",
             like: "為 blog 點贊",
@@ -231,7 +231,8 @@ export default {
                 titlePlaceHolder: "在此填寫標題...",
                 titleRequired: "請填寫標題",
                 contentPlaceHolder: "在此輸入blog内容...",
-                collectionNameRequired: "請填寫收藏夾名"
+                collectionNameRequired: "請填寫收藏夾名",
+                commentRequired: "請先寫下評論内容"
             },
             view: {
                 noCommentYet: "該 Blog 尚未有評論",
@@ -245,7 +246,8 @@ export default {
                 discardBlogWarning: "要丟棄這篇Blog嗎?",
                 copyLinkSuccess: "Blog 地址已經拷貝到剪貼簿，歡迎分享",
                 followSuccess: "關注作者成功",
-                unFollowSuccess: "取消關注作者成功"
+                unFollowSuccess: "取消關注作者成功",
+                leaveCommentSuccess: "評論成功"
             },
             errors: {
                 ex_no_title: "請提供標題"

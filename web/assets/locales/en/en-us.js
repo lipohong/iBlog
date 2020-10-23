@@ -91,7 +91,7 @@ export default {
             publish: "Publish Blog",
             follow: "Follow",
             unFollow: "Unfollow",
-            viewProfile: "View author profile",
+            viewProfile: "View profile",
             viewBlog: "View this blog",
             editBlog: "Edit this blog",
             like: "Like the blog",
@@ -231,7 +231,8 @@ export default {
                 titlePlaceHolder: "Set blog title here...",
                 titleRequired: "Title is required",
                 contentPlaceHolder: "Input blog content here...",
-                collectionNameRequired: "Collection name is required",
+                collectionNameRequired: "Collection name is required.",
+                commentRequired: "Comment should not be empty."
             },
             view: {
                 noCommentYet: "No Comment For This Blog Yet",
@@ -245,7 +246,8 @@ export default {
                 discardBlogWarning: "Are you sure to discard the blog?",
                 copyLinkSuccess: "Blog link copied to clipboard, you can share the blog elsewhere now.",
                 followSuccess: "Follow author success.",
-                unFollowSuccess: "Unfollow author success."
+                unFollowSuccess: "Unfollow author success.",
+                leaveCommentSuccess: "Leave comment success."
             },
             errors: {
                 ex_no_title: "Title not provided."
