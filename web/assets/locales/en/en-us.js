@@ -118,7 +118,8 @@ export default {
             search: "Search blog",
             noDescriptionMessage: "I am too lazy to write my description here.",
             blogsAmount: "Blogs amount",
-            fans: "Fans amount"
+            fans: "Fans amount",
+            noResult: "No blog result here..."
         },
         user: {
             uploadAvatar: "Upload Avatar",

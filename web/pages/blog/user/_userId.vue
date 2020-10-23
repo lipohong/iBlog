@@ -15,8 +15,8 @@
                         </v-card-title>
 
                         <v-card-text class="headline font-weight-bold">
-                        <span v-if="author.userInfo.description">"{{ author.userInfo.description }}"</span>
-                        <span v-else>"{{ $t('pages.blog.noDescriptionMessage') }}"</span>
+                            <span v-if="author.userInfo.description">"{{ author.userInfo.description }}"</span>
+                            <span v-else>"{{ $t('pages.blog.noDescriptionMessage') }}"</span>
                         </v-card-text>
 
                         <v-card-actions>
@@ -54,14 +54,26 @@
                         </v-card-actions>
                     </v-card>
                     <div class="mt-2">
-                        <v-text-field
-                            v-model="search"
-                            append-icon="mdi-magnify"
-                            :label="$t('pages.blog.search')"
-                            single-line
-                            hide-details
-                            outlined
-                        />
+                        <div>
+                            <v-text-field
+                                v-model="search"
+                                append-icon="mdi-magnify"
+                                :label="$t('pages.blog.search')"
+                                single-line
+                                hide-details
+                                outlined
+                            />
+                        </div>
+                        <div class="mt-2">
+                            <v-select
+                                v-model="categories"
+                                :items="categoriesOptions"
+                                :label="$t('pages.blog.categories.categories')"
+                                multiple
+                                outlined
+                                hide-details
+                            />
+                        </div>
                     </div>
                 </div>
                 <div class="ma-1" style="flex-grow: 3">
@@ -94,7 +106,14 @@
                             </div>
                         </v-container>
                     </v-sheet>
-                    <v-pagination class="mt-5" v-model="page" :length="pagination.totalPage"/>
+                    <v-sheet v-if="blogList.length === 0">
+                        <v-container>
+                            <div class="text-center">
+                                {{ $t('pages.blog.noResult') }}
+                            </div>
+                        </v-container>
+                    </v-sheet>
+                    <v-pagination v-if="pagination.totalPage > 0" class="mt-5" v-model="page" :length="pagination.totalPage"/>
                 </div>
             </div>
         </v-container>
@@ -140,6 +159,29 @@
                 dayjs,
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 page: 1,
+                categories: [],
+                categoriesOptions: [
+                    'dataStructure',
+                    'algorithm',
+                    'designPattern',
+                    'programming',
+                    'frontend',
+                    'html',
+                    'css',
+                    'js',
+                    'ts',
+                    'jest',
+                    'framework',
+                    'UIlibrary',
+                    'backend',
+                    'devOps',
+                    'networking',
+                    'life',
+                    'other'
+                ].map(option => ({
+                    value: option,
+                    text: this.$t(`pages.blog.categories.${option}`)
+                })),
                 search: ''
             }
         },
@@ -155,12 +197,8 @@
                     }
                     let { blogList, pagination } = await this.$store.dispatch('blog/searchAuthorBlog', postData);
                     blogList = blogList.map(blog => {
-                        // conver delta to plain string
-                        blog.content = blog.content.reduce(function (text, op) {
-                            if (!op.insert) return text;
-                            if (typeof op.insert !== 'string') return text + ' ';
-                            return text + op.insert;
-                        }, '');
+                        // conver html to plain string
+                        blog.content = htmlToText.fromString(blog.content, { wordwrap: false });
 
                         return blog
                     })
@@ -241,6 +279,9 @@
         },
         watch: {
             page() {
+                this.getAuthorBlogList();
+            },
+            categories() {
                 this.getAuthorBlogList();
             },
             search: {

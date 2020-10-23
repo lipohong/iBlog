@@ -4,16 +4,29 @@
             <v-card>
                 <v-card-title>
                     {{ $t('pages.blog.blogList') }}
-                    <v-spacer></v-spacer>
-                    <v-text-field
-                        v-model="search"
-                        append-icon="mdi-magnify"
-                        :label="$t('pages.blog.search')"
-                        single-line
-                        hide-details
-                    />
                 </v-card-title>
+                <div class="mx-5" style="display: flex; flex-wrap: wrap">
+                    <div style="flex-grow: 1">
+                        <v-text-field
+                            v-model="search"
+                            append-icon="mdi-magnify"
+                            :label="$t('pages.blog.search')"
+                            single-line
+                            hide-details
+                        />
+                    </div>
+                    <div class="ml-3" style="flex-grow: 1; width: 350px">
+                        <v-select
+                            v-model="categories"
+                            :items="categoriesOptions"
+                            :label="$t('pages.blog.categories.categories')"
+                            multiple
+                            hide-details
+                        />
+                    </div>
+                </div>
                 <v-data-table
+                    class="mt-5"
                     :headers="headers"
                     :items="blogList"
                     :itemsPerPage="10"
@@ -82,6 +95,29 @@
                 search: '',
                 categories: [],
                 page: 1,
+                categories: [],
+                categoriesOptions: [
+                    'dataStructure',
+                    'algorithm',
+                    'designPattern',
+                    'programming',
+                    'frontend',
+                    'html',
+                    'css',
+                    'js',
+                    'ts',
+                    'jest',
+                    'framework',
+                    'UIlibrary',
+                    'backend',
+                    'devOps',
+                    'networking',
+                    'life',
+                    'other'
+                ].map(option => ({
+                    value: option,
+                    text: this.$t(`pages.blog.categories.${option}`)
+                })),
                 headers: [
                     {
                         text: this.$t('pages.blog.title'),
@@ -112,6 +148,9 @@
         },
         watch: {
             page() {
+                this.getBlogList();
+            },
+            categories() {
                 this.getBlogList();
             },
             search: {

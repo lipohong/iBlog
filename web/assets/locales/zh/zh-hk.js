@@ -118,7 +118,8 @@ export default {
             search: "搜尋 blog",
             noDescriptionMessage: "我太懶了，不想自我介紹",
             blogsAmount: "Blog 發佈數量",
-            fans: "粉絲數量"
+            fans: "粉絲數量",
+            noResult: "沒有符合條件的 blog "
         },
         user: {
             uploadAvatar: "上載頭像",
