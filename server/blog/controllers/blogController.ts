@@ -2,7 +2,8 @@ import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import BlogModel  from '../models/blog/class/blogModel';
 import BlogStatus from '../models/blog/enum/blogStatus';
-import { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount } from '../services/blogService';
+import { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getTop5BlogPosters } from '../services/blogService';
+import { getUserList } from '../services/userService';
 
 export class BlogController {
 
@@ -122,6 +123,40 @@ export class BlogController {
       const resultObject = await getBlogPagination(expression, pageObject, null);
 
       return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getTop5ViewedBlogs = async (req: IERequest, res: IEResponse) => {
+    try {
+      let expression: object = { status: BlogStatus.published, isDeleted: false };
+
+      const resultObject = await getTop5ViewedBlogs(expression);
+
+      return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getTop5BlogPosters = async (req: IERequest, res: IEResponse) => {
+    try {
+      const expresssions = [
+        { $match: { status: BlogStatus.published, isDeleted: false } },
+        { $group: { _id: "$userId", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 }
+      ];
+
+      const resultObject = await getTop5BlogPosters(expresssions);
+      const userIdsList = resultObject.map(item => (item._id));
+      const userList = await getUserList(userIdsList);
+      const userListMap = _.keyBy(userList, '_id');      
+
+      return res.success(null, resultObject.map(user => ({ ...user, ...userListMap[user._id] })));
     }
     catch (err) {
       return res.throwErr(err);

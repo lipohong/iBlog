@@ -61,6 +61,30 @@ async function getBlogPagination(expression: object, pageObj: IPageModel, option
   }
 }
 
+async function getTop5ViewedBlogs(expression: object): Promise<BlogModel[]> {
+  try {
+
+    let blogResultList: BlogModel[] = await Blog.find(expression, null, null).sort({ viewed: -1 }).limit(5).lean();
+
+    return blogResultList;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
+async function getTop5BlogPosters(expression: Array<Object>): Promise<Array<any>> {
+  try {
+
+    let blogResultList = await Blog.aggregate(expression);
+
+    return blogResultList;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
 async function saveNewBlog(model: BlogModel): Promise<BlogModel> {
   try {
     const blog: any = await new Blog(model).save();
@@ -97,4 +121,4 @@ async function getBlogsAmount(expression: object): Promise<Number> {
   }
 }
 
-export { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount }
+export { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getTop5BlogPosters }
