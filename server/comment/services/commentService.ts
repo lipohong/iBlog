@@ -64,6 +64,18 @@ async function getCommentAmount(expression: object): Promise<Number> {
   }
 }
 
+async function getTop5CommentedBlogs(expression: Array<Object>): Promise<Array<any>> {
+  try {
+
+    let commentResultList = await Comment.aggregate(expression);
+
+    return commentResultList;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
 async function saveNewComment(model: CommentModel): Promise<CommentModel> {
   try {
     const comment: any = await new Comment(model).save();
@@ -86,4 +98,4 @@ async function updateComment(expression: object, updateFields: object): Promise<
   }
 }
 
-export { getComment, getCommentPagination, saveNewComment, updateComment, getCommentAmount }
+export { getComment, getCommentPagination, saveNewComment, updateComment, getCommentAmount, getTop5CommentedBlogs }

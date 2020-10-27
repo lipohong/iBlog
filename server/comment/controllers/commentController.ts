@@ -2,8 +2,9 @@ import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import CommentModel  from '../models/comment/class/commentModel';
 import CommentStatus from '../models/comment/enum/commentStatus';
-import { getComment, getCommentPagination, saveNewComment, updateComment, getCommentAmount } from '../services/commentService';
+import { getComment, getCommentPagination, saveNewComment, updateComment, getCommentAmount, getTop5CommentedBlogs } from '../services/commentService';
 import { getUserList } from '../services/userService';
+import { getBlogList } from '../services/blogService';
 
 export class CommentController {
 
@@ -120,6 +121,27 @@ export class CommentController {
       }))
 
       return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getTop5CommentedBlogs = async (req: IERequest, res: IEResponse) => {
+    try {
+      const expresssions = [
+        { $match: { isDeleted: false } },
+        { $group: { _id: "$blogId", comments: { $sum: 1 } } },
+        { $sort: { comments: -1 } },
+        { $limit: 5 }
+      ];
+
+      let resultObject = await getTop5CommentedBlogs(expresssions);
+      const blogIdsList = resultObject.map(item => (item._id));
+      const blogList = await getBlogList(blogIdsList);
+      const blogListMap = _.keyBy(blogList, '_id');  
+
+      return res.success(null, resultObject.map(comment => ({  ...comment, ...blogListMap[comment._id] })));
     }
     catch (err) {
       return res.throwErr(err);

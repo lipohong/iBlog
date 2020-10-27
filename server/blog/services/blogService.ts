@@ -22,6 +22,17 @@ async function getBlog(expression: object): Promise<BlogModel> {
   }
 }
 
+async function getBlogs(expression: object, option: object): Promise<BlogModel[]> {
+  try {
+    const blogList: any = await Blog.find(expression, null, option).sort({ createdDate: -1 }).lean();
+
+    return blogList;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
 async function getBlogPagination(expression: object, pageObj: IPageModel, option: object): Promise<BlogListPaginationModel> {
   try {
     let pagination = null;
@@ -121,4 +132,4 @@ async function getBlogsAmount(expression: object): Promise<Number> {
   }
 }
 
-export { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getTop5BlogPosters }
+export { getBlog, getBlogs, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getTop5BlogPosters }

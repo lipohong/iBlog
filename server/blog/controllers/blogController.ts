@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import BlogModel  from '../models/blog/class/blogModel';
 import BlogStatus from '../models/blog/enum/blogStatus';
-import { getBlog, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getTop5BlogPosters } from '../services/blogService';
+import { getBlog, getBlogs, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getTop5BlogPosters } from '../services/blogService';
 import { getUserList } from '../services/userService';
 
 export class BlogController {
@@ -95,6 +95,19 @@ export class BlogController {
     }
   }
 
+  public getBlogsByIds = async (req: IERequest, res: IEResponse) => {
+    try {
+      let expression: object = { _id: { $in: req.body }, status: BlogStatus.published, isDeleted: false };
+
+      const resultObject = await getBlogs(expression, null);
+
+      return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
   public getUserBlogs = async (req: IERequest, res: IEResponse) => {
     try {
       let expression: object = { userId: req.params.userId, status: BlogStatus.published, isDeleted: false };
@@ -146,8 +159,8 @@ export class BlogController {
     try {
       const expresssions = [
         { $match: { status: BlogStatus.published, isDeleted: false } },
-        { $group: { _id: "$userId", count: { $sum: 1 } } },
-        { $sort: { count: -1 } },
+        { $group: { _id: "$userId", blogs: { $sum: 1 } } },
+        { $sort: { blogs: -1 } },
         { $limit: 5 }
       ];
 

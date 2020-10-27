@@ -21,6 +21,7 @@ export class blogRoute {
     router.get('/top5/blogPosters', auth(false), this.blogController.getTop5BlogPosters);
     router.get('/:blogId', auth(false), this.blogController.getBlogById);
     router.post('/', auth(true), this.blogController.create);
+    router.post('/blogs', auth(false), this.blogController.getBlogsByIds);
     router.put('/:blogId', auth(true), this.blogController.update);
     router.delete('/:blogId', auth(true), this.blogController.remove);
 

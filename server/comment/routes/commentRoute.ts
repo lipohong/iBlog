@@ -15,6 +15,7 @@ export class commentRoute {
 
     router.get('/blog/:blogId', auth(false), this.commentController.getCommentsByBlogId);
     router.get('/blog/:blogId/amount', auth(false), this.commentController.getCommentAmountByBlogId);
+    router.get('/blogs/top5', auth(false), this.commentController.getTop5CommentedBlogs);
     router.get('/', auth(true), this.commentController.getMyComments);
     router.get('/:commentId', auth(false), this.commentController.getCommentById);
     router.post('/', auth(true), this.commentController.create);

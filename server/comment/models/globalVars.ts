@@ -10,6 +10,7 @@ interface IGlobVars {
   aesSecret: string;
   logLevel: string;
   userUrl: string;
+  blogUrl: string;
 }
 
 class GlobalVars {
@@ -24,7 +25,8 @@ class GlobalVars {
       jwtBcryptSaltRounds: Number.parseInt(process.env.JWT_BCRYPT_SALT_ROUNDS),
       aesSecret: process.env.AES_SECRET,
       logLevel: process.env.LOG_LEVEL,
-      userUrl: process.env.USER_URL
+      userUrl: process.env.USER_URL,
+      blogUrl: process.env.BLOG_URL
     } as IGlobVars;
   }
 
