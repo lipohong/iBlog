@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import LikeModel  from '../models/like/class/likeModel';
-import { getLike, getLikePagination, saveNewLike, removeLike, getLikeAmount } from '../services/likeService';
+import { getLike, getLikePagination, saveNewLike, removeLike, getLikeAmount, getLikesUsingAggregate } from '../services/likeService';
+import { getBlogList } from '../services/blogService';
 
 export class LikeController {
 
@@ -21,6 +22,19 @@ export class LikeController {
       resultObject.likeList = resultObject.likeList.map(like => (new LikeModel(like, 'getLikesByBlogId')))
 
       return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public checkBlogLikedByUser = async (req: IERequest, res: IEResponse) => {
+    try {
+      const { blogId, userId } = req.params;
+      let expression: object = { blogId, userId };
+      const likeAmount = await getLikeAmount(expression);
+
+      return res.success(null, { liked: likeAmount > 0 });
     }
     catch (err) {
       return res.throwErr(err);
@@ -79,6 +93,35 @@ export class LikeController {
       const resultObject = await getLikePagination(expression, pageObject, null);
 
       return res.success(null, resultObject);
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getTop5LikedBlogs = async (req: IERequest, res: IEResponse) => {
+    try {
+      const expresssions = [
+        { $group: { _id: "$blogId", likes: { $sum: 1 } } },
+        { $sort: { likes: -1 } },
+        { $limit: 20 }
+      ];
+      const resultObject = await getLikesUsingAggregate(expresssions);
+      const blogIdsList = resultObject.map(item => (item._id));      
+      const blogList = await getBlogList(blogIdsList);
+      const blogListMap = _.keyBy(blogList, '_id');
+      let returnList = [];
+      for (let like of resultObject) {
+        if (blogListMap[like._id]) {
+          returnList.push({
+            ...like,
+            ...blogListMap[like._id]
+          });
+          if (returnList.length >= 5) break;
+        }
+      }
+
+      return res.success(null, returnList);
     }
     catch (err) {
       return res.throwErr(err);

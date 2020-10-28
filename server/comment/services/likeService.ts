@@ -45,6 +45,17 @@ async function getLikePagination(expression: object, pageObj: IPageModel, option
   }
 }
 
+async function getLikesUsingAggregate(expression: Array<Object>): Promise<Array<any>> {
+  try {
+    const likeResultList = await Like.aggregate(expression);
+
+    return likeResultList;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
 async function getLikeAmount(expression: object): Promise<Number> {
   try {
     const total: number = await Like.countDocuments(expression).lean();
@@ -89,4 +100,4 @@ async function removeLike(expression: object): Promise<boolean> {
   }
 }
 
-export { getLike, getLikePagination, saveNewLike, updateLike, removeLike, getLikeAmount }
+export { getLike, getLikePagination, saveNewLike, updateLike, removeLike, getLikeAmount, getLikesUsingAggregate }
