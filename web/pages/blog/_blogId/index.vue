@@ -167,11 +167,18 @@
                 // get comments amount
                 response = await $axios.get(`${process.env.commentApi}/comments/blog/${params.blogId}/amount`);
                 const comments = response.data.payload;
+                // check liked
+                let liked = false;
+                const userId = store.state.authentication.userId;
+                if (userId) {
+                    response = await $axios.get(`${process.env.commentApi}/likes/blog/${params.blogId}/user/${store.state.authentication.userId}`);
+                    liked = response.data.payload.liked;
+                }
                 // get likes amount
                 response = await $axios.get(`${process.env.commentApi}/likes/blog/${params.blogId}/amount`);
                 const likes = response.data.payload;
                 return {
-                    blog, author, collectionList, commentList, commentListPagination, comments, likes
+                    blog, author, collectionList, commentList, commentListPagination, comments, liked, likes
                 }
             } catch (err) {
                 redirect(`/${app.i18n.locale}/auth/login`);
@@ -182,7 +189,6 @@
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 dayjs,
                 collectionOverlay: false,
-                liked: false,
                 collectionName: '',
                 collectionNameRequiredMessage: null,
                 selected: [],
@@ -466,9 +472,6 @@
             return {
                 title: `${this.$t('headers.viewBlogPage')} - ${this.blog.title}` || 'Error'
             }
-        },
-        beforeMount() {
-            this.liked = this.blog['liked'];
         },
         watch: {
             collectionName() {
