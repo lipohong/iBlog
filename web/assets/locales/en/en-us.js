@@ -19,6 +19,12 @@ export default {
             logOut: "Log Out",
             theme: "Theme"
         },
+        home: {
+            top5BlogsPosters: "Most Blogs Owner",
+            top5ViewedBlogs: "Most Viewed Blogs",
+            top5CommentedBlogs: "Most Commented Blogs",
+            top5LikedBlogs: "Most Liked Blogs"
+        },
         login: {
             iblogLogin: "iBlog Login",
             email: "Email:",

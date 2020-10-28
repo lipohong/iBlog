@@ -19,6 +19,12 @@ export default {
             logOut: "登出",
             theme: "主題"
         },
+        home: {
+            top5BlogsPosters: "最多發 blog 作者",
+            top5ViewedBlogs: "最多瀏覽 blog",
+            top5CommentedBlogs: "最多評論 blog",
+            top5LikedBlogs: "最多點讚 blog"
+        },
         login: {
             iblogLogin: "iBlog 登錄",
             email: "電郵:",
