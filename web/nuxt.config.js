@@ -21,7 +21,8 @@ export default {
     },
     buildModules: ['@nuxt/typescript-build', ["@nuxtjs/vuetify"]],
     server: {
-        port: 3004
+        host: '0.0.0.0',
+        port: '3004'
     },
     head: {
         titleTemplate: 'iBlog - %s',
