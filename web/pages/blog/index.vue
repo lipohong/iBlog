@@ -1,5 +1,5 @@
 <template>
-    <div class="blog mt-5 mb-10">
+    <div class="blog">
         <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
             <v-card>
                 <v-card-title>

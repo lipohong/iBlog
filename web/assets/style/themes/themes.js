@@ -25,6 +25,14 @@ export const light = [
         primary: "#4E342E",  // brown darken-3
         secondary: "#6D4C41"  // brown darken-1
     },
+    {
+        primary: "#EF6C00",  // orange darken-3
+        secondary: "#FB8C00"  // orange darken-1
+    },
+    {
+        primary: "#AD1457",  // pink darken-3
+        secondary: "#D81B60"  // pink darken-1
+    },
 ].map((item) => ({
     ...item,
     ...defaultSettings

@@ -1,10 +1,27 @@
 <template>
-    <div class="home mt-5 mb-15">
+    <div class="home">
+        <div class="bannerContainer">
+            <div class="py-10 px-3">
+                <div class="text-sm-h4 text-h5 text-center">{{ $t('pages.home.shareWithIBlog') }}</div>
+                <div class="mt-5 text-body-1 text-center">{{ $t('pages.home.description') }}</div>
+                <div class="mt-1 text-body-1 text-center font-weight-bold">
+                    <span style="cursor: pointer" @click="redirectToLogin">
+                        {{ $t('pages.home.login') }}
+                    </span> | 
+                    <span style="cursor: pointer" @click="redirectToBlogCreate">
+                        {{ $t('pages.home.postBlog') }}
+                    </span> | 
+                    <span style="cursor: pointer" @click="redirectToRegister">
+                        {{ $t('pages.home.register') }}
+                    </span>
+                </div>
+            </div>
+        </div>
         <v-container :style="`max-width: ${thresholds.md}px`">
             <div>
                 <span class="text-h6">{{ $t('pages.home.top5BlogsPosters') }}</span>
             </div>
-            <div style="display: grid; justify-items: center; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));">
+            <div class="top5BlogPostersContainer">
                 <div class="ma-2" v-for="author in top5BlogPosters" :key="author._id" style="cursor: pointer" :data-author-id="author._id" @click="redirectToAuthorProfile" >
                     <v-card :color="secondaryColor" dark width="130">
                         <v-card-title>
@@ -21,116 +38,33 @@
                         <v-card-actions>
                             <v-list-item>
                                 <div style="width: 100%; display: flex; justify-content: flex-end; align-items: center">
-                                    <v-tooltip bottom>
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <div v-bind="attrs" v-on="on">
-                                                <v-icon class="mr-1">mdi-post</v-icon>
-                                                <span class="subheading">{{ author.blogs }}</span>
-                                            </div>
-                                        </template>
-                                        {{ $t('pages.blog.blogsAmount') }}
-                                    </v-tooltip>
+                                    <div>
+                                        <v-icon class="mr-1">mdi-post</v-icon>
+                                        <span class="subheading">{{ author.blogs }}</span>
+                                    </div>
                                 </div>
                             </v-list-item>
                         </v-card-actions>
                     </v-card>
                 </div>
             </div>
-            <div class="mt-5">
-                <span class="text-h6">{{  $t('pages.home.top5ViewedBlogs')}}</span>
+            <div class="mt-5 text-h6">
+                <span>{{  $t('pages.home.top5ViewedBlogs')}}</span>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
-                <v-sheet class="blogContainer ma-2" v-for="blog in top5ViewedBlogs" :key="blog._id" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
-                    <v-container>
-                        <div style="display: flex">
-                            <div>
-                                <v-avatar :color="secondaryColor" size="125" tile>
-                                    <v-img v-if="blog.cover" :src="blog.cover"></v-img>
-                                    <span class="white--text text-h3" v-else>{{ blog.title[0] }}</span>
-                                </v-avatar>
-                            </div>
-                            <div class="ml-2">
-                                <div class="text-h5">{{ blog.title }}</div>
-                                <div class="mt-1 body-1 text--secondary">
-                                    <span v-text="String(blog.content).slice(0, 30)"></span>
-                                </div>
-                                <div class="mt-1 caption text--secondary">
-                                    {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
-                                </div>
-                                <div class="mt-1 body-2">
-                                    <v-icon>mdi-eye-outline</v-icon>
-                                    <span>{{ blog.viewed || 0 }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </v-container>
-                </v-sheet>
+            <BlogTile :blogList="top5ViewedBlogs" :viewed="true" />
+            <div class="mt-5 text-h6">
+                <span>{{  $t('pages.home.top5CommentedBlogs')}}</span>
             </div>
-            <div class="mt-5">
-                <span class="text-h6">{{  $t('pages.home.top5CommentedBlogs')}}</span>
+            <BlogTile :blogList="top5CommentedBlogs" :comments="true" />
+            <div class="mt-5 text-h6">
+                <span>{{  $t('pages.home.top5LikedBlogs')}}</span>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
-                <v-sheet class="blogContainer ma-2" v-for="blog in top5CommentedBlogs" :key="blog._id" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
-                    <v-container>
-                        <div style="display: flex">
-                            <div>
-                                <v-avatar :color="secondaryColor" size="125" tile>
-                                    <v-img v-if="blog.cover" :src="blog.cover"></v-img>
-                                    <span class="white--text text-h3" v-else>{{ blog.title[0] }}</span>
-                                </v-avatar>
-                            </div>
-                            <div class="ml-2">
-                                <div class="text-h5">{{ blog.title }}</div>
-                                <div class="mt-1 body-1 text--secondary">
-                                    <span v-text="String(blog.content).slice(0, 30)"></span>
-                                </div>
-                                <div class="mt-1 caption text--secondary">
-                                    {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
-                                </div>
-                                <div class="mt-1 body-2">
-                                    <v-icon>mdi-comment-processing-outline</v-icon>
-                                    <span>{{ blog.comments }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </v-container>
-                </v-sheet>
-            </div>
-            <div class="mt-5">
-                <span class="text-h6">{{  $t('pages.home.top5LikedBlogs')}}</span>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
-                <v-sheet class="blogContainer ma-2" v-for="blog in top5LikedBlogs" :key="blog._id" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
-                    <v-container>
-                        <div style="display: flex">
-                            <div>
-                                <v-avatar :color="secondaryColor" size="125" tile>
-                                    <v-img v-if="blog.cover" :src="blog.cover"></v-img>
-                                    <span class="white--text text-h3" v-else>{{ blog.title[0] }}</span>
-                                </v-avatar>
-                            </div>
-                            <div class="ml-2">
-                                <div class="text-h5">{{ blog.title }}</div>
-                                <div class="mt-1 body-1 text--secondary">
-                                    <span v-text="String(blog.content).slice(0, 30)"></span>
-                                </div>
-                                <div class="mt-1 caption text--secondary">
-                                    {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
-                                </div>
-                                <div class="mt-1 body-2">
-                                    <v-icon>mdi-heart-outline</v-icon>
-                                    <span>{{ blog.likes }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </v-container>
-                </v-sheet>
-            </div>
+            <BlogTile :blogList="top5LikedBlogs" :likes="true" />
         </v-container>
     </div>
 </template>
 <script>
-    const dayjs = require('dayjs');
+    import BlogTile from '../components/blogTile';
     const htmlToText = require('html-to-text');
 
     export default {
@@ -174,9 +108,11 @@
                 console.log(err);
             }
         },
+        components: {
+            BlogTile
+        },
         data() {
             return {
-                dayjs,
                 thresholds: this.$vuetify.breakpoint.thresholds,
             }
         },
@@ -190,15 +126,15 @@
                     }
                 });
             },
-            redirectToBlogViewingPage(e) {
-                const blogId = e.currentTarget.dataset.blogId;
-                this.$router.push({
-                    name: `blog-blogId___${this.$i18n.locale}`,
-                    params: {
-                        blogId
-                    }
-                });
-            }
+            redirectToLogin() {
+                this.$router.push({ name: `auth-login___${this.$i18n.locale}` });
+            },
+            redirectToRegister() {
+                this.$router.push({ name: `auth-register___${this.$i18n.locale}` });
+            },
+            redirectToBlogCreate() {
+                this.$router.push({ name: `blog-create___${this.$i18n.locale}` });
+            },
         },
         computed: {
             primaryColor() {

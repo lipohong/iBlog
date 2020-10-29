@@ -1,5 +1,5 @@
 <template>
-    <div class="blog mt-5 mb-15">
+    <div class="blog">
         <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
             <div class="coverContainer mb-5" v-if="blog['cover']">
                 <img class="cover" :src="blog['cover']" />
@@ -31,24 +31,25 @@
             </div>
             <div class="mt-10">
                 <div v-if="commentList.length > 0">
-                    <div class="mt-8" v-for="comment in commentList" :key="comment._id">
-                        <div style="display: flex; flex-wrap: wrap">
-                            <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
-                                <div>
+                    <v-timeline align-top dense>
+                        <v-timeline-item fill-dot icon="mdi-update" small v-for="comment in commentList" :key="comment._id">
+                            <div>
+                                <span class="text-caption">{{ dayjs(comment.updatedDate).format('YYYY/MM/DD HH:mm') }}</span>
+                            </div>
+                            <div class="mt-5" style="display: flex; flex-wrap: wrap">
+                                <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
                                     <AuthorProfile :author="comment.user" />
-                                    <v-icon>mdi-update</v-icon>
-                                    <span class="text-caption">{{ dayjs(comment.updatedDate).format('YYYY/MM/DD HH:mm') }}</span>
+                                </div>
+                                <div style="flex-grow: 3; width: 320px;">
+                                    <v-sheet color="defualt" elevation="1" tile>
+                                        <v-container>
+                                            <pre style="white-space: pre-wrap; word-wrap: break-word">{{ comment.comment }}</pre>
+                                        </v-container>
+                                    </v-sheet>
                                 </div>
                             </div>
-                            <div style="flex-grow: 3; width: 320px;">
-                                <v-sheet color="defualt" elevation="1" rounded>
-                                    <v-container>
-                                        <pre style="white-space: pre-wrap; word-wrap: break-word">{{ comment.comment }}</pre>
-                                    </v-container>
-                                </v-sheet>
-                            </div>
-                        </div>
-                    </div>
+                        </v-timeline-item>
+                    </v-timeline>
                     <div class="mt-5" v-if="commentListPagination.totalPage > 1">
                         <div style="display: flex; justify-content: flex-end">
                             <v-pagination v-model="page" :length="commentListPagination.totalPage" />

@@ -1,5 +1,5 @@
 <template>
-    <div class="register mt-5 mb-10">
+    <div class="register">
         <v-container :style="`max-width: ${thresholds.xs}px`">
             <div v-if="verifyCode && verifyEmail">
                 <div v-if="verifying">{{ $t(`messages.register.general.activatingAccount`) }}</div>

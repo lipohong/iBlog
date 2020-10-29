@@ -1,5 +1,5 @@
 <template>
-    <div class="blog mt-5 mb-10">
+    <div class="blog">
         <BlogForm :blog="blog" />
     </div>
 </template>

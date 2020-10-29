@@ -1,5 +1,5 @@
 <template>
-    <div class="forgetPassword mt-5 mb-10">
+    <div class="forgetPassword">
         <v-container :style="`max-width: ${thresholds.xs}px`">
             <v-sheet color="defualt" elevation="1" rounded>
                 <div class="pa-5">

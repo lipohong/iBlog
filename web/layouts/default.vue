@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <div>
+        <div class="mb-5">
             <v-app-bar :color="primaryColor" flat dark>
                 <v-toolbar-title style="cursor: pointer" @click="$router.push({ path: `/${$i18n.locale}` })">iBlog</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -39,10 +39,15 @@
                         </v-list-item>
                     </v-list>
                 </v-menu>
-                <v-btn icon @click="changeMode">
-                    <v-icon v-if="$store.state.mode.mode === 'light'">mdi-brightness-5</v-icon>
-                    <v-icon v-else>mdi-brightness-4</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon @click="changeMode" v-bind="attrs" v-on="on">
+                            <v-icon v-if="$store.state.mode.mode === 'light'">mdi-brightness-5</v-icon>
+                            <v-icon v-else>mdi-brightness-4</v-icon>
+                        </v-btn>
+                    </template>
+                    {{ $t('pages.layout.lightDarkSwitching') }}
+                </v-tooltip>
                 <v-menu open-on-hover bottom offset-y v-if="$store.state.user.user._id" >
                     <template v-slot:activator="{ on, attrs }">
                         <v-avatar v-bind="attrs" v-on="on" size="35" :color="secondaryColor">
@@ -75,6 +80,11 @@
             <v-progress-linear indeterminate :color="secondaryColor" :active="$store.state.global.progressBar"></v-progress-linear>
         </div>
         <Nuxt />
+        <div class="my-5 text-center text--secondary">
+            <div>
+                <span>iBlog</span> © 2020 <a class="text--secondary" style="text-decoration: none;" href="mailto: lipohong@hotmail.com">Stan Li</a>
+            </div>            
+        </div>
         <v-snackbar
             :value="$store.state.global.snackBarOpen"
             :color="$store.state.global.snackBarColor"

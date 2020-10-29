@@ -17,9 +17,15 @@ export default {
             postBlog: "發Blog",
             blogsManagement: "管理Blog",
             logOut: "登出",
-            theme: "主題"
+            theme: "主題",
+            lightDarkSwitching: "日間 / 夜間模式切換"
         },
         home: {
+            shareWithIBlog: "在 iBlog 分享你的成長!",
+            description: "iBlog 是一個發佈和記錄 blog 的系統",
+            login: "登錄",
+            postBlog: "發 Blog",
+            register: "注冊",
             top5BlogsPosters: "最多發 blog 作者",
             top5ViewedBlogs: "最多瀏覽 blog",
             top5CommentedBlogs: "最多評論 blog",

@@ -17,9 +17,15 @@ export default {
             postBlog: "Post Blog",
             blogsManagement: "Blogs Management",
             logOut: "Log Out",
-            theme: "Theme"
+            theme: "Theme",
+            lightDarkSwitching: "Light / Dark switch"
         },
         home: {
+            shareWithIBlog: "Share Your Development With iBlog!",
+            description: "iBlog is a blog management system with features that helping users to post or record blogs.",
+            login: "Login",
+            postBlog: "Post Blog",
+            register: "Register",
             top5BlogsPosters: "Most Blogs Owner",
             top5ViewedBlogs: "Most Viewed Blogs",
             top5CommentedBlogs: "Most Commented Blogs",
