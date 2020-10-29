@@ -1,6 +1,6 @@
 version: "3"
 services:
-  ireview-client-nuxt:
+  iBlog-web:
     build: .
     ports:
       - "80:3004"
