@@ -3,7 +3,6 @@ require('dotenv').config();
 
 export default {
     modules: [
-        '@nuxtjs/vuetify',
         '@nuxtjs/axios',
         ['nuxt-i18n', I18N]
     ],
