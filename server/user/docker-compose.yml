@@ -1,6 +1,6 @@
 version: "3"
 services:
-  iblog-server:
+  iblog-user-server:
     build: .
     ports: 
       - "8010:8010"
