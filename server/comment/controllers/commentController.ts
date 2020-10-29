@@ -29,11 +29,7 @@ export class CommentController {
 
   public getCommentsByBlogId = async (req: IERequest, res: IEResponse) => {
     try {
-      let expression: object = { blogId: req.params.blogId, status: CommentStatus.published };
-      const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
-      if (!isAdmin) {
-        expression['isDeleted'] = false;
-      }
+      let expression: object = { blogId: req.params.blogId, status: CommentStatus.published, isDeleted: false };
       const page = req.query.page;
       const perPage = req.query.perPage;
       let pageObject = null;
@@ -62,7 +58,7 @@ export class CommentController {
 
   public getCommentAmountByBlogId = async (req: IERequest, res: IEResponse) => {
     try {
-      let expression: object = { blogId: req.params.blogId, status: CommentStatus.published };
+      let expression: object = { blogId: req.params.blogId, status: CommentStatus.published, isDeleted: false };
       const commentAmount = await getCommentAmount(expression);
 
       return res.success(null, commentAmount);
@@ -78,7 +74,7 @@ export class CommentController {
       if (!blogIds || blogIds.length === 0) {
         return res.success(null, {});
       }
-      let expression: object = { blogId: { $in: blogIds }, status: CommentStatus.published };
+      let expression: object = { blogId: { $in: blogIds }, status: CommentStatus.published, isDeleted: false };
       const resultObject = await getCommentPagination(expression, null, null);
       const commentListMap = _.groupBy(resultObject.commentList, 'blogId');
       let blogsCommentAmount = {};
@@ -96,11 +92,7 @@ export class CommentController {
 
   public getMyComments = async (req: IERequest, res: IEResponse) => {
     try {
-      let expression: object = { userId: req.state.jwtPayload.userId };
-      const isAdmin = _.get(req, 'state.jwtPayload.isAdmin');
-      if (!isAdmin) {
-        expression['isDeleted'] = false;
-      }
+      let expression: object = { userId: req.state.jwtPayload.userId, isDeleted: false };
       const page = req.query.page;
       const perPage = req.query.perPage;
       let pageObject = null;
