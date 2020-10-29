@@ -1,0 +1,7 @@
+version: "3"
+services:
+  ireview-client-nuxt:
+    build: .
+    ports:
+      - "80:3004"
+    command: bash -c "npm run start"
