@@ -27,7 +27,6 @@
                 </div>
                 <div>
                     <span>{{ $t('pages.blog.cover') }}</span>
-                    
                     <div style="display: flex; justify-content: center">
                         <div @click="uploadCover" class="text-center" style="width: 480px; height: 270px; border: dashed 2px #aaa; cursor: pointer; line-height: 270px">
                             <v-img v-if="cover" :src="cover" contain height="100%" />

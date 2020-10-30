@@ -184,6 +184,6 @@
             return {
                 title: this.$t('headers.homePage')
             }
-        },
+        }
     }
 </script>
