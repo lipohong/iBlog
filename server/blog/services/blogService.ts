@@ -24,7 +24,7 @@ async function getBlog(expression: object): Promise<BlogModel> {
 
 async function getBlogs(expression: object, option: object): Promise<BlogModel[]> {
   try {
-    const blogList: any = await Blog.find(expression, null, option).sort({ createdDate: -1 }).lean();
+    const blogList: any = await Blog.find(expression, null, option).sort({ updatedDate: -1 }).lean();
 
     return blogList;
   }
@@ -48,7 +48,7 @@ async function getBlogPagination(expression: object, pageObj: IPageModel, option
         currentPage: pageObj.page,
       };
     }
-    let blogResultList: BlogModel[] = await Blog.find(expression, null, option).sort({ createdDate: -1 }).lean();
+    let blogResultList: BlogModel[] = await Blog.find(expression, null, option).sort({ updatedDate: -1 }).lean();
     if (blogResultList.length > 0) {
       const ids = _.map(blogResultList, '_id');
       const commentsMap = await getCommentAmountForBlogs(ids);
@@ -84,7 +84,7 @@ async function getTop5ViewedBlogs(expression: object): Promise<BlogModel[]> {
   }
 }
 
-async function getTop5BlogPosters(expression: Array<Object>): Promise<Array<any>> {
+async function getBlogsUsingAggregate(expression: Array<Object>): Promise<Array<any>> {
   try {
 
     let blogResultList = await Blog.aggregate(expression);
@@ -107,13 +107,13 @@ async function saveNewBlog(model: BlogModel): Promise<BlogModel> {
   }
 }
 
-async function updateBlog(expression: object, updateFields: object): Promise<BlogModel> {
+async function updateBlog(expression: object, updateFields: object, option: object): Promise<BlogModel> {
   try {
     updateFields = removeUndefinedField(updateFields);
     if (!updateFields['viewed'] && !updateFields['cover']) {
       updateFields['cover'] = '';
     }
-    const blog = await Blog.findOneAndUpdate(expression, { $set: updateFields }).lean();
+    const blog = await Blog.findOneAndUpdate(expression, { $set: updateFields }, option).lean();
 
     return new BlogModel(await getBlog({ _id: blog._id }), 'update');
   }
@@ -132,4 +132,4 @@ async function getBlogsAmount(expression: object): Promise<Number> {
   }
 }
 
-export { getBlog, getBlogs, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getTop5BlogPosters }
+export { getBlog, getBlogs, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getBlogsUsingAggregate }

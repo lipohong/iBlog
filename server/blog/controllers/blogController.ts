@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { IERequest, IEResponse } from '../models/commonModel';
 import BlogModel  from '../models/blog/class/blogModel';
 import BlogStatus from '../models/blog/enum/blogStatus';
-import { getBlog, getBlogs, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getTop5BlogPosters } from '../services/blogService';
+import { getBlog, getBlogs, getBlogPagination, saveNewBlog, updateBlog, getBlogsAmount, getTop5ViewedBlogs, getBlogsUsingAggregate } from '../services/blogService';
 import { getUserList } from '../services/userService';
 
 export class BlogController {
@@ -18,7 +18,7 @@ export class BlogController {
       }
       // view amount + 1
       blog.viewed = blog.viewed ? blog.viewed + 1 : 1;
-      await updateBlog(expression, { viewed: blog.viewed });
+      await updateBlog(expression, { viewed: blog.viewed }, { timestamps: false });
 
       return res.success(null, new BlogModel(blog, 'fetch'));
     }
@@ -157,19 +157,36 @@ export class BlogController {
 
   public getTop5BlogPosters = async (req: IERequest, res: IEResponse) => {
     try {
-      const expresssions = [
+      const expressions = [
         { $match: { status: BlogStatus.published, isDeleted: false } },
         { $group: { _id: "$userId", blogs: { $sum: 1 } } },
         { $sort: { blogs: -1 } },
         { $limit: 5 }
       ];
 
-      const resultObject = await getTop5BlogPosters(expresssions);
+      const resultObject = await getBlogsUsingAggregate(expressions);
       const userIdsList = resultObject.map(item => (item._id));
       const userList = await getUserList(userIdsList);
       const userListMap = _.keyBy(userList, '_id');      
 
       return res.success(null, resultObject.map(user => ({ ...user, ...userListMap[user._id] })));
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+  public getTop5LatestBlogs = async (req: IERequest, res: IEResponse) => {
+    try {
+      const expressions = [
+        { $match: { status: BlogStatus.published, isDeleted: false } },
+        { $sort: { updatedDate: -1 } },
+        { $limit: 5 }
+      ];
+
+      const resultObject = await getBlogsUsingAggregate(expressions);
+
+      return res.success(null, resultObject);
     }
     catch (err) {
       return res.throwErr(err);
@@ -213,7 +230,7 @@ export class BlogController {
         model.title = model.title.trim();
       }
 
-      return res.success("msg_update_blog_success", await updateBlog(expression, model));
+      return res.success("msg_update_blog_success", await updateBlog(expression, model, null));
     }
     catch (err) {
       return res.throwErr(err);
@@ -227,7 +244,7 @@ export class BlogController {
       if (!blog) {
         throw new Error('ex_cannot_find_blog');
       }
-      await updateBlog(expression, { isDeleted: true });
+      await updateBlog(expression, { isDeleted: true }, null);
 
       return res.success("msg_remove_blog_success", null);
     }
