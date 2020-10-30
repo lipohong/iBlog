@@ -68,6 +68,7 @@
     </div>
 </template>
 <script>
+    import * as _ from 'lodash';
     import BlogTile from '../components/blogTile';
     const htmlToText = require('html-to-text');
 
