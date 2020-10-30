@@ -92,7 +92,7 @@
                                         <span v-else v-text="String(blog.title).slice(1)"/>
                                     </div>
                                     <div class="mt-1 body-1 text--secondary">
-                                        <span v-text="String(blog.content).slice(0, 30)"></span>
+                                        <span v-text="blog.content"></span>
                                     </div>
                                     <div class="mt-1 caption text--secondary">
                                         {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
@@ -141,7 +141,11 @@
                 let { blogList, pagination } = response.data.payload;
                 blogList = blogList.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    // limit length of title
+                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    // limit length of content
+                    blog.content = _.truncate(blog.content, { 'length': 30 });
 
                     return blog
                 })

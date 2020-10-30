@@ -30,7 +30,7 @@
                     
                     <div style="display: flex; justify-content: center">
                         <div @click="uploadCover" class="text-center" style="width: 480px; height: 270px; border: dashed 2px #aaa; cursor: pointer; line-height: 270px">
-                            <img v-if="cover" :src="cover" style="height: 100%; object-fit: cover;" />
+                            <v-img v-if="cover" :src="cover" contain height="100%" />
                             <div v-else>{{ $t('pages.blog.uploadCover') }} <v-icon>mdi-cloud-upload</v-icon></div>
                         </div>
                         <v-tooltip v-if="cover" bottom>

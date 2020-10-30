@@ -78,7 +78,11 @@
                 let top5ViewedBlogs = response.data.payload;
                 top5ViewedBlogs = top5ViewedBlogs.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    // limit length of title
+                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    // limit length of content
+                    blog.content = _.truncate(blog.content, { 'length': 30 });
 
                     return blog
                 })
@@ -87,7 +91,11 @@
                 let top5CommentedBlogs = response.data.payload;
                 top5CommentedBlogs = top5CommentedBlogs.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    // limit length of title
+                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    // limit length of content
+                    blog.content = _.truncate(blog.content, { 'length': 30 });
 
                     return blog
                 })
@@ -96,7 +104,11 @@
                 let top5LikedBlogs = response.data.payload;
                 top5LikedBlogs = top5LikedBlogs.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    // limit length of title
+                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    // limit length of content
+                    blog.content = _.truncate(blog.content, { 'length': 30 });
 
                     return blog
                 })

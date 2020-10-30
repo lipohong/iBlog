@@ -10,12 +10,12 @@
                         </v-avatar>
                     </div>
                     <div class="ml-3">
-                        <div class="text-h5">
+                        <div class="text-subtitle-1 text-sm-h6">
                             <span v-if="blog.cover" v-text="blog.title"/>
                             <span v-else v-text="String(blog.title).slice(1)"/>
                         </div>
-                        <div class="mt-1 body-1 text--secondary">
-                            <span v-text="String(blog.content).slice(0, 30)"></span>
+                        <div class="mt-1 body-2 text--secondary">
+                            <span v-text="blog.content"></span>
                         </div>
                         <div class="mt-1 caption text--secondary">
                             <v-icon class="mr-1">mdi-update</v-icon>{{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
