@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <div class="bannerContainer">
-            <div class="py-10 px-3">
+            <div class="py-15 px-3">
                 <div class="text-sm-h4 text-h5 text-center">{{ $t('pages.home.shareWithIBlog') }}</div>
                 <div class="mt-5 text-body-1 text-center">{{ $t('pages.home.description') }}</div>
                 <div class="mt-1 text-body-1 text-center font-weight-bold">
