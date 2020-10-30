@@ -27,6 +27,7 @@ export default {
             postBlog: "Post Blog",
             register: "Register",
             top5BlogsPosters: "Most Blogs Owner",
+            top5LatestBlogs: "Latest Blogs",
             top5ViewedBlogs: "Most Viewed Blogs",
             top5CommentedBlogs: "Most Commented Blogs",
             top5LikedBlogs: "Most Liked Blogs"

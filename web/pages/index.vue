@@ -49,6 +49,10 @@
                 </div>
             </div>
             <div class="mt-5 text-h6">
+                <span>{{  $t('pages.home.top5LatestBlogs')}}</span>
+            </div>
+            <BlogTile :blogList="top5LatestBlogs" />
+            <div class="mt-5 text-h6">
                 <span>{{  $t('pages.home.top5ViewedBlogs')}}</span>
             </div>
             <BlogTile :blogList="top5ViewedBlogs" :viewed="true" />
@@ -73,6 +77,19 @@
                 // get top 5 blog posters
                 let response = await $axios.get( `${process.env.blogApi}/blogs/blogPosters/top5`);
                 const top5BlogPosters = response.data.payload;
+                // get top 5 latest blogs
+                response = await $axios.get( `${process.env.blogApi}/blogs/latestBlogs/top5`);
+                let top5LatestBlogs = response.data.payload;
+                top5LatestBlogs = top5LatestBlogs.map(blog => {
+                    // conver html to plain string
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    // limit length of title
+                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    // limit length of content
+                    blog.content = _.truncate(blog.content, { 'length': 30 });
+
+                    return blog
+                })
                 // get top 5 viewed blogs
                 response = await $axios.get( `${process.env.blogApi}/blogs/viewedBlogs/top5`);
                 let top5ViewedBlogs = response.data.payload;
@@ -114,7 +131,7 @@
                 })
                 
                 return {
-                    top5BlogPosters, top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs
+                    top5BlogPosters, top5LatestBlogs, top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs
                 }
             } catch (err) {
                 console.log(err);
