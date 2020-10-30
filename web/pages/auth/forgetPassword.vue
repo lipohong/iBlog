@@ -164,6 +164,11 @@
             email() {
                 this.emailRequiredMessage = null;
             }
+        },
+        head() {
+            return {
+                title: this.$t('headers.forgetPasswordPage')
+            }
         }
     }
 </script>

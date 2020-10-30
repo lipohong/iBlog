@@ -162,6 +162,11 @@
             if (this.verifyEmail && this.verifyCode) {
                 await this.registerVerify();
             }
+        },
+        head() {
+            return {
+                title: this.$t('headers.registerPage')
+            }
         }
     }
 </script>
