@@ -190,7 +190,7 @@
                                     }
                                 }
                             );
-                            const avatar = `${process.env.fileApi}/files/${data.payload.fileId}`;
+                            const avatar = `${process.env.googleFileLink}${data.payload.fileId}`;
                             const range = this.quill.getSelection();
                             if (range) {
                                 this.quill.insertEmbed(range.index, 'image', avatar);
@@ -230,7 +230,7 @@
                                     }
                                 }
                             );
-                            this.cover = `${process.env.fileApi}/files/${data.payload.fileId}`;
+                            this.cover = `${process.env.googleFileLink}${data.payload.fileId}`;
                         } catch (err) {
                             // show error message
                             this.$store.dispatch('global/setSnackBar', {

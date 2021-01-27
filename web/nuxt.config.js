@@ -37,5 +37,6 @@ export default {
         fileApi: process.env.FILE_API,
         blogApi: process.env.BLOG_API,
         commentApi: process.env.COMMENT_API,
+        googleFileLink: process.env.GOOGLE_FILE_LINK,
     }
 }

@@ -122,7 +122,7 @@
                                     }
                                 }
                             );
-                            this.avatar = `${process.env.fileApi}/files/${data.payload.fileId}`;
+                            this.avatar = `${process.env.googleFileLink}${data.payload.fileId}`;
                         } catch (err) {
                             // show error message
                             this.$store.dispatch('global/setSnackBar', {
