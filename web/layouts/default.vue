@@ -80,7 +80,7 @@
             <v-progress-linear indeterminate :color="secondaryColor" :active="$store.state.global.progressBar"></v-progress-linear>
         </div>
         <Nuxt />
-        <div class="my-5 text-center">
+        <div class="my-10 text-center">
             <a class="text--secondary" style="text-decoration: none;" href="mailto: lipohong@hotmail.com">
                 <span>iBlog © 2020 </span>
                 <span>Stan Li</span>

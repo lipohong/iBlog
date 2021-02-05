@@ -10,11 +10,17 @@ body {
         font-weight: bolder;
     }
     .title-2 {
-        font-size: large;;
+        font-size: large;
     }
-    // .v-application--wrap {
-    //     background-color: #eee;
-    // }
+    .v-tab {
+        text-transform: none;
+    }
+    .blogContainer {
+        cursor: pointer;
+        &:hover {
+            background: #aaa;
+        }
+    }
 }
 
 @import './home.scss';

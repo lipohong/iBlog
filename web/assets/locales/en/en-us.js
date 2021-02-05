@@ -27,10 +27,10 @@ export default {
             postBlog: "Post Blog",
             register: "Register",
             top5BlogsPosters: "Most Blogs Owner",
-            top5LatestBlogs: "Latest Blogs",
-            top5ViewedBlogs: "Most Viewed Blogs",
-            top5CommentedBlogs: "Most Commented Blogs",
-            top5LikedBlogs: "Most Liked Blogs"
+            top5LatestBlogs: "Latest",
+            top5ViewedBlogs: "Most Viewed",
+            top5CommentedBlogs: "Most Commented",
+            top5LikedBlogs: "Most Liked"
         },
         login: {
             iblogLogin: "iBlog Login",
