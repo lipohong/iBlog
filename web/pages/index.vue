@@ -21,7 +21,7 @@
             <v-tabs show-arrows right v-model="tab">
                 <v-tab small v-for="(item, index) in tabTitles" :key= index>{{ item }}</v-tab>
             </v-tabs>
-            <v-tabs-items v-model="tab">
+            <v-tabs-items class="mt-5" v-model="tab">
                 <v-tab-item
                     v-for="(item, index) in [top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs]"
                     :key="index"
@@ -33,40 +33,29 @@
                 <span>{{ $t('pages.home.top5LatestBlogs') }}</span>
             </div>
             <div v-if="latestBlogs">
-                <v-sheet class="blogContainer mb-2" v-for="(blog, index) in latestBlogs.blogList" :key="index" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
-                    <v-container>
-                        <div style="display: flex">
-                            <div>
-                                <v-avatar :color="secondaryColor" size="125" tile>
-                                    <v-img v-if="blog.cover" :src="blog.cover"></v-img>
-                                    <span class="white--text text-h3" v-else>{{ blog.title[0] }}</span>
-                                </v-avatar>
-                            </div>
-                            <div class="ml-2">
-                                <div class="text-h5">
-                                    <span v-if="blog.cover" v-text="blog.title"/>
-                                    <span v-else v-text="String(blog.title).slice(1)"/>
-                                </div>
-                                <div class="mt-1 body-1 text--secondary">
-                                    <span v-text="blog.content"></span>
-                                </div>
-                                <div class="mt-1 caption text--secondary">
-                                    {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
-                                </div>
-                                <div class="mt-1 body-2">
-                                    <v-icon>mdi-eye-outline</v-icon>
-                                    <span>{{ blog.viewed || 0 }}</span>
-                                    <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
-                                    <span>{{ blog.comments }}</span>
-                                    <v-icon class="ml-2">mdi-heart-outline</v-icon>
-                                    <span>{{ blog.likes }}</span>
+                <div class="blogListContainer">
+                    <div class="blogContainer mb-4" v-for="(blog, index) in latestBlogs.blogList" :key="index" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
+                        <v-img v-if="blog.cover" :src="blog.cover" height="250"></v-img>
+                        <h2>{{ blog.title }}</h2>
+                        <div>{{ blog.content }}</div>
+                        <v-divider class="mt-4 mb-2"></v-divider>
+                        <div>
+                            <div class="body-2">
+                                <v-icon>mdi-eye-outline</v-icon>
+                                <span>{{ blog.viewed || 0 }}</span>
+                                <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
+                                <span>{{ blog.comments }}</span>
+                                <v-icon class="ml-2">mdi-heart-outline</v-icon>
+                                <span>{{ blog.likes }}</span>
+                                <div class="caption text--secondary">
+                                    <v-icon class="mr-1">mdi-update</v-icon> {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
                                 </div>
                             </div>
                         </div>
-                    </v-container>
-                </v-sheet>
-                <div class="mt-10 text-center" v-if="latestBlogs.pagination.currentPage < latestBlogs.pagination.totalPage">
-                    <v-progress-circular v-if="loadingLatestBlogs" indeterminate :color="primaryColor"></v-progress-circular>
+                    </div>
+                </div>
+                <div class="mt-10 text-center" v-if="loadingLatestBlogs">
+                    <v-progress-circular indeterminate :color="primaryColor"></v-progress-circular>
                 </div>
             </div>
         </v-container>
@@ -129,7 +118,7 @@
                     // limit length of title
                     blog.title = _.truncate(blog.title, { 'length': 50 });
                     // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30 });
+                    blog.content = _.truncate(blog.content, { 'length': 100 });
 
                     return blog
                 })
@@ -200,6 +189,10 @@
 
                         return blog
                     });
+                    // remove onscroll event if all blogs loaded
+                    if (latestBlogs.pagination.currentPage >= latestBlogs.pagination.totalPage) {
+                        window.onscroll = () => {};
+                    }
                     this.latestBlogs = {
                         blogList: [...this.latestBlogs.blogList, ...latestBlogs.blogList],
                         pagination: latestBlogs.pagination
@@ -215,6 +208,12 @@
                     });
                 }
                 this.loadingLatestBlogs = false;
+            },
+            scrollListening() {
+                if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+                    // at the bottom of the page
+                    this.loadMoreBlogs();
+                }
             }
         },
         computed: {
@@ -231,15 +230,13 @@
                 return this.$store.state.mode.mode === 'light' ? 'secondary' : 'primary';
             },
         },
-        mounted() {
+        created() {
             if (process.client) {
-                window.onscroll = () => {
-                    if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
-                        // you're at the bottom of the page
-                        this.loadMoreBlogs();
-                    }
-                };
+                window.onscroll = () => this.scrollListening();
             }
+        },
+        beforeDestroy() {
+            window.onscroll = () => {};
         },
         head() {
             return {
