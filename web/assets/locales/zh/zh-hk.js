@@ -27,10 +27,10 @@ export default {
             postBlog: "發 Blog",
             register: "注冊",
             top5BlogsPosters: "最多發 blog 作者",
-            top5LatestBlogs: "最新發佈 blog",
-            top5ViewedBlogs: "最多瀏覽 blog",
-            top5CommentedBlogs: "最多評論 blog",
-            top5LikedBlogs: "最多點讚 blog"
+            top5LatestBlogs: "最新發佈",
+            top5ViewedBlogs: "最多瀏覽",
+            top5CommentedBlogs: "最多評論",
+            top5LikedBlogs: "最多點讚"
         },
         login: {
             iblogLogin: "iBlog 登錄",

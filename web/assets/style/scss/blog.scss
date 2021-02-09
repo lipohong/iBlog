@@ -34,6 +34,7 @@
     .viewUserBlogsContainer {
         .blogContainer {
             cursor: pointer;
+            border-radius: 10px;
             &:hover {
                 background: #aaa;
             }

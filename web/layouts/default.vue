@@ -57,19 +57,19 @@
                     </template>
                     <v-list :color="secondaryColor">
                         <v-list-item link @click="redirectToUserProfile">
-                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.profileManagement`) }}<v-icon dark right>mdi-card-account-details</v-icon></v-list-item-title>
+                            <v-list-item-title style="color: #fff"><v-icon dark>mdi-card-account-details</v-icon> {{ this.$t(`pages.layout.profileManagement`) }}</v-list-item-title>
                         </v-list-item>
                         <v-divider />
                         <v-list-item link @click="redirectToBlogCreate">
-                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.postBlog`) }}<v-icon dark right>mdi-post</v-icon></v-list-item-title>
+                            <v-list-item-title style="color: #fff"><v-icon dark>mdi-post</v-icon> {{ this.$t(`pages.layout.postBlog`) }}</v-list-item-title>
                         </v-list-item>
                         <v-divider />
                         <v-list-item link @click="redirectToBlogManagement">
-                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.blogsManagement`) }}<v-icon dark right>mdi-playlist-edit</v-icon></v-list-item-title>
+                            <v-list-item-title style="color: #fff"><v-icon dark>mdi-playlist-edit</v-icon> {{ this.$t(`pages.layout.blogsManagement`) }}</v-list-item-title>
                         </v-list-item>
                         <v-divider />
                         <v-list-item link @click="logOut">
-                            <v-list-item-title style="color: #fff">{{ this.$t(`pages.layout.logOut`) }}<v-icon dark right>mdi-exit-to-app</v-icon></v-list-item-title>
+                            <v-list-item-title style="color: #fff"><v-icon dark>mdi-exit-to-app</v-icon> {{ this.$t(`pages.layout.logOut`) }}</v-list-item-title>
                         </v-list-item>
                     </v-list>
                 </v-menu>
@@ -80,7 +80,7 @@
             <v-progress-linear indeterminate :color="secondaryColor" :active="$store.state.global.progressBar"></v-progress-linear>
         </div>
         <Nuxt />
-        <div class="my-5 text-center">
+        <div class="my-10 text-center">
             <a class="text--secondary" style="text-decoration: none;" href="mailto: lipohong@hotmail.com">
                 <span>iBlog © 2020 </span>
                 <span>Stan Li</span>
