@@ -177,7 +177,7 @@
             async loadMoreBlogs() {
                 this.loadingLatestBlogs = true;
                 try {
-                    let response = await this.$axios.get(`${process.env.blogApi}/blogs?page=${this.latestBlogs.pagination.currentPage + 1}&perPage=5`);
+                    let response = await this.$axios.get(`${process.env.blogApi}/blogs?page=${this.latestBlogs.pagination.currentPage + 1}&perPage=10`);
                     let latestBlogs = response.data.payload;
                     latestBlogs.blogList = latestBlogs.blogList.map(blog => {
                         // conver html to plain string
@@ -185,7 +185,7 @@
                         // limit length of title
                         blog.title = _.truncate(blog.title, { 'length': 50 });
                         // limit length of content
-                        blog.content = _.truncate(blog.content, { 'length': 30 });
+                        blog.content = _.truncate(blog.content, { 'length': 100 });
 
                         return blog
                     });
