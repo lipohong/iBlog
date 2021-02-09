@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div class="ma-1" style="flex-grow: 3">
-                    <v-sheet class="blogContainer mb-2" v-for="blog in blogList" :key="blog._id" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
+                    <v-sheet class="blogContainer mb-2" v-for="blog in blogList" :key="blog._id" elevation="2" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
                         <v-container>
                             <div style="display: flex">
                                 <div>
@@ -141,7 +141,7 @@
                 let { blogList, pagination } = response.data.payload;
                 blogList = blogList.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
                     blog.title = _.truncate(blog.title, { 'length': 50 });
                     // limit length of content

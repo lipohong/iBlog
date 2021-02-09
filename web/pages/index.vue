@@ -35,11 +35,11 @@
             <div v-if="latestBlogs">
                 <div class="blogListContainer">
                     <div class="blogContainer mb-4" v-for="(blog, index) in latestBlogs.blogList" :key="index" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
-                        <v-img v-if="blog.cover" :src="blog.cover" height="250"></v-img>
-                        <h2>{{ blog.title }}</h2>
-                        <div>{{ blog.content }}</div>
-                        <v-divider class="mt-4 mb-2"></v-divider>
-                        <div>
+                        <v-img class="mx-1 mt-2" v-if="blog.cover" :src="blog.cover" height="250"></v-img>
+                        <div class="mx-4 my-2">
+                            <h2>{{ blog.title }}</h2>
+                            <div>{{ blog.content }}</div>
+                            <v-divider class="mt-4 mb-2"></v-divider>
                             <div class="body-2">
                                 <v-icon>mdi-eye-outline</v-icon>
                                 <span>{{ blog.viewed || 0 }}</span>
@@ -47,7 +47,7 @@
                                 <span>{{ blog.comments }}</span>
                                 <v-icon class="ml-2">mdi-heart-outline</v-icon>
                                 <span>{{ blog.likes }}</span>
-                                <div class="caption text--secondary">
+                                <div class="mt-1 caption text--secondary">
                                     <v-icon class="mr-1">mdi-update</v-icon> {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                 let top5ViewedBlogs = response.data.payload;
                 top5ViewedBlogs = top5ViewedBlogs.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
                     blog.title = _.truncate(blog.title, { 'length': 50 });
                     // limit length of content
@@ -88,7 +88,7 @@
                 let top5CommentedBlogs = response.data.payload;
                 top5CommentedBlogs = top5CommentedBlogs.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
                     blog.title = _.truncate(blog.title, { 'length': 50 });
                     // limit length of content
@@ -101,7 +101,7 @@
                 let top5LikedBlogs = response.data.payload;
                 top5LikedBlogs = top5LikedBlogs.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
                     blog.title = _.truncate(blog.title, { 'length': 50 });
                     // limit length of content
@@ -110,11 +110,11 @@
                     return blog
                 })
                 // get latest 10 blogs
-                response = await $axios.get(`${process.env.blogApi}/blogs?page=1&perPage=5`);
+                response = await $axios.get(`${process.env.blogApi}/blogs?page=1&perPage=10`);
                 let latestBlogs = response.data.payload;
                 latestBlogs.blogList = latestBlogs.blogList.map(blog => {
                     // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
                     blog.title = _.truncate(blog.title, { 'length': 50 });
                     // limit length of content
