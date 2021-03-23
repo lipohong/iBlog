@@ -1,26 +1,40 @@
 .home {
     .bannerContainer {
         background: #ccc;
-        color: black
+        color: black;
     }
     .top5BlogPostersContainer {
         display: grid;
         justify-items: center;
-        grid-template-columns:
-        repeat(auto-fill, minmax(170px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     }
     .top5BlogsContainer {
         display: grid;
-        grid-template-columns:
-        repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         .blogContainer {
             cursor: pointer;
             border: 1px solid #eee;
             border-radius: 10px;
             margin: 5px;
-            box-shadow: 2px 2px 2px #eee;
+            box-shadow: 3px 3px 10px #eee;
             &:hover {
                 background: #aaa;
+            }
+        }
+    }
+    .blogListContainer {
+        column-gap: 10px;
+        .blogContainer {
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            break-inside: avoid-column;
+            page-break-inside: avoid;
+            transition: all 300ms ease-in-out;
+            &:hover {
+                transform: scale(0.9) rotate(2deg);
             }
         }
     }
