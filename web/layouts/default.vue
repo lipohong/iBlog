@@ -79,15 +79,17 @@
             </v-app-bar>
             <v-progress-linear indeterminate :color="secondaryColor" :active="$store.state.global.progressBar"></v-progress-linear>
         </div>
-        <Nuxt />
-        <footer class="homepageFooter my-10 text-center">
-            <a class="text--secondary" style="text-decoration: none;" href="mailto: lipohong@hotmail.com">
-                <span>iBlog © 2020 </span>
-                <span>Stan Li</span>
-            </a>
-            <a class="ml-2" style="text-decoration: none;" href="https://github.com/lipohong/iBlog">
-                <v-icon>mdi-github</v-icon>
-            </a>
+        <div class="nuxt">
+            <Nuxt />
+        </div>
+        <footer>
+            <v-app-bar class="homepageFooter" :color="primaryColor" flat dark>
+                <span>iBlog<sup>©</sup> 2021 </span>
+                <strong>Stan Li</strong>
+                <a class="ml-2" style="text-decoration: none;" href="https://github.com/lipohong/iBlog">
+                    <v-icon>mdi-github</v-icon>
+                </a>
+            </v-app-bar>
         </footer>
         <v-snackbar
             :value="$store.state.global.snackBarOpen"
