@@ -39,27 +39,38 @@ async function getMyInfo(expression: object): Promise<UserModel> {
   }
 }
 
-async function saveNewUser(model: UserModel): Promise<Boolean> {
+async function saveNewUser(model: UserModel): Promise<UserModel> {
   try {
     const user: any = await new User(model).save();
 
-    return !!user;
+    return new UserModel(user, 'get');
   }
   catch (err) {
     throw err;
   }
 }
 
-async function updateUser(expression: object, updateFields: object): Promise<any> {
+async function updateUser(expression: object, updateFields: object): Promise<UserModel> {
   try {
     let user = await User.findOneAndUpdate(expression, { $set: removeUndefinedField(updateFields) }).lean();
     user =  await User.findOne(expression);
 
-    return user;
+    return new UserModel(user, 'get');
   }
   catch (err) {
     throw err;
   }
 }
 
-export { getUser, getMyInfo, saveNewUser, updateUser, getUsers }
+async function removeUser(expression: object): Promise<Boolean> {
+  try {
+    await User.deleteOne(expression);
+
+    return true;
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
+export { getUser, getMyInfo, saveNewUser, updateUser, getUsers, removeUser }

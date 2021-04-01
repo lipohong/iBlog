@@ -5,33 +5,13 @@ body {
     .v-btn {
         text-transform: none;
     }
-    .title-1 {
-        font-size: x-large;
-        font-weight: bolder;
-    }
-    .title-2 {
-        font-size: large;
+    div {
+        word-wrap: break-word;
+        word-break: break-all;
     }
     .v-tab {
         text-transform: none;
     }
-    .blogListContainer {
-        column-gap: 10px;
-        .blogContainer {
-            cursor: pointer;
-            display: block;
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 2px 2px 5px #eee;
-            break-inside: avoid-column;
-            page-break-inside: avoid;
-            &:hover {
-                box-shadow: 5px 5px 5px #aaa;
-            }
-        }
-    }
-    
     /* Masonry on large screens */
     @media only screen and (min-width: 1024px) {
         .blogListContainer {
@@ -60,9 +40,8 @@ body {
     }
 }
 
-
-@import './home.scss';
-@import './auth.scss';
-@import './blog.scss';
-@import './user.scss';
-
+@import "./home.scss";
+@import "./auth.scss";
+@import "./blog.scss";
+@import "./user.scss";
+@import "./layout.scss";
