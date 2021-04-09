@@ -27,6 +27,7 @@
                 </div>
                 <div>
                     <span>{{ $t('pages.blog.cover') }}</span>
+                    <div :class="`coverMessage${coverExist ? '' : ' showCoverMessage'}`">{{ $t('messages.blog.form.coverRequired') }}</div>
                     <div style="display: flex; justify-content: center">
                         <div @click="uploadCover" class="text-center" style="width: 480px; height: 270px; border: dashed 2px #aaa; cursor: pointer; line-height: 270px">
                             <v-img v-if="cover" :src="cover" contain height="100%" />
@@ -34,7 +35,7 @@
                         </div>
                         <v-tooltip v-if="cover" bottom>
                             <template v-slot:activator="{ on, attrs }">
-                                <v-btn v-bind="attrs" v-on="on" @click="cover = ''" icon small>
+                                <v-btn v-bind="attrs" v-on="on" @click="removeCover" icon small>
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
                             </template>
@@ -127,7 +128,8 @@
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 dialogOpen: false,
                 dialogTitle: '',
-                dialogText: ''
+                dialogText: '',
+                coverExist: true
             }
         },
         computed: {
@@ -231,6 +233,7 @@
                                 }
                             );
                             this.cover = `${process.env.googleFileLink}${data.payload.fileId}`;
+                            this.coverExist = true;
                         } catch (err) {
                             // show error message
                             this.$store.dispatch('global/setSnackBar', {
@@ -245,7 +248,15 @@
                     }
                 }
             },
+            removeCover () {
+                this.cover = '';
+                this.coverExist = false;
+            },
             async handleSubmit() {
+                if (!this.cover) {
+                    this.coverExist = false;
+                    return;
+                }
                 if (!this.$refs.title.validate()) return;
                 const postData = {
                     cover: this.cover,

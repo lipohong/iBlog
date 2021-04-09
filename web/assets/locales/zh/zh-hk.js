@@ -21,8 +21,8 @@ export default {
             lightDarkSwitching: "日間 / 夜間模式切換"
         },
         home: {
-            shareWithIBlog: "在 iBlog 分享你的成長!",
-            description: "iBlog 是一個發佈和記錄 blog 的系統",
+            shareWithIBlog: "在 iBlog 分享你的時刻!",
+            description: "iBlog 是一個分享故事的 blog 網站",
             login: "登錄",
             postBlog: "發 Blog",
             register: "注冊",
@@ -245,6 +245,7 @@ export default {
             form: {
                 titlePlaceHolder: "在此填寫標題...",
                 titleRequired: "請填寫標題",
+                coverRequired: "請提供封面",
                 contentPlaceHolder: "在此輸入blog内容...",
                 collectionNameRequired: "請填寫收藏夾名",
                 commentRequired: "請先寫下評論内容"

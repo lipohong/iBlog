@@ -21,8 +21,8 @@ export default {
             lightDarkSwitching: "Light / Dark switch"
         },
         home: {
-            shareWithIBlog: "Share Your Development With iBlog!",
-            description: "iBlog is a blog management system with features that helping users to post or record blogs.",
+            shareWithIBlog: "Share Your Moment With iBlog!",
+            description: "iBlog is a blogging website for stories sharing",
             login: "Login",
             postBlog: "Post Blog",
             register: "Register",
@@ -245,6 +245,7 @@ export default {
             form: {
                 titlePlaceHolder: "Set blog title here...",
                 titleRequired: "Title is required",
+                coverRequired: "Cover is required",
                 contentPlaceHolder: "Input blog content here...",
                 collectionNameRequired: "Collection name is required.",
                 commentRequired: "Comment should not be empty."
