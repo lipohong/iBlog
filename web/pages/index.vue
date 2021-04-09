@@ -1,5 +1,6 @@
 <template>
     <div class="home">
+        <AppBar class="mb-5" />
         <div class="bannerContainer">
             <div class="py-15 px-3">
                 <div class="text-sm-h4 text-h5 text-center">{{ $t('pages.home.shareWithIBlog') }}</div>
@@ -59,12 +60,15 @@
                 </div>
             </div>
         </v-container>
+        <FooterBar />
     </div>
 </template>
 <script>
     import * as _ from 'lodash';
     const dayjs = require('dayjs');
     import BlogTile from '../components/blogTile';
+    import AppBar from '../components/appBar';
+    import FooterBar from '../components/footerBar';
     const htmlToText = require('html-to-text');
 
     export default {
@@ -131,7 +135,7 @@
             }
         },
         components: {
-            BlogTile
+            AppBar, BlogTile, FooterBar
         },
         data() {
             return {

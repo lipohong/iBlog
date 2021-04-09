@@ -1,4 +1,10 @@
 // global style setting and import file
+$break-point-xs: 480px;
+$break-point-sm: 480px;
+$break-point-md: 768px;
+$break-point-lg: 1024px;
+$break-point-xl: 1280px;
+
 body {
     margin: 0;
     padding: 0;
@@ -12,32 +18,6 @@ body {
     .v-tab {
         text-transform: none;
     }
-    /* Masonry on large screens */
-    @media only screen and (min-width: 1024px) {
-        .blogListContainer {
-            -moz-column-count: 4;
-            -webkit-column-count: 4;
-            column-count: 4;
-        }
-    }
-
-    /* Masonry on medium-sized screens */
-    @media only screen and (max-width: 1023px) and (min-width: 768px) {
-        .blogListContainer {
-            -moz-column-count: 3;
-            -webkit-column-count: 3;
-            column-count: 3;
-        }
-    }
-
-    /* Masonry on small screens */
-    @media only screen and (max-width: 767px) and (min-width: 540px) {
-        .blogListContainer {
-            -moz-column-count: 2;
-            -webkit-column-count: 2;
-            column-count: 2;
-        }
-    }
 }
 
 @import "./home.scss";
@@ -45,3 +25,4 @@ body {
 @import "./blog.scss";
 @import "./user.scss";
 @import "./layout.scss";
+@import "./sideBar.scss";

@@ -1,6 +1,7 @@
 <template>
     <div class="blog">
-        <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
+        <SideBar />
+        <div class="viewBlogContainer">
             <div class="coverContainer mb-5" v-if="blog['cover']">
                 <img class="cover" :src="blog['cover']" />
             </div>
@@ -131,17 +132,18 @@
                     </v-container>
                 </v-sheet>
             </v-overlay>
-        </v-container>
+        </div>
     </div>
 </template>
 <script>
     import AuthorProfile from '../../../components/authorProfile';
     import FunctionButton from '../../../components/functionButton';
+    import SideBar from '../../../components/sideBar';
     const dayjs = require('dayjs');
 
     export default {
         components: {
-            AuthorProfile, FunctionButton
+            AuthorProfile, FunctionButton, SideBar
         },
         async asyncData({ params, $axios, store, redirect, app }) {
             try {

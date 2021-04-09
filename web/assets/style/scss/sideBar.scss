@@ -1,0 +1,30 @@
+.sideBar {
+    height: 100%;
+    background-color: aqua;
+    transition-duration: 0.3s;
+}
+/* x large screens */
+@media only screen and (min-width: $break-point-xl) {
+    .sideBar {
+        width: 350px;
+    }
+}
+
+/* large screens */
+@media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-lg) {
+    .sideBar {
+        width: 300px;
+    }
+}
+
+/* medium-sized screens */
+@media only screen and (max-width: $break-point-lg - 1px) and (min-width: $break-point-md) {
+    .sideBar {
+    }
+}
+
+/* small screens */
+@media only screen and (max-width: $break-point-md - 1px) and (min-width: $break-point-sm) {
+    .sideBar {
+    }
+}

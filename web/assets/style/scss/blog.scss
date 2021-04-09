@@ -1,5 +1,7 @@
 .blog {
     word-wrap: break-word;
+    height: 100%;
+    display: flex;
     .editorContainer {
         .ql-container {
             min-height: 400px;
@@ -29,6 +31,8 @@
         }
     }
     .viewBlogContainer {
+        width: 100%;
+        margin: 1rem;
         .coverContainer {
             text-align: center;
             .cover {

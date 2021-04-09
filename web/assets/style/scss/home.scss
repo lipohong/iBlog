@@ -39,3 +39,30 @@
         }
     }
 }
+
+/* Masonry on large screens */
+@media only screen and (min-width: $break-point-xl) {
+    .blogListContainer {
+        -moz-column-count: 4;
+        -webkit-column-count: 4;
+        column-count: 4;
+    }
+}
+
+/* Masonry on medium-sized screens */
+@media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-md) {
+    .blogListContainer {
+        -moz-column-count: 3;
+        -webkit-column-count: 3;
+        column-count: 3;
+    }
+}
+
+/* Masonry on small screens */
+@media only screen and (max-width: $break-point-md - 1px) and (min-width: $break-point-sm) {
+    .blogListContainer {
+        -moz-column-count: 2;
+        -webkit-column-count: 2;
+        column-count: 2;
+    }
+}
