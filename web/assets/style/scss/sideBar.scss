@@ -1,7 +1,25 @@
 .sideBar {
+    flex-shrink: 0;
     height: 100%;
-    background-color: aqua;
+    width: 0;
+    overflow: hidden;
     transition-duration: 0.3s;
+    .sideBarContainer {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        align-items: center;
+        color: white;
+        .sideBarAvatar {
+            margin-top: 5rem;
+        }
+        .h1 {
+            margin: 1.2rem 0;
+        }
+        h2 {
+            margin: 1rem 0;
+        }
+    }
 }
 /* x large screens */
 @media only screen and (min-width: $break-point-xl) {
@@ -20,11 +38,19 @@
 /* medium-sized screens */
 @media only screen and (max-width: $break-point-lg - 1px) and (min-width: $break-point-md) {
     .sideBar {
+        position: fixed;
+        &.showSideBar {
+            width: 300px;
+        }
     }
 }
 
 /* small screens */
 @media only screen and (max-width: $break-point-md - 1px) and (min-width: $break-point-sm) {
     .sideBar {
+        position: fixed;
+        &.showSideBar {
+            width: 300px;
+        }
     }
 }

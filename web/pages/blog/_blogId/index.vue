@@ -1,7 +1,7 @@
 <template>
     <div class="blog">
-        <SideBar />
-        <div class="viewBlogContainer">
+        <SideBar :author="author" />
+        <div class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
             <div class="coverContainer mb-5" v-if="blog['cover']">
                 <img class="cover" :src="blog['cover']" />
             </div>
