@@ -60,7 +60,6 @@
                 </div>
             </div>
         </v-container>
-        <FooterBar />
     </div>
 </template>
 <script>
@@ -68,7 +67,6 @@
     const dayjs = require('dayjs');
     import BlogTile from '../components/blogTile';
     import AppBar from '../components/appBar';
-    import FooterBar from '../components/footerBar';
     const htmlToText = require('html-to-text');
 
     export default {
@@ -135,7 +133,7 @@
             }
         },
         components: {
-            AppBar, BlogTile, FooterBar
+            AppBar, BlogTile
         },
         data() {
             return {

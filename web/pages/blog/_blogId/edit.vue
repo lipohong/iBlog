@@ -1,9 +1,11 @@
 <template>
     <div class="blog">
+        <AppBar />
         <BlogForm :blog="blog" />
     </div>
 </template>
 <script>
+    import AppBar from '../../../components/appBar';
     import BlogForm from '../../../components/blogForm';
 
     export default {
@@ -24,7 +26,7 @@
                 redirect(`/${app.i18n.locale}/auth/login`);
             }
         },
-        components: { BlogForm },
+        components: { AppBar, BlogForm },
         middleware: ['auth'],
         data() {
             return {

@@ -1,5 +1,6 @@
 <template>
     <div class="blog">
+        <AppBar />
         <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
             <v-card>
                 <v-card-title>
@@ -65,6 +66,7 @@
 <script>
     import * as _ from 'lodash';
     const dayjs = require('dayjs');
+    import AppBar from '../../components/appBar';
 
     export default {
         async asyncData({ params, $axios, store, redirect, app }) {
@@ -146,6 +148,7 @@
                 ]
             }
         },
+        components: { AppBar },
         watch: {
             page() {
                 this.getBlogList();

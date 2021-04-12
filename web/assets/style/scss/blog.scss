@@ -1,7 +1,6 @@
 .blog {
     word-wrap: break-word;
     height: 100%;
-    display: flex;
     .editorContainer {
         .ql-container {
             min-height: 400px;
@@ -31,23 +30,27 @@
         }
     }
     .viewBlogContainer {
-        margin: 0 auto;
-        padding: 1rem;
-        width: 100%;
-        .coverContainer {
-            text-align: center;
-            .cover {
-                width: 100%;
-                height: auto;
+        main {
+            padding: 1rem;
+            .coverContainer {
+                text-align: center;
+                .cover {
+                    width: 100%;
+                    height: auto;
+                }
             }
-        }
-        .blogTitle {
-            font-size: 40px;
-            font-family: medium-content-title-font, Georgia, Cambria,
-                "Times New Roman", Times, serif;
-        }
-        .updatedDate {
-            color: #999;
+            .blogTitle {
+                font-size: 40px;
+                font-family: medium-content-title-font, Georgia, Cambria,
+                    "Times New Roman", Times, serif;
+            }
+            .updatedDate {
+                color: #999;
+            }
+            .sperateBar {
+                height: 0.5rem !important;
+                margin: 3rem 0;
+            }
         }
     }
     .viewUserBlogsContainer {
@@ -57,6 +60,36 @@
             &:hover {
                 background: #aaa;
             }
+        }
+    }
+    /* x large screens */
+    @media only screen and (min-width: $break-point-xl) {
+        .viewBlogContainer,
+        .viewUserBlogsContainer {
+            margin-left: 27rem;
+        }
+    }
+    /* large screens */
+    @media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-lg) {
+        .viewBlogContainer,
+        .viewUserBlogsContainer {
+            margin-left: 22rem;
+        }
+    }
+
+    /* medium-sized screens */
+    @media only screen and (max-width: $break-point-lg - 1px) and (min-width: $break-point-md) {
+        .viewBlogContainer,
+        .viewUserBlogsContainer {
+            margin-left: 0;
+        }
+    }
+
+    /* small screens */
+    @media only screen and (max-width: $break-point-md - 1px) {
+        .viewBlogContainer,
+        .viewUserBlogsContainer {
+            margin-left: 0;
         }
     }
 }

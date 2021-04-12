@@ -1,56 +1,119 @@
+@mixin tab-selected {
+    &::after {
+        position: absolute;
+        display: block;
+        border: 1px solid white;
+        content: "";
+        width: 100%;
+        height: 100%;
+        margin: 1rem 0 0 -1rem;
+        z-index: -1000;
+    }
+}
 .sideBar {
+    position: fixed;
     flex-shrink: 0;
     height: 100%;
     width: 0;
     overflow: hidden;
-    transition-duration: 0.3s;
+    transition-duration: 0.2s;
+    z-index: 1000;
     .sideBarContainer {
-        display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        align-items: center;
-        color: white;
-        .sideBarAvatar {
+        height: 100%;
+        button {
+            margin: 0.5rem;
+            padding: 0.5rem;
+            background-color: white;
+            outline: 0;
+            &:hover {
+                background-color: darken($color: white, $amount: 10);
+            }
+            &:focus {
+                background-color: white;
+            }
+        }
+        .profileContainer {
             margin-top: 5rem;
+            text-align: center;
+            color: white;
         }
-        .h1 {
-            margin: 1.2rem 0;
+        nav {
+            margin-top: 5rem;
+            ul {
+                padding: 0 3rem 0 0;
+                li {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    list-style-type: none;
+                    padding: 1rem 1.5rem;
+                    margin-bottom: 1.5rem;
+                    z-index: 100;
+                    background-color: white;
+                    .v-icon {
+                        margin-right: 2rem;
+                    }
+                    a {
+                        font-size: 1.2rem;
+                    }
+                    &.selected {
+                        @include tab-selected;
+                    }
+                    &:hover {
+                        @include tab-selected;
+                    }
+                }
+            }
         }
-        h2 {
-            margin: 1rem 0;
+    }
+    .sideBarMenuButton {
+        position: fixed;
+        cursor: pointer;
+        display: none;
+        top: 0.5rem;
+        padding: 0.5rem;
+        transition-duration: 0.2s;
+        opacity: 0.9;
+        &.openSideBarMenu {
+            margin-left: 17rem;
         }
     }
 }
 /* x large screens */
 @media only screen and (min-width: $break-point-xl) {
     .sideBar {
-        width: 350px;
+        width: 23rem;
     }
 }
 
 /* large screens */
 @media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-lg) {
     .sideBar {
-        width: 300px;
+        width: 18rem;
     }
 }
 
 /* medium-sized screens */
 @media only screen and (max-width: $break-point-lg - 1px) and (min-width: $break-point-md) {
     .sideBar {
-        position: fixed;
         &.showSideBar {
-            width: 300px;
+            width: 17rem;
+        }
+        .sideBarMenuButton {
+            display: inline-block;
         }
     }
 }
 
 /* small screens */
-@media only screen and (max-width: $break-point-md - 1px) and (min-width: $break-point-sm) {
+@media only screen and (max-width: $break-point-md - 1px) {
     .sideBar {
-        position: fixed;
         &.showSideBar {
-            width: 300px;
+            width: 17rem;
+        }
+        .sideBarMenuButton {
+            display: inline-block;
         }
     }
 }

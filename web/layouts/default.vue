@@ -4,6 +4,7 @@
         <div class="nuxt">
             <Nuxt />
         </div>
+        <FooterBar />
         <v-snackbar
             :value="$store.state.global.snackBarOpen"
             :color="$store.state.global.snackBarColor"
@@ -26,10 +27,12 @@
     </v-app>
 </template>
 <script>
+    import FooterBar from '../components/footerBar';
     import { dark, light } from '../assets/style/themes/themes';
 
     export default {
         middleware: ['checkTheme', 'checkMode', 'checkAuthentication'],
+        components: { FooterBar },
         methods: {
             closeSnackBar() {
                 this.$store.dispatch('global/setSnackBar', {
