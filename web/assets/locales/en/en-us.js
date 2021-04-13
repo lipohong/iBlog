@@ -20,6 +20,12 @@ export default {
             theme: "Theme",
             lightDarkSwitching: "Light / Dark switch"
         },
+        sideBar: {
+            backToHome: "Back to home page",
+            allBlogs: "All Blogs",
+            aboutAuthor: "About Author",
+            languageSwitching: "English / Chinese switch",
+        },
         home: {
             shareWithIBlog: "Share Your Moment With iBlog!",
             description: "iBlog is a blogging website for stories sharing",

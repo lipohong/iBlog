@@ -1,4 +1,5 @@
 .blog {
+    position: relative;
     word-wrap: break-word;
     height: 100%;
     .editorContainer {
@@ -54,6 +55,28 @@
         }
     }
     .viewUserBlogsContainer {
+        padding: 5rem;
+        .searchBarContainer {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: row-reverse;
+            .searchButton {
+                margin-left: 1rem;
+                padding: 1rem;
+                cursor: pointer;
+                display: inline-block;
+                &:hover {
+                    filter: brightness(80%);
+                }
+            }
+            input {
+                width: 100%;
+                max-width: 30rem;
+                border: 2px solid;
+                padding: 0.5rem;
+                outline: none;
+            }
+        }
         .blogContainer {
             cursor: pointer;
             border-radius: 10px;
@@ -90,6 +113,9 @@
         .viewBlogContainer,
         .viewUserBlogsContainer {
             margin-left: 0;
+        }
+        .viewUserBlogsContainer {
+            padding: 4rem 1.5rem;
         }
     }
 }

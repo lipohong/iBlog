@@ -1,6 +1,6 @@
 <template>
     <div class="blog">
-        <SideBar :author="author" />
+        <SideBar :author="author" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewBlogContainer" >
             <main :style="`max-width: ${thresholds.sm}px`">
                 <v-progress-linear class="sperateBar" value="100" :color="primaryColor"></v-progress-linear>
@@ -160,6 +160,13 @@
                 // get author info
                 response = await $axios.get(`${process.env.userApi}/users/${blog['userId']}`);
                 const author = response.data.payload;
+                // get author's fans
+                response = await $axios.get(`${process.env.userApi}/follows/${blog['userId']}/fans`);
+                const { followList } = response.data.payload;
+                // get author blogs amount
+                response = await $axios.get(`${process.env.blogApi}/blogs/user/${blog['userId']}/amount`);
+                const { amount } = response.data.payload;
+                const blogsAmount = amount;
                 // get collectionList
                 let collectionList = [];
                 if (headers) {
@@ -184,7 +191,7 @@
                 response = await $axios.get(`${process.env.commentApi}/likes/blog/${params.blogId}/amount`);
                 const likes = response.data.payload;
                 return {
-                    blog, author, collectionList, commentList, commentListPagination, comments, liked, likes
+                    author, blog, blogsAmount, collectionList, commentList, commentListPagination, comments, followList, liked, likes
                 }
             } catch (err) {
                 redirect(`/${app.i18n.locale}/auth/login`);

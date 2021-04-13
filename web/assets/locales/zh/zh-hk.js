@@ -20,6 +20,12 @@ export default {
             theme: "主題",
             lightDarkSwitching: "日間 / 夜間模式切換"
         },
+        sideBar: {
+            backToHome: "回首頁",
+            allBlogs: "全部 Blog",
+            aboutAuthor: "關於作者",
+            languageSwitching: "英文 / 中文切換",
+        },
         home: {
             shareWithIBlog: "在 iBlog 分享你的時刻!",
             description: "iBlog 是一個分享故事的 blog 網站",

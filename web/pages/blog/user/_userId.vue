@@ -1,125 +1,55 @@
 <template>
     <div class="blog">
-        <SideBar :author="author" :selectedItem="0" />
+        <SideBar :author="author" :selectedItem="0" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewUserBlogsContainer">
             <main :style="`max-width: ${thresholds.sm}px`">
-                <div style="display: flex; flex-wrap: wrap">
-                    <div class="ma-1" style="flex-grow: 1; width: 250px">
-                        <v-card :color="secondaryColor" dark>
-                            <v-card-title>
-                                <v-avatar size="40" :color="specialColor">
-                                    <img v-if="author.userInfo.avatar" :src="author.userInfo.avatar" style="object-fit: cover">
-                                    <span class="white--text" v-else>{{ author.username[0] }}</span>
-                                </v-avatar>
-                                <div class="ma-2">
-                                    <div style="wordBreak: break-word">{{ author.username }}</div>
+                <div class="searchBarContainer">
+                    <v-sheet class="searchButton" color="primary" @click="getAuthorBlogList">
+                        <v-icon dark>mdi-magnify</v-icon>
+                    </v-sheet>
+                    <input v-model="search" :placeholder="$t('pages.blog.search')">
+                </div>
+                <div>
+                    <v-sheet class="blogContainer mb-2" v-for="blog in blogList" :key="blog._id" elevation="2" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
+                        <v-container>
+                            <div style="display: flex">
+                                <div>
+                                    <v-avatar :color="secondaryColor" size="125" tile>
+                                        <v-img v-if="blog.cover" :src="blog.cover"></v-img>
+                                        <span class="white--text text-h3" v-else>{{ blog.title[0] }}</span>
+                                    </v-avatar>
                                 </div>
-                            </v-card-title>
-
-                            <v-card-text class="headline font-weight-bold">
-                                <span v-if="author.userInfo.description">"{{ author.userInfo.description }}"</span>
-                                <span v-else>"{{ $t('pages.blog.noDescriptionMessage') }}"</span>
-                            </v-card-text>
-
-                            <v-card-actions>
-                                <v-list-item>
-                                    <div style="width: 100%; display: flex; justify-content: flex-end; align-items: center">
-                                        <v-tooltip bottom v-if="$store.state.authentication.userId !== author._id">
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <v-btn class="mr-4" @click="flowOrUnfollow" small icon v-bind="attrs" v-on="on">
-                                                    <v-icon v-if="followed">mdi-heart</v-icon>
-                                                    <v-icon v-else>mdi-heart-outline</v-icon>
-                                                </v-btn>
-                                            </template>
-                                            {{ followed ? $t('pages.blog.unFollow') : $t('pages.blog.follow') }}
-                                        </v-tooltip>
-                                        <v-tooltip bottom>
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <div v-bind="attrs" v-on="on">
-                                                    <v-icon class="mr-1">mdi-post</v-icon>
-                                                    <span class="subheading mr-4">{{ blogsAmount }}</span>
-                                                </div>
-                                            </template>
-                                            {{ $t('pages.blog.blogsAmount') }}
-                                        </v-tooltip>
-                                        <v-tooltip bottom>
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <div v-bind="attrs" v-on="on">
-                                                    <v-icon class="mr-1">mdi-account-group</v-icon>
-                                                    <span class="subheading">{{ followList.length }}</span>
-                                                </div>
-                                            </template>
-                                            {{ $t('pages.blog.fans') }}
-                                        </v-tooltip>
+                                <div class="ml-2">
+                                    <div class="text-h5">
+                                        <span v-if="blog.cover" v-text="blog.title"/>
+                                        <span v-else v-text="String(blog.title).slice(1)"/>
                                     </div>
-                                </v-list-item>
-                            </v-card-actions>
-                        </v-card>
-                        <div class="mt-2">
-                            <div>
-                                <v-text-field
-                                    v-model="search"
-                                    append-icon="mdi-magnify"
-                                    :label="$t('pages.blog.search')"
-                                    single-line
-                                    hide-details
-                                    outlined
-                                />
+                                    <div class="mt-1 body-1 text--secondary">
+                                        <span v-text="blog.content"></span>
+                                    </div>
+                                    <div class="mt-1 caption text--secondary">
+                                        {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
+                                    </div>
+                                    <div class="mt-1 body-2">
+                                        <v-icon>mdi-eye-outline</v-icon>
+                                        <span>{{ blog.viewed || 0 }}</span>
+                                        <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
+                                        <span>{{ blog.comments }}</span>
+                                        <v-icon class="ml-2">mdi-heart-outline</v-icon>
+                                        <span>{{ blog.likes }}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mt-2">
-                                <v-select
-                                    v-model="categories"
-                                    :items="categoriesOptions"
-                                    :label="$t('pages.blog.categories.categories')"
-                                    multiple
-                                    outlined
-                                    hide-details
-                                />
+                        </v-container>
+                    </v-sheet>
+                    <v-sheet v-if="blogList.length === 0">
+                        <v-container>
+                            <div class="text-center">
+                                {{ $t('pages.blog.noResult') }}
                             </div>
-                        </div>
-                    </div>
-                    <div class="ma-1" style="flex-grow: 3">
-                        <v-sheet class="blogContainer mb-2" v-for="blog in blogList" :key="blog._id" elevation="2" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
-                            <v-container>
-                                <div style="display: flex">
-                                    <div>
-                                        <v-avatar :color="secondaryColor" size="125" tile>
-                                            <v-img v-if="blog.cover" :src="blog.cover"></v-img>
-                                            <span class="white--text text-h3" v-else>{{ blog.title[0] }}</span>
-                                        </v-avatar>
-                                    </div>
-                                    <div class="ml-2">
-                                        <div class="text-h5">
-                                            <span v-if="blog.cover" v-text="blog.title"/>
-                                            <span v-else v-text="String(blog.title).slice(1)"/>
-                                        </div>
-                                        <div class="mt-1 body-1 text--secondary">
-                                            <span v-text="blog.content"></span>
-                                        </div>
-                                        <div class="mt-1 caption text--secondary">
-                                            {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
-                                        </div>
-                                        <div class="mt-1 body-2">
-                                            <v-icon>mdi-eye-outline</v-icon>
-                                            <span>{{ blog.viewed || 0 }}</span>
-                                            <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
-                                            <span>{{ blog.comments }}</span>
-                                            <v-icon class="ml-2">mdi-heart-outline</v-icon>
-                                            <span>{{ blog.likes }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </v-container>
-                        </v-sheet>
-                        <v-sheet v-if="blogList.length === 0">
-                            <v-container>
-                                <div class="text-center">
-                                    {{ $t('pages.blog.noResult') }}
-                                </div>
-                            </v-container>
-                        </v-sheet>
-                        <v-pagination v-if="pagination.totalPage > 0" class="mt-5" v-model="page" :length="pagination.totalPage"/>
-                    </div>
+                        </v-container>
+                    </v-sheet>
+                    <v-pagination v-if="pagination.totalPage > 0" class="mt-5" v-model="page" :length="pagination.totalPage"/>
                 </div>
             </main>
         </div>
@@ -295,12 +225,6 @@
             },
             categories() {
                 this.getAuthorBlogList();
-            },
-            search: {
-                handler: _.debounce(function() {
-                    this.getAuthorBlogList()
-                }, 300),
-                immediate: false
             }
         },
         computed: {
