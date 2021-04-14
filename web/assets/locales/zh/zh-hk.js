@@ -9,7 +9,7 @@ export default {
         editBlogPage: "編輯blog頁",
         manageBlogPage: "管理Blog頁",
         viewBlogPage: "瀏覽Blog頁",
-        authorProfilePage: "作者資料頁"
+        authorProfilePage: "作者主頁"
     },
     pages: {
         layout: {

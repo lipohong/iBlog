@@ -9,7 +9,7 @@ export default {
         editBlogPage: "Edit Blog Page",
         manageBlogPage: "Manage Blog Page",
         viewBlogPage: "View Blog Page",
-        authorProfilePage: "Author Profile Page"
+        authorProfilePage: "Author Home Page"
     },
     pages: {
         layout: {

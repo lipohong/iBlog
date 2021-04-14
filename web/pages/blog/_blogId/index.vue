@@ -10,7 +10,7 @@
                 <div class="blogTitle" v-text="blog['title']"></div>
                 <div class="updatedDate" style="display: flex; flex-wrap: wrap; align-items: center">
                     <v-icon>mdi-update</v-icon>
-                    <span>{{ dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</span>
+                    <span>{{ $dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</span>
                     <v-icon class="ml-4">mdi-eye-outline</v-icon>
                     <span>{{ blog.viewed || 0 }}</span>
                     <v-icon class="ml-4">mdi-comment-processing-outline</v-icon>
@@ -37,7 +37,7 @@
                         <v-timeline align-top dense>
                             <v-timeline-item fill-dot icon="mdi-update" small v-for="comment in commentList" :key="comment._id">
                                 <div>
-                                    <span class="text-caption">{{ dayjs(comment.updatedDate).format('YYYY/MM/DD HH:mm') }}</span>
+                                    <span class="text-caption">{{ $dayjs(comment.updatedDate).format('YYYY/MM/DD HH:mm') }}</span>
                                 </div>
                                 <div class="mt-5" style="display: flex; flex-wrap: wrap">
                                     <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
@@ -142,7 +142,6 @@
     import AuthorProfile from '../../../components/authorProfile';
     import FunctionButton from '../../../components/functionButton';
     import SideBar from '../../../components/sideBar';
-    const dayjs = require('dayjs');
 
     export default {
         components: {
@@ -200,7 +199,6 @@
         data() {
             return {
                 thresholds: this.$vuetify.breakpoint.thresholds,
-                dayjs,
                 collectionOverlay: false,
                 collectionName: '',
                 collectionNameRequiredMessage: null,

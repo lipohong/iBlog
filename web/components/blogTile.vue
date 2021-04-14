@@ -18,7 +18,7 @@
                             <span v-text="blog.content"></span>
                         </div>
                         <div class="mt-1 caption text--secondary">
-                            <v-icon class="mr-1">mdi-update</v-icon>{{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
+                            <v-icon class="mr-1">mdi-update</v-icon>{{ $dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
                         </div>
                         <div class="mt-1 body-2">
                             <div v-if="viewed">
@@ -41,15 +41,12 @@
     </div>
 </template>
 <script>
-    const dayjs = require('dayjs');
-
     export default {
         props: [
             'blogList', 'viewed', 'comments', 'likes'
         ],
         data() {
             return {
-                dayjs,
             }
         },
         methods: {

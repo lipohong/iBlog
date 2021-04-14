@@ -15,8 +15,6 @@
     </v-tooltip>
 </template>
 <script>
-    const dayjs = require('dayjs');
-
     export default {
         props: ['author'],
         data() {

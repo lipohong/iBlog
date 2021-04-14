@@ -9,56 +9,23 @@
                     </v-sheet>
                     <input v-model="search" :placeholder="$t('pages.blog.search')">
                 </div>
-                <div>
-                    <v-sheet class="blogContainer mb-2" v-for="blog in blogList" :key="blog._id" elevation="2" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
-                        <v-container>
-                            <div style="display: flex">
-                                <div>
-                                    <v-avatar :color="secondaryColor" size="125" tile>
-                                        <v-img v-if="blog.cover" :src="blog.cover"></v-img>
-                                        <span class="white--text text-h3" v-else>{{ blog.title[0] }}</span>
-                                    </v-avatar>
-                                </div>
-                                <div class="ml-2">
-                                    <div class="text-h5">
-                                        <span v-if="blog.cover" v-text="blog.title"/>
-                                        <span v-else v-text="String(blog.title).slice(1)"/>
-                                    </div>
-                                    <div class="mt-1 body-1 text--secondary">
-                                        <span v-text="blog.content"></span>
-                                    </div>
-                                    <div class="mt-1 caption text--secondary">
-                                        {{ $t('pages.blog.lastUpdateAt') }} {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
-                                    </div>
-                                    <div class="mt-1 body-2">
-                                        <v-icon>mdi-eye-outline</v-icon>
-                                        <span>{{ blog.viewed || 0 }}</span>
-                                        <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
-                                        <span>{{ blog.comments }}</span>
-                                        <v-icon class="ml-2">mdi-heart-outline</v-icon>
-                                        <span>{{ blog.likes }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </v-container>
-                    </v-sheet>
-                    <v-sheet v-if="blogList.length === 0">
-                        <v-container>
-                            <div class="text-center">
-                                {{ $t('pages.blog.noResult') }}
-                            </div>
-                        </v-container>
-                    </v-sheet>
-                    <v-pagination v-if="pagination.totalPage > 0" class="mt-5" v-model="page" :length="pagination.totalPage"/>
-                </div>
+                <BlogPreview v-for="blog in blogList" :key="blog._id" elevation="2" @click="redirectToBlogViewingPage" :data-blog-id="blog._id" :blog="blog" />
+                <v-sheet v-if="blogList.length === 0">
+                    <v-container>
+                        <div class="text-center">
+                            {{ $t('pages.blog.noResult') }}
+                        </div>
+                    </v-container>
+                </v-sheet>
+                <v-pagination v-if="pagination.totalPage > 0" class="mt-5" v-model="page" :length="pagination.totalPage"/>
             </main>
         </div>
     </div>
 </template>
 <script>
+    import BlogPreview from '../../../components/blogPreview';
     import SideBar from '../../../components/sideBar';
     import * as _ from 'lodash';
-    const dayjs = require('dayjs');
     const htmlToText = require('html-to-text');
 
     export default {
@@ -97,7 +64,6 @@
         },
         data() {
             return {
-                dayjs,
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 page: 1,
                 categories: [],
@@ -126,7 +92,7 @@
                 search: ''
             }
         },
-        components: { SideBar },
+        components: { BlogPreview, SideBar },
         methods: {
             async getAuthorBlogList() {
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });

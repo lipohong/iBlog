@@ -38,7 +38,7 @@
                         <tbody>
                             <tr v-for="item in items" :key="item._id">
                                 <td style="max-width: 200px">{{ item.title }}</td>
-                                <td>{{ dayjs(item.updatedDate).format('YYYY/MM/DD HH:mm') }}</td>
+                                <td>{{ $dayjs(item.updatedDate).format('YYYY/MM/DD HH:mm') }}</td>
                                 <td class="text-capitalize">{{ $t(`pages.common.${item.status}`) }}</td>
                                 <td class="text-center">
                                      <v-tooltip bottom>
@@ -65,7 +65,6 @@
 </template>
 <script>
     import * as _ from 'lodash';
-    const dayjs = require('dayjs');
     import AppBar from '../../components/appBar';
 
     export default {
@@ -92,7 +91,6 @@
         },
         data() {
             return {
-                dayjs,
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 search: '',
                 categories: [],
