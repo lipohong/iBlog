@@ -2,14 +2,16 @@
     <div class="blog">
         <SideBar :author="author" :selectedItem="0" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewUserBlogsContainer">
-            <main :style="`max-width: ${thresholds.sm}px`">
+            <main>
                 <div class="searchBarContainer">
                     <v-sheet class="searchButton" color="primary" @click="getAuthorBlogList">
                         <v-icon dark>mdi-magnify</v-icon>
                     </v-sheet>
                     <input v-model="search" :placeholder="$t('pages.blog.search')">
                 </div>
-                <BlogPreview v-for="blog in blogList" :key="blog._id" elevation="2" @click="redirectToBlogViewingPage" :data-blog-id="blog._id" :blog="blog" />
+                <div class="blogPreviewListContainer">
+                    <BlogPreview v-for="blog in blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
+                </div>
                 <v-sheet v-if="blogList.length === 0">
                     <v-container>
                         <div class="text-center">
@@ -17,7 +19,7 @@
                         </div>
                     </v-container>
                 </v-sheet>
-                <v-pagination v-if="pagination.totalPage > 0" class="mt-5" v-model="page" :length="pagination.totalPage"/>
+                <v-pagination v-if="pagination.totalPage > 0" v-model="page" :length="pagination.totalPage"/>
             </main>
         </div>
     </div>
@@ -44,9 +46,9 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
                     // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30 });
+                    blog.content = _.truncate(blog.content, { 'length': 200, 'omission': '...'});
 
                     return blog
                 })
@@ -85,10 +87,10 @@
                     'networking',
                     'life',
                     'other'
-                ].map(option => ({
-                    value: option,
-                    text: this.$t(`pages.blog.categories.${option}`)
-                })),
+                ].reduce((accumulator, currentValue) => {
+                    accumulator[currentValue] = this.$t(`pages.blog.categories.${currentValue}`);
+                    return accumulator;
+                }, {}),
                 search: ''
             }
         },
@@ -174,15 +176,6 @@
                     });
                 }
                 this.$store.dispatch('global/setProgressBar', { progressBar: false });
-            },
-            redirectToBlogViewingPage(e) {
-                const blogId = e.currentTarget.dataset.blogId;
-                this.$router.push({
-                    name: `blog-blogId___${this.$i18n.locale}`,
-                    params: {
-                        blogId
-                    }
-                });
             },
         },
         watch: {

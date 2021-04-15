@@ -1,6 +1,6 @@
 // global style setting and import file
 $break-point-xs: 480px;
-$break-point-sm: 480px;
+$break-point-sm: 576px;
 $break-point-md: 768px;
 $break-point-lg: 1024px;
 $break-point-xl: 1280px;
@@ -11,7 +11,14 @@ body {
     .v-btn {
         text-transform: none;
     }
-    div {
+    div,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
         word-wrap: break-word;
         word-break: break-all;
     }

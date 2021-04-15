@@ -1,24 +1,50 @@
 <template>
-    <div class="blog">
-        <div class="blogPreviewContainer">
-            <v-progress-linear class="sperateBar" value="100" :color="primaryColor"></v-progress-linear>
-            <img :src="blog.cover" alt="Blog Cover">
-            <h2>{{ blog.title }}</h2>
-            <p>{{ blog.content }}</p>
-            <span>{{ $dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}</span>
-        </div>
-    </div>
+    <article class="blogPreviewContainer">
+        <v-progress-linear class="sperateBar" value="100" :color="primaryColor"></v-progress-linear>
+        <header @click="redirectToBlogViewingPage">
+            <div class="imageContainer">
+                <img :src="blog.cover" alt="Blog Cover">
+            </div>
+            <a>{{ blog.title }}</a>
+        </header>
+        <section>{{ blog.content }}</section>
+        <footer>
+            <section>
+                <span>{{ categoriesOptions[blog.categories[0]] }}</span>
+                <span>{{ $dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}</span>
+            </section>
+            <hr>
+            <section>
+                <div>
+                    <v-icon>mdi-eye-outline</v-icon> {{ blog.viewed }}
+                    <v-icon>mdi-comment-processing-outline</v-icon> {{ blog.comments }}
+                    <v-icon>mdi-heart-outline</v-icon> {{ blog.likes }}
+                </div>
+                <span>{{ `By ${author.username}` }}</span>
+            </section>
+        </footer>
+    </article>
 </template>
 <script>
 
 export default {
     props: [
-        'blog', 'viewed', 'comments', 'likes'
+        'author', 'blog', 'categoriesOptions'
     ],
     data() {
         return {
 
         }
+    },
+    methods: {
+        redirectToBlogViewingPage() {
+            this.$router.push({
+                name: `blog-blogId___${this.$i18n.locale}`,
+                params: {
+                    blogId: this.blog._id
+                }
+            });
+        },
     },
     computed: {
         primaryColor() {

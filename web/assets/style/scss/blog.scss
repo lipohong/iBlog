@@ -49,12 +49,13 @@
                 color: #999;
             }
             .sperateBar {
-                height: 0.5rem !important;
+                height: 0.3rem !important;
                 margin: 3rem 0;
             }
         }
     }
     .viewUserBlogsContainer {
+        max-width: $break-point-xl;
         padding: 5rem;
         .searchBarContainer {
             margin-bottom: 2rem;
@@ -80,18 +81,69 @@
                 }
             }
         }
-        .blogContainer {
-            cursor: pointer;
-            border-radius: 10px;
-            &:hover {
-                background: #aaa;
-            }
+        .blogPreviewListContainer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 2rem;
+            row-gap: 2rem;
+        }
+        nav {
+            margin-top: 8rem;
         }
     }
     .blogPreviewContainer {
-        img {
-            display: block;
-            width: 100%;
+        margin-top: 5rem;
+        .sperateBar {
+            height: 0.3rem !important;
+        }
+        header {
+            cursor: pointer;
+            margin-top: 3rem;
+            transition: 0.3s;
+            opacity: 0.8;
+            &:hover {
+                opacity: 1;
+                .imageContainer {
+                    img {
+                        object-position: 0 0;
+                    }
+                }
+            }
+            .imageContainer {
+                overflow: hidden;
+                img {
+                    display: block;
+                    transition: 0.3s;
+                    object-fit: cover;
+                    object-position: -2rem 0;
+                    max-height: 18rem;
+                    width: calc(100% + 3rem);
+                }
+            }
+            a {
+                display: block;
+                margin-top: 1rem;
+                font-size: 2rem;
+            }
+        }
+        section {
+            margin-top: 1rem;
+            opacity: 0.8;
+        }
+        footer {
+            margin-top: 3rem;
+            section {
+                display: flex;
+                justify-content: space-between;
+                i {
+                    margin-left: 0.3rem;
+                }
+            }
+            hr {
+                opacity: 0.5;
+                border-width: 1px 0 0 0;
+                margin: 1rem 0;
+            }
         }
     }
     /* x large screens */
@@ -125,6 +177,9 @@
         }
         .viewUserBlogsContainer {
             padding: 4rem 1.5rem;
+            .blogPreviewListContainer {
+                grid-template-columns: 1fr;
+            }
         }
     }
 }
