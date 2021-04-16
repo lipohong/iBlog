@@ -25,7 +25,7 @@
         methods: {
             redirectToAuthorProfile() {
                 this.$router.push({
-                    name: `blog-user-userId___${this.$i18n.locale}`,
+                    name: `blog-user-userId-profile___${this.$i18n.locale}`,
                     params: {
                         userId: this.author._id
                     }

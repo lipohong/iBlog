@@ -10,19 +10,81 @@
                     </template>
                     {{ $t('pages.sideBar.backToHome') }}
                 </v-tooltip>
+                <v-menu open-on-hover bottom offset-y v-if="$store.state.user.user._id" >
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-avatar class="avatarButton" v-bind="attrs" v-on="on" tile>
+                            <img v-if="$store.state.user.user.userInfo.avatar" :src="$store.state.user.user.userInfo.avatar" style="object-fit: cover;">
+                            <a v-else>{{ $store.state.user.user.username[0] }}</a>
+                        </v-avatar>
+                    </template>
+                    <v-list :color="secondaryColor">
+                        <v-list-item link @click="redirectToUserProfile">
+                            <v-list-item-title style="color: #fff"><v-icon dark>mdi-card-account-details</v-icon> {{ this.$t(`pages.layout.profileManagement`) }}</v-list-item-title>
+                        </v-list-item>
+                        <v-divider />
+                        <v-list-item link @click="redirectToBlogCreate">
+                            <v-list-item-title style="color: #fff"><v-icon dark>mdi-post</v-icon> {{ this.$t(`pages.layout.postBlog`) }}</v-list-item-title>
+                        </v-list-item>
+                        <v-divider />
+                        <v-list-item link @click="redirectToBlogManagement">
+                            <v-list-item-title style="color: #fff"><v-icon dark>mdi-playlist-edit</v-icon> {{ this.$t(`pages.layout.blogsManagement`) }}</v-list-item-title>
+                        </v-list-item>
+                        <v-divider />
+                        <v-list-item link @click="logOut">
+                            <v-list-item-title style="color: #fff"><v-icon dark>mdi-exit-to-app</v-icon> {{ this.$t(`pages.layout.logOut`) }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <v-tooltip v-else bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-avatar class="avatarButton" @click="redirectToLogin" tile v-bind="attrs" v-on="on">
+                            <v-icon color="primary">mdi-account-circle</v-icon>
+                        </v-avatar>
+                    </template>
+                    {{ $t('pages.sideBar.login') }}
+                </v-tooltip>
                 <div class="profileContainer">
                     <v-avatar size="80" :color="secondaryColor">
                         <img v-if="author.userInfo.avatar" :src="author.userInfo.avatar">
                         <span class="white--text" v-else>{{ author.username[0] }}</span>
                     </v-avatar>
                     <h1 class="sideBarAuthorName">{{ author.username }}</h1>
+                    <div class="infosContainer">
+                        <v-tooltip bottom v-if="$store.state.authentication.userId !== author._id">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn class="mr-4" @click="flowOrUnfollow" small icon v-bind="attrs" v-on="on">
+                                    <v-icon v-if="followed">mdi-heart</v-icon>
+                                    <v-icon v-else>mdi-heart-outline</v-icon>
+                                </v-btn>
+                            </template>
+                            {{ followed ? $t('pages.blog.unFollow') : $t('pages.blog.follow') }}
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <div v-bind="attrs" v-on="on">
+                                    <v-icon class="mr-1">mdi-post</v-icon>
+                                    <span class="subheading mr-4">{{ blogsAmount }}</span>
+                                </div>
+                            </template>
+                            {{ $t('pages.blog.blogsAmount') }}
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <div v-bind="attrs" v-on="on">
+                                    <v-icon class="mr-1">mdi-account-group</v-icon>
+                                    <span class="subheading">{{ followList.length }}</span>
+                                </div>
+                            </template>
+                            {{ $t('pages.blog.fans') }}
+                        </v-tooltip>
+                    </div>
                 </div>
                 <nav>
                     <ul>
-                        <li :class="selectedItem === 0 ? `selected` : ``" @click="redirectToAuthorProfile">
+                        <li :class="selectedItem === 0 ? `selected` : ``" @click="redirectToAuthorBlogListPage">
                             <v-icon color="primary">mdi-post</v-icon> <a>{{ $t('pages.sideBar.allBlogs') }}</a>
                         </li>
-                        <li :class="selectedItem === 1 ? `selected` : ``">
+                        <li :class="selectedItem === 1 ? `selected` : ``" @click="redirectToAuthorProfile">
                             <v-icon color="primary">mdi-card-account-details</v-icon> <a>{{ $t('pages.sideBar.aboutAuthor') }}</a>
                         </li>
                     </ul>
@@ -86,11 +148,52 @@
             }
         },
         methods: {
-            redirectToAuthorProfile() {
+            redirectToLogin() {
+                this.$router.push({
+                    name: `auth-login___${this.$i18n.locale}`,
+                    query: {
+                        from: this.$route.path
+                    }
+                });
+            },
+            redirectToAuthorBlogListPage() {
                 this.$router.push({
                     name: `blog-user-userId___${this.$i18n.locale}`,
                     params: {
                         userId: this.author._id
+                    }
+                });
+            },
+            redirectToAuthorProfile() {
+                this.$router.push({
+                    name: `blog-user-userId-profile___${this.$i18n.locale}`,
+                    params: {
+                        userId: this.author._id
+                    }
+                });
+            },
+            redirectToUserProfile() {
+                this.$router.push({ name: `user-profile___${this.$i18n.locale}` });
+            },
+            redirectToBlogCreate() {
+                this.$router.push({
+                    name: `blog-create___${this.$i18n.locale}`,
+                    query: {
+                        from: this.$route.path
+                    }
+                });
+            },
+            redirectToBlogManagement() {
+                this.$router.push({ name: `blog___${this.$i18n.locale}` });
+            },
+            logOut() {
+                this.$store.dispatch('authentication/resetAuth');   // reset auth info
+                this.$store.dispatch('user/resetUser');  // reset user info
+                Cookies.remove('authentication');
+                this.$router.push({
+                    name: `auth-login___${this.$i18n.locale}`,
+                    query: {
+                        from: this.$route.path
                     }
                 });
             },

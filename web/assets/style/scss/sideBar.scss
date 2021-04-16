@@ -45,6 +45,26 @@
             transition-duration: 0.2s;
             @include button-hover-focus;
         }
+        .avatarButton {
+            background-color: white;
+            float: right;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 40px !important;
+            height: 40px !important;
+            min-width: auto !important;
+            min-height: auto !important;
+            overflow: hidden;
+            img {
+                object-fit: cover;
+            }
+            a {
+                font-size: 2rem;
+            }
+            &:hover {
+                opacity: 0.8;
+            }
+        }
         .profileContainer {
             margin-top: 5rem;
             text-align: center;
@@ -56,6 +76,9 @@
                 justify-content: flex-end;
                 align-items: center;
                 align-content: center;
+            }
+            span {
+                font-size: 3rem;
             }
         }
         nav {
@@ -103,11 +126,12 @@
         cursor: pointer;
         display: none;
         top: 0.5rem;
+        left: 0rem;
         padding: 0.5rem;
         transition-duration: 0.2s;
         opacity: 0.9;
         &.openSideBarMenu {
-            margin-left: 14rem;
+            left: 17rem;
         }
     }
 }

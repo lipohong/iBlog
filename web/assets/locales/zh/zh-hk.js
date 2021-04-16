@@ -7,9 +7,10 @@ export default {
         profilePage: "個人資料頁",
         createBlogPage: "新建blog頁",
         editBlogPage: "編輯blog頁",
-        manageBlogPage: "管理Blog頁",
-        viewBlogPage: "瀏覽Blog頁",
-        authorProfilePage: "作者主頁"
+        manageBlogPage: "管理blog頁",
+        viewBlogPage: "瀏覽blog頁",
+        authorBlogListPage: "作者blog列表頁",
+        authorProfilePage: "作者簡介頁"
     },
     pages: {
         layout: {
@@ -22,6 +23,7 @@ export default {
         },
         sideBar: {
             backToHome: "回首頁",
+            login: "去登陸頁",
             allBlogs: "全部 Blog",
             aboutAuthor: "關於作者",
             languageSwitching: "英文 / 中文切換",
@@ -159,6 +161,7 @@ export default {
     },
     messages: {
         layout: {
+            languageSwitching: '英文 / 中文切換',
             switchMode: "切換日間/夜間模式",
             chooseMainTheme: "選擇主題",
             switchLanguage: "語言切換",
@@ -232,7 +235,8 @@ export default {
             form: {
                 usernameRequired: "請填好用戶名",
                 passwordRequired: "請填好密碼",
-                verifyCodeRequired: "請填好驗證碼"
+                verifyCodeRequired: "請填好驗證碼",
+                descriptionPlaceHolder: "在此輸入個人簡介內容...",
             },
             general: {
                 resetPasswordSuccess: "密碼已重置",

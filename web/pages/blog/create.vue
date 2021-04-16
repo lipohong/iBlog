@@ -1,13 +1,15 @@
 <template>
     <div class="blog">
+        <AppBar />
         <BlogForm />
     </div>
 </template>
 <script>
+    import AppBar from '../../components/appBar';
     import BlogForm from '../../components/blogForm';
 
     export default {
-        components: { BlogForm },
+        components: { AppBar, BlogForm },
         middleware: ['auth'],
         data() {
             return {

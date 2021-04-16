@@ -31,7 +31,7 @@
         }
     }
     .viewBlogContainer {
-        main {
+        article {
             padding: 1rem;
             .coverContainer {
                 text-align: center;
@@ -40,7 +40,7 @@
                     height: auto;
                 }
             }
-            .blogTitle {
+            header {
                 font-size: 40px;
                 font-family: medium-content-title-font, Georgia, Cambria,
                     "Times New Roman", Times, serif;
@@ -146,17 +146,26 @@
             }
         }
     }
+    .profileViewingContainer {
+        max-width: $break-point-xl;
+        padding: 5rem;
+        article {
+            margin: 2rem 0 5rem 0;
+        }
+    }
     /* x large screens */
     @media only screen and (min-width: $break-point-xl) {
         .viewBlogContainer,
-        .viewUserBlogsContainer {
+        .viewUserBlogsContainer,
+        .profileViewingContainer {
             margin-left: 27rem;
         }
     }
     /* large screens */
     @media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-lg) {
         .viewBlogContainer,
-        .viewUserBlogsContainer {
+        .viewUserBlogsContainer,
+        .profileViewingContainer {
             margin-left: 22rem;
         }
     }
@@ -164,7 +173,8 @@
     /* medium-sized screens */
     @media only screen and (max-width: $break-point-lg - 1px) and (min-width: $break-point-md) {
         .viewBlogContainer,
-        .viewUserBlogsContainer {
+        .viewUserBlogsContainer,
+        .profileViewingContainer {
             margin-left: 0;
         }
     }
@@ -172,7 +182,8 @@
     /* small screens */
     @media only screen and (max-width: $break-point-md - 1px) {
         .viewBlogContainer,
-        .viewUserBlogsContainer {
+        .viewUserBlogsContainer,
+        .profileViewingContainer {
             margin-left: 0;
         }
         .viewUserBlogsContainer {

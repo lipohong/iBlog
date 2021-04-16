@@ -25,8 +25,8 @@
     </div>
 </template>
 <script>
-    import BlogPreview from '../../../components/blogPreview';
-    import SideBar from '../../../components/sideBar';
+    import BlogPreview from '../../../../components/blogPreview';
+    import SideBar from '../../../../components/sideBar';
     import * as _ from 'lodash';
     const htmlToText = require('html-to-text');
 
@@ -206,7 +206,7 @@
         },
         head() {
             return {
-                title: this.$t('headers.authorProfilePage')
+                title: this.$t('headers.authorBlogListPage')
             }
         }
     }

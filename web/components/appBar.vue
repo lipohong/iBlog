@@ -5,22 +5,6 @@
         <v-menu open-on-hover bottom offset-y>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" icon>
-                    <v-icon>mdi-translate</v-icon>
-                </v-btn>
-            </template>
-            <v-list :color="secondaryColor">
-                <v-list-item link @click="changeLanguage" data-language="en">
-                    <v-list-item-title style="color: #fff">English</v-list-item-title>
-                </v-list-item>
-                <v-divider />
-                <v-list-item link @click="changeLanguage" data-language="zh">
-                    <v-list-item-title style="color: #fff">中文繁體</v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-menu>
-        <v-menu open-on-hover bottom offset-y>
-            <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" icon>
                     <v-icon>mdi-palette</v-icon>
                 </v-btn>
             </template>
@@ -37,6 +21,14 @@
                 </v-list-item>
             </v-list>
         </v-menu>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn icon @click="changeLanguage" v-bind="attrs" v-on="on">
+                    <v-icon>mdi-translate</v-icon>
+                </v-btn>
+            </template>
+            {{ $t('messages.layout.languageSwitching') }}
+        </v-tooltip>
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon @click="changeMode" v-bind="attrs" v-on="on">
@@ -99,9 +91,8 @@
                 Cookies.set('mode', this.$vuetify.theme.dark ? 'dark' : 'light');
                 this.$store.dispatch('mode/setMode', { mode: this.$vuetify.theme.dark ? 'dark' : 'light' });
             },
-            changeLanguage(e) {
-                const language = e.currentTarget.dataset.language;
-                this.$i18n.setLocale(language);
+            changeLanguage() {
+                this.$i18n.setLocale(this.$i18n.locale === 'en' ? 'zh' : 'en');
             },
             redirectToLogin() {
                 this.$router.push({

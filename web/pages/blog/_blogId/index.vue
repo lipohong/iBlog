@@ -2,13 +2,13 @@
     <div class="blog">
         <SideBar :author="author" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewBlogContainer" >
-            <main :style="`max-width: ${thresholds.sm}px`">
-                <v-progress-linear class="sperateBar" value="100" :color="primaryColor"></v-progress-linear>
+            <article :style="`max-width: ${thresholds.sm}px`">
+                <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
                 <div class="coverContainer mb-5" v-if="blog['cover']">
                     <img class="cover" :src="blog['cover']" />
                 </div>
-                <div class="blogTitle" v-text="blog['title']"></div>
-                <div class="updatedDate" style="display: flex; flex-wrap: wrap; align-items: center">
+                <header v-text="blog['title']"></header>
+                <nav class="updatedDate" style="display: flex; flex-wrap: wrap; align-items: center">
                     <v-icon>mdi-update</v-icon>
                     <span>{{ $dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</span>
                     <v-icon class="ml-4">mdi-eye-outline</v-icon>
@@ -17,21 +17,21 @@
                     <span>{{ comments }}</span>
                     <v-icon class="ml-4">mdi-heart-outline</v-icon>
                     <span>{{ likes }}</span>
-                </div>
+                </nav>
                 <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
                 <div class="ql-snow">
-                    <div class="ql-editor" v-html="blog['content']"></div>
+                    <main class="ql-editor" v-html="blog['content']"></main>
                 </div>
                 <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
-                <div class="mt-1 body-2">
+                <footer class="mt-1 body-2">
                     <v-icon>mdi-eye-outline</v-icon>
                     <span>{{ blog.viewed || 0 }}</span>
                     <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
                     <span>{{ comments }}</span>
                     <v-icon class="ml-2">mdi-heart-outline</v-icon>
                     <span>{{ likes }}</span>
-                </div>
-                <v-progress-linear class="sperateBar" value="100" :color="primaryColor"></v-progress-linear>
+                </footer>
+                <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
                 <div class="mt-10">
                     <div v-if="commentList.length > 0">
                         <v-timeline align-top dense>
@@ -134,7 +134,7 @@
                         </v-container>
                     </v-sheet>
                 </v-overlay>
-            </main>
+            </article>
         </div>
     </div>
 </template>

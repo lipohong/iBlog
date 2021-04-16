@@ -1,6 +1,6 @@
 <template>
     <article class="blogPreviewContainer">
-        <v-progress-linear class="sperateBar" value="100" :color="primaryColor"></v-progress-linear>
+        <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
         <header @click="redirectToBlogViewingPage">
             <div class="imageContainer">
                 <img :src="blog.cover" alt="Blog Cover">
@@ -50,7 +50,11 @@ export default {
         primaryColor() {
 
             return this.$store.state.mode.mode === 'light' ? 'primary' : 'default';
-        }
+        },
+        secondaryColor() {
+
+            return this.$store.state.mode.mode === 'light' ? 'secondary' : 'primary';
+        },
     }
 }
 </script>

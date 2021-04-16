@@ -9,7 +9,8 @@ export default {
         editBlogPage: "Edit Blog Page",
         manageBlogPage: "Manage Blog Page",
         viewBlogPage: "View Blog Page",
-        authorProfilePage: "Author Home Page"
+        authorBlogListPage: "Author Blog List Page",
+        authorProfilePage: "Author Profile Page"
     },
     pages: {
         layout: {
@@ -22,6 +23,7 @@ export default {
         },
         sideBar: {
             backToHome: "Back to home page",
+            login: "Go to login page",
             allBlogs: "All Blogs",
             aboutAuthor: "About Author",
             languageSwitching: "English / Chinese switch",
@@ -159,6 +161,7 @@ export default {
     },
     messages: {
         layout: {
+            languageSwitching: 'English / Chinese switch',
             switchMode: "Switch light/dark Mode Theme",
             chooseMainTheme: "Choose Main Theme",
             switchLanguage: "Switch Language",
@@ -232,7 +235,8 @@ export default {
             form: {
                 usernameRequired: "Username is required",
                 passwordRequired: "Password is required",
-                verifyCodeRequired: "Verify Code is required"
+                verifyCodeRequired: "Verify Code is required",
+                descriptionPlaceHolder: "Input your description here...",
             },
             general: {
                 resetPasswordSuccess: "Reset password success, you can login with the new password now.",
