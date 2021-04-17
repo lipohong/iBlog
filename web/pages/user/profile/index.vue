@@ -1,7 +1,7 @@
 <template>
     <div class="user">
         <AppBar />
-        <v-container :style="`max-width: ${thresholds.sm}px`">
+        <v-container class="mt-5" :style="`max-width: ${thresholds.sm}px`">
             <v-sheet color="defualt" elevation="1" rounded>
                 <div class="pa-5">
                     <v-form ref="profileForm" v-model="valid" lazy-validation>

@@ -1,6 +1,7 @@
 <template>
     <div class="register">
-        <v-container :style="`max-width: ${thresholds.xs}px`">
+        <AppBar />
+        <v-container class="mt-5" :style="`max-width: ${thresholds.xs}px`">
             <div v-if="verifyCode && verifyEmail">
                 <div v-if="verifying">{{ $t(`messages.register.general.activatingAccount`) }}</div>
                 <div v-else>{{ $t(`messages.register.errors.activateFail`) }}</div>
@@ -32,6 +33,7 @@
 <script>
     import * as crypto from 'crypto-js';
     import * as _ from 'lodash';
+    import AppBar from '../../components/appBar';
 
     export default {
         data() {
@@ -58,6 +60,7 @@
                 confirmPassword: ''
             }
         },
+        components: { AppBar },
         methods: {
             async encryptAES (password) {
                 const encryptedPassword = await crypto.AES.encrypt(password, process.env.aesSecrect).toString();

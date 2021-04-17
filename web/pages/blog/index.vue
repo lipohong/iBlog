@@ -1,7 +1,7 @@
 <template>
     <div class="blog">
         <AppBar />
-        <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
+        <v-container class="mt-5" :style="`max-width: ${thresholds.sm}px`">
             <v-card>
                 <v-card-title>
                     {{ $t('pages.blog.blogList') }}

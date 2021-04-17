@@ -43,27 +43,18 @@
                     </template>
                     {{ $t('pages.sideBar.login') }}
                 </v-tooltip>
-                <div class="profileContainer">
+                <section class="profileContainer">
                     <v-avatar size="80" :color="secondaryColor">
                         <img v-if="author.userInfo.avatar" :src="author.userInfo.avatar">
                         <span class="white--text" v-else>{{ author.username[0] }}</span>
                     </v-avatar>
-                    <h1 class="sideBarAuthorName">{{ author.username }}</h1>
+                    <p>{{ author.username }}</p>
                     <div class="infosContainer">
-                        <v-tooltip bottom v-if="$store.state.authentication.userId !== author._id">
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn class="mr-4" @click="flowOrUnfollow" small icon v-bind="attrs" v-on="on">
-                                    <v-icon v-if="followed">mdi-heart</v-icon>
-                                    <v-icon v-else>mdi-heart-outline</v-icon>
-                                </v-btn>
-                            </template>
-                            {{ followed ? $t('pages.blog.unFollow') : $t('pages.blog.follow') }}
-                        </v-tooltip>
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
                                 <div v-bind="attrs" v-on="on">
-                                    <v-icon class="mr-1">mdi-post</v-icon>
-                                    <span class="subheading mr-4">{{ blogsAmount }}</span>
+                                    <v-icon dark>mdi-post</v-icon>
+                                    <span>{{ blogsAmount }}</span>
                                 </div>
                             </template>
                             {{ $t('pages.blog.blogsAmount') }}
@@ -71,14 +62,14 @@
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
                                 <div v-bind="attrs" v-on="on">
-                                    <v-icon class="mr-1">mdi-account-group</v-icon>
-                                    <span class="subheading">{{ followList.length }}</span>
+                                    <v-icon dark>mdi-account-group</v-icon>
+                                    <span>{{ followList.length }}</span>
                                 </div>
                             </template>
                             {{ $t('pages.blog.fans') }}
                         </v-tooltip>
                     </div>
-                </div>
+                </section>
                 <nav>
                     <ul>
                         <li :class="selectedItem === 0 ? `selected` : ``" @click="redirectToAuthorBlogListPage">
