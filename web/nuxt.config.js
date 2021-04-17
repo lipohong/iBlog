@@ -4,6 +4,7 @@ require('dotenv').config();
 export default {
     modules: [
         '@nuxtjs/axios',
+        '@nuxtjs/dayjs',
         ['nuxt-i18n', I18N]
     ],
     plugins: [

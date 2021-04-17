@@ -1,6 +1,7 @@
 <template>
     <div class="forgetPassword">
-        <v-container :style="`max-width: ${thresholds.xs}px`">
+        <AppBar />
+        <v-container class="mt-5" :style="`max-width: ${thresholds.xs}px`">
             <v-sheet color="defualt" elevation="1" rounded>
                 <div class="pa-5">
                     <v-form ref="forgetPasswordForm" v-model="valid" lazy-validation>
@@ -33,6 +34,7 @@
 <script>
     import * as crypto from 'crypto-js';
     import * as _ from 'lodash';
+    import AppBar from '../../components/appBar';
 
     export default {
         data() {
@@ -56,6 +58,7 @@
                 confirmPassword: ''
             }
         },
+        components: { AppBar },
         methods: {
             async encryptAES (password) {
                 const encryptedPassword = await crypto.AES.encrypt(password, process.env.aesSecrect).toString();

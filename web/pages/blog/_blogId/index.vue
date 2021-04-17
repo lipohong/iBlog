@@ -1,147 +1,151 @@
 <template>
     <div class="blog">
-        <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
-            <div class="coverContainer mb-5" v-if="blog['cover']">
-                <img class="cover" :src="blog['cover']" />
-            </div>
-            <div class="blogTitle" v-text="blog['title']"></div>
-            <div class="updatedDate" style="display: flex; flex-wrap: wrap; align-items: center">
-                <AuthorProfile :author="author" />
-                <v-icon>mdi-update</v-icon>
-                <span>{{ dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</span>
-                <v-icon class="ml-4">mdi-eye-outline</v-icon>
-                <span>{{ blog.viewed || 0 }}</span>
-                <v-icon class="ml-4">mdi-comment-processing-outline</v-icon>
-                <span>{{ comments }}</span>
-                <v-icon class="ml-4">mdi-heart-outline</v-icon>
-                <span>{{ likes }}</span>
-            </div>
-            <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
-            <div class="ql-snow">
-                <div class="ql-editor" v-html="blog['content']"></div>
-            </div>
-            <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
-            <div class="mt-1 body-2">
-                <v-icon>mdi-eye-outline</v-icon>
-                <span>{{ blog.viewed || 0 }}</span>
-                <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
-                <span>{{ comments }}</span>
-                <v-icon class="ml-2">mdi-heart-outline</v-icon>
-                <span>{{ likes }}</span>
-            </div>
-            <div class="mt-10">
-                <div v-if="commentList.length > 0">
-                    <v-timeline align-top dense>
-                        <v-timeline-item fill-dot icon="mdi-update" small v-for="comment in commentList" :key="comment._id">
-                            <div>
-                                <span class="text-caption">{{ dayjs(comment.updatedDate).format('YYYY/MM/DD HH:mm') }}</span>
-                            </div>
-                            <div class="mt-5" style="display: flex; flex-wrap: wrap">
-                                <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
-                                    <AuthorProfile :author="comment.user" />
-                                </div>
-                                <div style="flex-grow: 3; width: 320px;">
-                                    <v-sheet color="defualt" elevation="1" tile>
-                                        <v-container>
-                                            <pre style="white-space: pre-wrap; word-wrap: break-word">{{ comment.comment }}</pre>
-                                        </v-container>
-                                    </v-sheet>
-                                </div>
-                            </div>
-                        </v-timeline-item>
-                    </v-timeline>
-                    <div class="mt-5" v-if="commentListPagination.totalPage > 1">
-                        <div style="display: flex; justify-content: flex-end">
-                            <v-pagination v-model="page" :length="commentListPagination.totalPage" />
-                        </div>
-                    </div>
+        <SideBar :author="author" :followList="followList" :blogsAmount="blogsAmount" />
+        <div class="viewBlogContainer" >
+            <article :style="`max-width: ${thresholds.sm}px`">
+                <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                <div class="coverContainer mb-5" v-if="blog['cover']">
+                    <img class="cover" :src="blog['cover']" />
                 </div>
-                <div class="text-center" v-else>
-                    {{ $t('messages.blog.view.noCommentYet') }}
+                <header v-text="blog['title']"></header>
+                <nav class="updatedDate" style="display: flex; flex-wrap: wrap; align-items: center">
+                    <v-icon>mdi-update</v-icon>
+                    <span>{{ $dayjs(blog['updatedDate']).format('YYYY/MM/DD HH:mm') }}</span>
+                    <v-icon class="ml-4">mdi-eye-outline</v-icon>
+                    <span>{{ blog.viewed || 0 }}</span>
+                    <v-icon class="ml-4">mdi-comment-processing-outline</v-icon>
+                    <span>{{ comments }}</span>
+                    <v-icon class="ml-4">mdi-heart-outline</v-icon>
+                    <span>{{ likes }}</span>
+                </nav>
+                <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
+                <div class="ql-snow">
+                    <main class="ql-editor" v-html="blog['content']"></main>
                 </div>
+                <FunctionButton :blog="blog" :collected="collected" :liked="liked" :handleCollectButtonClick="handleCollectButtonClick" :handLikeButtonClick="handLikeButtonClick"  />
+                <footer class="mt-1 body-2">
+                    <v-icon>mdi-eye-outline</v-icon>
+                    <span>{{ blog.viewed || 0 }}</span>
+                    <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
+                    <span>{{ comments }}</span>
+                    <v-icon class="ml-2">mdi-heart-outline</v-icon>
+                    <span>{{ likes }}</span>
+                </footer>
+                <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
                 <div class="mt-10">
-                    <div style="display: flex; flex-wrap: wrap" v-if="$store.state.authentication.jwt">
-                        <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
-                            <AuthorProfile :author="$store.state.user.user" />
-                        </div>
-                        <div style="flex-grow: 3; width: 320px;">
-                            <v-textarea
-                                v-model="comment"
-                                rows="4"
-                                append-icon="mdi-send"
-                                outlined
-                                auto-grow
-                                @click:append="handleSendCommentButtonClick"
-                                :error-messages="commentRequiredMessage"
-                                :placeholder="$t('messages.blog.view.commentPlaceHolder')"
-                            />
+                    <div v-if="commentList.length > 0">
+                        <v-timeline align-top dense>
+                            <v-timeline-item fill-dot icon="mdi-update" small v-for="comment in commentList" :key="comment._id">
+                                <div>
+                                    <span class="text-caption">{{ $dayjs(comment.updatedDate).format('YYYY/MM/DD HH:mm') }}</span>
+                                </div>
+                                <div class="mt-5" style="display: flex; flex-wrap: wrap">
+                                    <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
+                                        <AuthorProfile :author="comment.user" />
+                                    </div>
+                                    <div style="flex-grow: 3; width: 320px;">
+                                        <v-sheet color="defualt" elevation="1" tile>
+                                            <v-container>
+                                                <pre style="white-space: pre-wrap; word-wrap: break-word">{{ comment.comment }}</pre>
+                                            </v-container>
+                                        </v-sheet>
+                                    </div>
+                                </div>
+                            </v-timeline-item>
+                        </v-timeline>
+                        <div class="mt-5" v-if="commentListPagination.totalPage > 1">
+                            <div style="display: flex; justify-content: flex-end">
+                                <v-pagination v-model="page" :length="commentListPagination.totalPage" />
+                            </div>
                         </div>
                     </div>
                     <div class="text-center" v-else>
-                        <span class="font-weight-black" style="cursor: pointer" @click="redirectToLogin">{{ $t('pages.blog.commentLogin') }}</span> {{ $t('pages.blog.leaveComment') }}
+                        {{ $t('messages.blog.view.noCommentYet') }}
                     </div>
-                </div>
-            </div>
-            <v-overlay :value="collectionOverlay">
-                <v-sheet rounded :light="!$vuetify.theme.dark">
-                    <v-container>
-                        <div style="text-align: right">
-                            <v-btn icon small @click="collectionOverlay = false">
-                                <v-icon>mdi-close</v-icon>
-                            </v-btn>
-                        </div>
-                        <div class="text-h6 text-center font-weight-bold">
-                            <span>{{ $t('pages.blog.collectBlog') }}</span>
-                        </div>
-                        <div>
-                            <span class="text-subtitle-2">{{ $t('pages.blog.addCollection') }}</span>
-                        </div>
-                        <div style="display: flex">
-                            <v-text-field
-                                v-model="collectionName"
-                                outlined
-                                dense
-                                :placeholder="$t('pages.blog.collectionName')"
-                                :error-messages="collectionNameRequiredMessage"
-                                append-icon="mdi-folder-plus-outline"
-                                @click:append="handleAddCollectButtonClick"
-                            />
-                        </div>
-                        <div class="pb-4" v-if="collectionList">
-                            <span class="text-subtitle-2">{{ $t('pages.blog.collectionList') }}</span>
-                            <div class="mt-2">
-                                <div class="text-center" v-if="collectionList.length === 0">
-                                    {{ $t('pages.blog.noCollection') }}
-                                </div>
-                                <v-data-table
-                                    :headers="headers"
-                                    :items="collectionList"
-                                    item-key="_id"
-                                    show-select
-                                    disable-sort
-                                    style="max-width: 350px; min-width: 250px"
-                                    :items-per-page="100"
-                                    hide-default-footer
-                                    @item-selected="handleSellectOneCollection"
-                                    @toggle-select-all="handleSellectAllCollection"
-                                    :value="selected"
+                    <div class="mt-10">
+                        <div style="display: flex; flex-wrap: wrap" v-if="$store.state.authentication.jwt">
+                            <div style="display: flex; flex-grow: 1; justify-content: center; align-items: flex-start; width: 150px">
+                                <AuthorProfile :author="$store.state.user.user" />
+                            </div>
+                            <div style="flex-grow: 3; width: 320px;">
+                                <v-textarea
+                                    v-model="comment"
+                                    rows="4"
+                                    append-icon="mdi-send"
+                                    outlined
+                                    auto-grow
+                                    @click:append="handleSendCommentButtonClick"
+                                    :error-messages="commentRequiredMessage"
+                                    :placeholder="$t('messages.blog.view.commentPlaceHolder')"
                                 />
                             </div>
                         </div>
-                    </v-container>
-                </v-sheet>
-            </v-overlay>
-        </v-container>
+                        <div class="text-center" v-else>
+                            <span class="font-weight-black" style="cursor: pointer" @click="redirectToLogin">{{ $t('pages.blog.commentLogin') }}</span> {{ $t('pages.blog.leaveComment') }}
+                        </div>
+                    </div>
+                </div>
+                <v-overlay :value="collectionOverlay">
+                    <v-sheet rounded :light="!$vuetify.theme.dark">
+                        <v-container>
+                            <div style="text-align: right">
+                                <v-btn icon small @click="collectionOverlay = false">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                            </div>
+                            <div class="text-h6 text-center font-weight-bold">
+                                <span>{{ $t('pages.blog.collectBlog') }}</span>
+                            </div>
+                            <div>
+                                <span class="text-subtitle-2">{{ $t('pages.blog.addCollection') }}</span>
+                            </div>
+                            <div style="display: flex">
+                                <v-text-field
+                                    v-model="collectionName"
+                                    outlined
+                                    dense
+                                    :placeholder="$t('pages.blog.collectionName')"
+                                    :error-messages="collectionNameRequiredMessage"
+                                    append-icon="mdi-folder-plus-outline"
+                                    @click:append="handleAddCollectButtonClick"
+                                />
+                            </div>
+                            <div class="pb-4" v-if="collectionList">
+                                <span class="text-subtitle-2">{{ $t('pages.blog.collectionList') }}</span>
+                                <div class="mt-2">
+                                    <div class="text-center" v-if="collectionList.length === 0">
+                                        {{ $t('pages.blog.noCollection') }}
+                                    </div>
+                                    <v-data-table
+                                        :headers="headers"
+                                        :items="collectionList"
+                                        item-key="_id"
+                                        show-select
+                                        disable-sort
+                                        style="max-width: 350px; min-width: 250px"
+                                        :items-per-page="100"
+                                        hide-default-footer
+                                        @item-selected="handleSellectOneCollection"
+                                        @toggle-select-all="handleSellectAllCollection"
+                                        :value="selected"
+                                    />
+                                </div>
+                            </div>
+                        </v-container>
+                    </v-sheet>
+                </v-overlay>
+            </article>
+        </div>
     </div>
 </template>
 <script>
     import AuthorProfile from '../../../components/authorProfile';
     import FunctionButton from '../../../components/functionButton';
-    const dayjs = require('dayjs');
+    import SideBar from '../../../components/sideBar';
 
     export default {
         components: {
-            AuthorProfile, FunctionButton
+            AuthorProfile, FunctionButton, SideBar
         },
         async asyncData({ params, $axios, store, redirect, app }) {
             try {
@@ -155,6 +159,13 @@
                 // get author info
                 response = await $axios.get(`${process.env.userApi}/users/${blog['userId']}`);
                 const author = response.data.payload;
+                // get author's fans
+                response = await $axios.get(`${process.env.userApi}/follows/${blog['userId']}/fans`);
+                const { followList } = response.data.payload;
+                // get author blogs amount
+                response = await $axios.get(`${process.env.blogApi}/blogs/user/${blog['userId']}/amount`);
+                const { amount } = response.data.payload;
+                const blogsAmount = amount;
                 // get collectionList
                 let collectionList = [];
                 if (headers) {
@@ -179,7 +190,7 @@
                 response = await $axios.get(`${process.env.commentApi}/likes/blog/${params.blogId}/amount`);
                 const likes = response.data.payload;
                 return {
-                    blog, author, collectionList, commentList, commentListPagination, comments, liked, likes
+                    author, blog, blogsAmount, collectionList, commentList, commentListPagination, comments, followList, liked, likes
                 }
             } catch (err) {
                 redirect(`/${app.i18n.locale}/auth/login`);
@@ -188,7 +199,6 @@
         data() {
             return {
                 thresholds: this.$vuetify.breakpoint.thresholds,
-                dayjs,
                 collectionOverlay: false,
                 collectionName: '',
                 collectionNameRequiredMessage: null,
@@ -471,7 +481,7 @@
         },
         head() {
             return {
-                title: `${this.$t('headers.viewBlogPage')} - ${this.blog.title}` || 'Error'
+                title: `${this.$t('headers.viewBlogPage')} - ${this.blog.title}`
             }
         },
         watch: {

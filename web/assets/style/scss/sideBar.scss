@@ -1,0 +1,208 @@
+.sideBar {
+    position: fixed;
+    height: 100%;
+    width: 0;
+    overflow-x: hidden;
+    transition-duration: 0.2s;
+    z-index: 1000;
+    @mixin tab-selected {
+        &::after {
+            position: absolute;
+            display: block;
+            border: 1px solid white;
+            content: "";
+            width: 100%;
+            height: 100%;
+            margin: 1rem 0 0 -1rem;
+            z-index: 0;
+        }
+    }
+    @mixin button-hover-focus {
+        &:focus {
+            background-color: white;
+        }
+        &:hover {
+            background-color: darken($color: white, $amount: 10);
+        }
+        &:active {
+            background-color: darken($color: white, $amount: 20);
+        }
+    }
+    .sideBarContainer {
+        height: 100%;
+        overflow-y: auto;
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+        button {
+            margin: 0.5rem;
+            padding: 0.5rem;
+            background-color: white;
+            outline: 0;
+            transition-duration: 0.2s;
+            @include button-hover-focus;
+        }
+        .avatarButton {
+            cursor: pointer;
+            background-color: white;
+            float: right;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 40px !important;
+            height: 40px !important;
+            min-width: auto !important;
+            min-height: auto !important;
+            overflow: hidden;
+            img {
+                object-fit: cover;
+            }
+            a {
+                font-size: 2rem;
+            }
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+        .profileContainer {
+            margin-top: 5rem;
+            text-align: center;
+            color: white;
+            p {
+                font-size: 1.5rem;
+            }
+            .infosContainer {
+                width: 100%;
+                padding: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+                span {
+                    margin-right: 1rem;
+                }
+            }
+        }
+        nav {
+            margin-top: 5rem;
+            ul {
+                padding: 0 3rem 0 0;
+                li {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    list-style-type: none;
+                    padding: 1rem 1.5rem;
+                    margin-bottom: 1.5rem;
+                    background-color: white;
+                    .v-icon {
+                        margin-right: 2rem;
+                    }
+                    a {
+                        font-size: 1.2rem;
+                    }
+                    &.selected {
+                        @include tab-selected;
+                    }
+                    &:hover {
+                        @include tab-selected;
+                    }
+                }
+            }
+            .sideBarButtonGroup {
+                margin: 5rem 0;
+                button {
+                    margin-left: 1.8rem;
+                    padding: 1.2rem;
+                    background-color: white;
+                    outline: 0;
+                    transition-duration: 0.2s;
+                    @include button-hover-focus;
+                }
+            }
+        }
+    }
+    .sideBarMenuButton {
+        position: fixed;
+        cursor: pointer;
+        display: none;
+        top: 0.5rem;
+        left: 0rem;
+        padding: 0.5rem;
+        transition-duration: 0.2s;
+        opacity: 0.9;
+        &.openSideBarMenu {
+            left: 17rem;
+        }
+    }
+}
+/* x large screens */
+@media only screen and (min-width: $break-point-xl) {
+    .sideBar {
+        width: 23rem;
+    }
+}
+
+/* large screens */
+@media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-lg) {
+    .sideBar {
+        width: 18rem;
+        .sideBarContainer {
+            nav {
+                .sideBarButtonGroup {
+                    button {
+                        margin-left: 1rem;
+                        padding: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* medium-sized screens */
+@media only screen and (max-width: $break-point-lg - 1px) and (min-width: $break-point-md) {
+    .sideBar {
+        &.showSideBar {
+            width: 17rem;
+        }
+        .sideBarMenuButton {
+            display: inline-block;
+        }
+        .sideBarContainer {
+            nav {
+                .sideBarButtonGroup {
+                    button {
+                        margin-left: 1rem;
+                        padding: 0.8rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* small screens */
+@media only screen and (max-width: $break-point-md - 1px) {
+    .sideBar {
+        &.showSideBar {
+            width: 17rem;
+        }
+        .sideBarMenuButton {
+            display: inline-block;
+        }
+        .sideBarContainer {
+            nav {
+                .sideBarButtonGroup {
+                    button {
+                        margin-left: 1rem;
+                        padding: 0.8rem;
+                    }
+                }
+            }
+        }
+    }
+}

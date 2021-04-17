@@ -9,6 +9,7 @@ export default {
         editBlogPage: "Edit Blog Page",
         manageBlogPage: "Manage Blog Page",
         viewBlogPage: "View Blog Page",
+        authorBlogListPage: "Author Blog List Page",
         authorProfilePage: "Author Profile Page"
     },
     pages: {
@@ -20,9 +21,16 @@ export default {
             theme: "Theme",
             lightDarkSwitching: "Light / Dark switch"
         },
+        sideBar: {
+            backToHome: "Back to home page",
+            login: "Go to login page",
+            allBlogs: "All Blogs",
+            aboutAuthor: "About Author",
+            languageSwitching: "English / Chinese switch",
+        },
         home: {
-            shareWithIBlog: "Share Your Development With iBlog!",
-            description: "iBlog is a blog management system with features that helping users to post or record blogs.",
+            shareWithIBlog: "Share Your Moment With iBlog!",
+            description: "iBlog is a blogging website for stories sharing",
             login: "Login",
             postBlog: "Post Blog",
             register: "Register",
@@ -153,6 +161,7 @@ export default {
     },
     messages: {
         layout: {
+            languageSwitching: 'English / Chinese switch',
             switchMode: "Switch light/dark Mode Theme",
             chooseMainTheme: "Choose Main Theme",
             switchLanguage: "Switch Language",
@@ -226,7 +235,8 @@ export default {
             form: {
                 usernameRequired: "Username is required",
                 passwordRequired: "Password is required",
-                verifyCodeRequired: "Verify Code is required"
+                verifyCodeRequired: "Verify Code is required",
+                descriptionPlaceHolder: "Input your description here...",
             },
             general: {
                 resetPasswordSuccess: "Reset password success, you can login with the new password now.",
@@ -245,6 +255,7 @@ export default {
             form: {
                 titlePlaceHolder: "Set blog title here...",
                 titleRequired: "Title is required",
+                coverRequired: "Cover is required",
                 contentPlaceHolder: "Input blog content here...",
                 collectionNameRequired: "Collection name is required.",
                 commentRequired: "Comment should not be empty."

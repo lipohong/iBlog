@@ -1,6 +1,7 @@
 <template>
     <div class="blog">
-        <v-container class="viewBlogContainer" :style="`max-width: ${thresholds.sm}px`">
+        <AppBar />
+        <v-container class="mt-5" :style="`max-width: ${thresholds.sm}px`">
             <v-card>
                 <v-card-title>
                     {{ $t('pages.blog.blogList') }}
@@ -37,7 +38,7 @@
                         <tbody>
                             <tr v-for="item in items" :key="item._id">
                                 <td style="max-width: 200px">{{ item.title }}</td>
-                                <td>{{ dayjs(item.updatedDate).format('YYYY/MM/DD HH:mm') }}</td>
+                                <td>{{ $dayjs(item.updatedDate).format('YYYY/MM/DD HH:mm') }}</td>
                                 <td class="text-capitalize">{{ $t(`pages.common.${item.status}`) }}</td>
                                 <td class="text-center">
                                      <v-tooltip bottom>
@@ -64,7 +65,7 @@
 </template>
 <script>
     import * as _ from 'lodash';
-    const dayjs = require('dayjs');
+    import AppBar from '../../components/appBar';
 
     export default {
         async asyncData({ params, $axios, store, redirect, app }) {
@@ -90,7 +91,6 @@
         },
         data() {
             return {
-                dayjs,
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 search: '',
                 categories: [],
@@ -146,6 +146,7 @@
                 ]
             }
         },
+        components: { AppBar },
         watch: {
             page() {
                 this.getBlogList();

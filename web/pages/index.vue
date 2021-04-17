@@ -1,5 +1,6 @@
 <template>
     <div class="home">
+        <AppBar class="mb-5" />
         <div class="bannerContainer">
             <div class="py-15 px-3">
                 <div class="text-sm-h4 text-h5 text-center">{{ $t('pages.home.shareWithIBlog') }}</div>
@@ -48,7 +49,7 @@
                                 <v-icon class="ml-2">mdi-heart-outline</v-icon>
                                 <span>{{ blog.likes }}</span>
                                 <div class="mt-1 caption text--secondary">
-                                    <v-icon class="mr-1">mdi-update</v-icon> {{ dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
+                                    <v-icon class="mr-1">mdi-update</v-icon> {{ $dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
                                 </div>
                             </div>
                         </div>
@@ -63,8 +64,8 @@
 </template>
 <script>
     import * as _ from 'lodash';
-    const dayjs = require('dayjs');
     import BlogTile from '../components/blogTile';
+    import AppBar from '../components/appBar';
     const htmlToText = require('html-to-text');
 
     export default {
@@ -131,11 +132,10 @@
             }
         },
         components: {
-            BlogTile
+            AppBar, BlogTile
         },
         data() {
             return {
-                dayjs,
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 tab: 0,
                 tabTitles: [

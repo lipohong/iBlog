@@ -1,6 +1,7 @@
 <template>
     <div class="user">
-        <v-container :style="`max-width: ${thresholds.xs}px`">
+        <AppBar />
+        <v-container class="mt-5" :style="`max-width: ${thresholds.sm}px`">
             <v-sheet color="defualt" elevation="1" rounded>
                 <div class="pa-5">
                     <v-form ref="profileForm" v-model="valid" lazy-validation>
@@ -24,7 +25,15 @@
                         <div class="subtitle-1 mt-2">{{ $t('pages.user.username') }}</div>
                         <v-text-field v-model="username" :rules="usernameRules" outlined></v-text-field>
                         <div class="subtitle-1 mt-2">{{ $t('pages.user.description') }}</div>
-                        <v-textarea v-model="description" outlined solo></v-textarea>
+                        <client-only>
+                            <quill-editor
+                                ref="editor"
+                                v-model="description"
+                                :options="editorOption"
+                                @ready="onEditorReady($event)"
+                            />
+                        </client-only>
+                        <!-- <v-textarea v-model="description" outlined solo></v-textarea> -->
                         <div class="my-8">
                             <v-btn @click="sumbitProfileForm" :color="primaryColor" block>{{ $t('pages.common.submit') }}</v-btn>
                         </div>
@@ -35,6 +44,8 @@
     </div>
 </template>
 <script>
+    import AppBar from '../../../components/appBar';
+
     export default {
         async asyncData({ params, $axios, store, redirect, app }) {
             try {
@@ -56,6 +67,7 @@
                 redirect(`/${app.i18n.locale}/auth/login`);
             }
         },
+        components: { AppBar },
         data() {
             return {
                 thresholds: this.$vuetify.breakpoint.thresholds,
@@ -65,10 +77,81 @@
                 usernameRules: [
                     v => !!v || this.$t('messages.user.form.usernameRequired')
                 ],
+                editorOption: {
+                    theme: 'snow',
+                    placeholder: this.$t(`messages.profile.form.descriptionPlaceHolder`),
+                    modules: {
+                        toolbar: {
+                            container: [
+                                [{ 'font': [] }],
+                                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                ['blockquote', 'code-block'],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                [{ 'direction': 'rtl' }],
+                                [{ 'color': [] }, { 'background': [] }],
+                                [{ 'align': [] }],
+                                ['link'],
+                                ['image'],
+                                ['clean']
+                            ],
+                            handlers: {
+                                'image': this.uploadImage
+                            }
+                        }
+                    }
+                },
                 description: ''
             }
         },
         methods: {
+            onEditorReady(quill) {
+                this.quill = quill;
+                this.$nextTick(() => {
+                    this.$parent.updated = false;
+                });
+            },
+            async uploadImage() {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.click();
+                input.onchange = async () => {
+                    const newImage = input.files[0];
+                    if (newImage) {
+                        this.$store.dispatch('global/setProgressBar', { progressBar: true });
+                        try {
+                            const postData = new FormData();
+                            postData.append("image", newImage);
+                            const { data } = await this.$axios.post(
+                                `${process.env.fileApi}/files`,
+                                postData,
+                                {
+                                    headers: {
+                                        'Content-Type': 'multipart/form-data'
+                                    }
+                                }
+                            );
+                            const avatar = `${process.env.googleFileLink}${data.payload.fileId}`;
+                            const range = this.quill.getSelection();
+                            if (range) {
+                                this.quill.insertEmbed(range.index, 'image', avatar);
+                            }
+                        } catch (err) {
+                            // show error message
+                            this.$store.dispatch('global/setSnackBar', {
+                                snackBar:{
+                                    open: true,
+                                    color: 'error',
+                                    message: this.$t(`messages.common.unknownError`)
+                                }
+                            });
+                        }
+                        this.$store.dispatch('global/setProgressBar', { progressBar: false });
+                    }
+                }
+            },
             async sumbitProfileForm() {
                 if (!this.$refs.profileForm.validate()) return
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });

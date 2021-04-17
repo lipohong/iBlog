@@ -1,7 +1,8 @@
 <template>
     <div class="login">
+        <AppBar />
         <v-container :style="`max-width: ${thresholds.xs}px`">
-            <v-sheet color="defualt" elevation="1" rounded>
+            <v-sheet class="mt-5" elevation="1" rounded>
                 <div class="pa-5">
                     <v-form ref="loginForm" v-model="valid" lazy-validation>
                         <div class="loginFormTitle title-1">iBlog {{ $t('headers.loginPage') }}</div>
@@ -37,6 +38,7 @@
     import * as crypto from 'crypto-js';
     import * as _ from 'lodash';
     import * as Cookies from 'js-cookie';
+    import AppBar from '../../components/appBar';
 
     export default {
         data() {
@@ -56,6 +58,7 @@
                 rememberMe: false,
             }
         },
+        components: { AppBar },
         methods: {
             redirectToHomePage() {
                 this.$router.push({ path: `/${this.$i18n.locale}` });
