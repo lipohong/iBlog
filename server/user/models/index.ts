@@ -13,12 +13,12 @@ import AdminUserSchema from './adminUser/schema/adminUserSchema';
 // Follow
 import FollowModel from './follow/class/followModel';
 import FollowListPaginationModel from './follow/class/followListPaginationModel';
-
+import FollowStatusEnum from './follow/enum/followStatusEnum';
 import FollowSchema from './follow/schema/followSchema';
 
 
 export {
     UserModel, UserInfoModel, FacebookLoginModel, UserSchema,
     AdminUserModel, AdminUserSchema,
-    FollowModel, FollowListPaginationModel, FollowSchema,
+    FollowModel, FollowListPaginationModel, FollowStatusEnum, FollowSchema,
 }
