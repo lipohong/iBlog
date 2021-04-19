@@ -41,7 +41,10 @@ export class BlogController {
       }
       if (req.query.tags) {
         const tagsList = req.query.tags.toString().split(',');
-        expression['tags'] = { $in: tagsList }
+        expression['tags'] = { $in: tagsList };
+      }
+      if (req.query.isRecommended) {
+        expression['isRecommended'] = true;
       }
       const page = req.query.page;
       const perPage = req.query.perPage;
@@ -231,6 +234,19 @@ export class BlogController {
       }
 
       return res.success("msg_update_blog_success", await updateBlog(expression, model, null));
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+    public setOrResetRecommend = async (req: IERequest, res: IEResponse) => {
+      try {   
+        const expression = { _id: req.params.blogId, userId: req.state.jwtPayload.userId, status: BlogStatus.published, isDeleted: false };
+        const oldBlog = await getBlog(expression);
+        const model = { viewed: oldBlog.viewed, isRecommended: !oldBlog.isRecommended };
+
+        return res.success("msg_blog_set_or_reset_recommend_success", await updateBlog(expression, model, null));
     }
     catch (err) {
       return res.throwErr(err);
