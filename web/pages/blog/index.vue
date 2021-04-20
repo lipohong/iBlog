@@ -65,7 +65,6 @@
 </template>
 <script>
     import * as _ from 'lodash';
-    import AppBar from '../../components/appBar';
 
     export default {
         async asyncData({ params, $axios, store, redirect, app }) {
@@ -146,7 +145,6 @@
                 ]
             }
         },
-        components: { AppBar },
         watch: {
             page() {
                 this.getBlogList();

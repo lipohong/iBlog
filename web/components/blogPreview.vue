@@ -20,7 +20,7 @@
                     <v-icon>mdi-comment-processing-outline</v-icon> {{ blog.comments }}
                     <v-icon>mdi-heart-outline</v-icon> {{ blog.likes }}
                 </div>
-                <span>{{ `By ${author.username}` }}</span>
+                <span>{{ `By ${ author ? author.username : blog.author ? blog.author.username : '' }` }}</span>
             </section>
         </footer>
     </article>

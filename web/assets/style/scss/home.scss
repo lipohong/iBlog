@@ -1,6 +1,6 @@
 .home {
     .bannerContainer {
-        background: #ccc;
+        background: linear-gradient(90deg, #aaa, #ccc);
         color: black;
     }
     .top5BlogPostersContainer {
@@ -23,46 +23,44 @@
         }
     }
     .blogListContainer {
-        column-gap: 10px;
-        .blogContainer {
-            cursor: pointer;
-            display: block;
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            break-inside: avoid-column;
-            page-break-inside: avoid;
-            transition: all 300ms ease-in-out;
-            &:hover {
-                transform: scale(0.9) rotate(2deg);
-            }
+        display: grid;
+        grid-template-columns: 1fr;
+        column-gap: 2rem;
+        row-gap: 2rem;
+    }
+}
+
+/* x large screens */
+@media only screen and (min-width: $break-point-xl) {
+    .home {
+        .blogListContainer {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+    }
+}
+/* large screens */
+@media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-lg) {
+    .home {
+        .blogListContainer {
+            grid-template-columns: 1fr 1fr 1fr;
         }
     }
 }
 
-/* Masonry on large screens */
-@media only screen and (min-width: $break-point-xl) {
-    .blogListContainer {
-        -moz-column-count: 4;
-        -webkit-column-count: 4;
-        column-count: 4;
+/* medium-sized screens */
+@media only screen and (max-width: $break-point-lg - 1px) and (min-width: $break-point-md) {
+    .home {
+        .blogListContainer {
+            grid-template-columns: 1fr 1fr;
+        }
     }
 }
 
-/* Masonry on medium-sized screens */
-@media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-md) {
-    .blogListContainer {
-        -moz-column-count: 3;
-        -webkit-column-count: 3;
-        column-count: 3;
-    }
-}
-
-/* Masonry on small screens */
-@media only screen and (max-width: $break-point-md - 1px) and (min-width: $break-point-sm) {
-    .blogListContainer {
-        -moz-column-count: 2;
-        -webkit-column-count: 2;
-        column-count: 2;
+/* small screens */
+@media only screen and (max-width: $break-point-md - 1px) {
+    .home {
+        .blogListContainer {
+            grid-template-columns: 1fr;
+        }
     }
 }

@@ -11,7 +11,6 @@
     </section>
 </template>
 <script>
-    import SideBar from '../../../../components/sideBar';
     import * as _ from 'lodash';
     const htmlToText = require('html-to-text');
 
@@ -49,7 +48,6 @@
                 redirect(`/${app.i18n.locale}/auth/login`);
             }
         },
-        components: { SideBar },
         data() {
             return {
 

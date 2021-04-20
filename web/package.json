@@ -20,6 +20,7 @@
     "lodash": "^4.17.20",
     "nuxt": "^2.14.7",
     "nuxt-i18n": "^6.15.4",
+    "sass": "^1.32.8",
     "vue-quill-editor": "^3.0.6"
   },
   "devDependencies": {
