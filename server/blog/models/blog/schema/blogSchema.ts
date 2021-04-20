@@ -30,6 +30,10 @@ const BlogSchema = new Schema({
     type: String,
     default: BlogStatus.private
   },
+  isRecommended: {
+    type: Boolean,
+    default: false,
+  },
   isDeleted: {
     type: Boolean,
     default: false,

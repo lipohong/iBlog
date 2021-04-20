@@ -41,7 +41,10 @@ export class BlogController {
       }
       if (req.query.tags) {
         const tagsList = req.query.tags.toString().split(',');
-        expression['tags'] = { $in: tagsList }
+        expression['tags'] = { $in: tagsList };
+      }
+      if (req.query.isRecommended) {
+        expression['isRecommended'] = true;
       }
       const page = req.query.page;
       const perPage = req.query.perPage;
@@ -52,7 +55,20 @@ export class BlogController {
           perPage: Number(perPage)
         }
       }
-      const resultObject = await getBlogPagination(expression, pageObject, null);
+      let resultObject = await getBlogPagination(expression, pageObject, null);
+      const userIdsList = resultObject.blogList.map(item => (item.userId));
+      const userList = await getUserList(userIdsList);
+      const userListMap = _.keyBy(userList, '_id');      
+      resultObject.blogList = resultObject.blogList.map(item => ({
+        ...item,
+        author: {
+          username: _.get(userListMap[item.userId], 'username', ''),
+          email: _.get(userListMap[item.userId], 'email', ''),
+          userInfo: {
+            avatar: _.get(userListMap[item.userId], 'userInfo.avatar', '')
+          }
+        }
+      }));
 
       return res.success(null, resultObject);
     }
@@ -231,6 +247,19 @@ export class BlogController {
       }
 
       return res.success("msg_update_blog_success", await updateBlog(expression, model, null));
+    }
+    catch (err) {
+      return res.throwErr(err);
+    }
+  }
+
+    public setOrResetRecommend = async (req: IERequest, res: IEResponse) => {
+      try {   
+        const expression = { _id: req.params.blogId, userId: req.state.jwtPayload.userId, status: BlogStatus.published, isDeleted: false };
+        const oldBlog = await getBlog(expression);
+        const model = { viewed: oldBlog.viewed, isRecommended: !oldBlog.isRecommended };
+
+        return res.success("msg_blog_set_or_reset_recommend_success", await updateBlog(expression, model, null));
     }
     catch (err) {
       return res.throwErr(err);

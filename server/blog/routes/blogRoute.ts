@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { BlogController } from '../controllers/blogController';
+import isAdmin from '../middlewares/isAdmin';
 const auth = require('../middlewares/auth');
 
 export class blogRoute {
@@ -24,7 +25,9 @@ export class blogRoute {
     router.post('/', auth(true), this.blogController.create);
     router.post('/blogs', auth(false), this.blogController.getBlogsByIds);
     router.put('/:blogId', auth(true), this.blogController.update);
+    router.put('/:blogId/recommend', auth(true), isAdmin, this.blogController.setOrResetRecommend);
     router.delete('/:blogId', auth(true), this.blogController.remove);
+    
 
     return router;
   }
