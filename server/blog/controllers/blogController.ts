@@ -55,7 +55,20 @@ export class BlogController {
           perPage: Number(perPage)
         }
       }
-      const resultObject = await getBlogPagination(expression, pageObject, null);
+      let resultObject = await getBlogPagination(expression, pageObject, null);
+      const userIdsList = resultObject.blogList.map(item => (item.userId));
+      const userList = await getUserList(userIdsList);
+      const userListMap = _.keyBy(userList, '_id');      
+      resultObject.blogList = resultObject.blogList.map(item => ({
+        ...item,
+        author: {
+          username: _.get(userListMap[item.userId], 'username', ''),
+          email: _.get(userListMap[item.userId], 'email', ''),
+          userInfo: {
+            avatar: _.get(userListMap[item.userId], 'userInfo.avatar', '')
+          }
+        }
+      }));
 
       return res.success(null, resultObject);
     }
