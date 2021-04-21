@@ -3,7 +3,7 @@
         <SideBar :author="author" :selectedItem="0" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewUserBlogsContainer">
             <main>
-                <BlogSearchBar v-model="search" :searchFunction="getAuthorBlogList" />
+                <BlogSearchBar @inputChange="handleInputChange" :searchFunction="getAuthorBlogList" />
                 <div class="blogPreviewListContainer">
                     <LazyBlogPreview v-for="blog in blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
                 </div>
@@ -117,6 +117,9 @@
                     });
                 }
                 this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
+            handleInputChange(inputChange) {
+                this.search = inputChange;
             },
             async getAuthorFans() {
                 try {

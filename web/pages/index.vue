@@ -19,22 +19,27 @@
             </div>
         </div>
         <v-container :style="`max-width: ${thresholds.md}px`">
-            <v-tabs show-arrows right v-model="tab">
-                <v-tab small v-for="(item, index) in tabTitles" :key= index>{{ item }}</v-tab>
-            </v-tabs>
-            <v-tabs-items class="mt-5" v-model="tab">
-                <v-tab-item
-                    v-for="(item, index) in [top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs]"
-                    :key="index"
-                >
-                    <BlogTile :blogList="item" :viewed="index === 0" :comments="index === 1" :likes="index === 2" />
-                </v-tab-item>
-            </v-tabs-items>
-            <div class="mt-5 text-h6">
-                <span>{{ $t('pages.home.top5LatestBlogs') }}</span>
-            </div>
             <section>
-                <BlogSearchBar v-model="search" :searchFunction="searchBlogs" />
+                <div class="caption">
+                    <h1>Recommend</h1>
+                    <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                </div>
+                <div class="recommendBlogsContainer">
+                    <div class="firstContainer">
+                        <BlogRecommendTile :blog="recommendedBLogList[0]" />
+                    </div>
+                    <div class="secondContainer">
+                        <BlogRecommendTile :blog="recommendedBLogList[1]" />
+                        <BlogRecommendTile :blog="recommendedBLogList[2]" />
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="caption">
+                    <h1>Recent</h1>
+                    <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                </div>
+                <BlogSearchBar @inputChange="handleInputChange" :searchFunction="searchBlogs" />
                 <div v-if="latestBlogs && latestBlogs.blogList.length > 0" class="blogListContainer">
                     <LazyBlogPreview v-for="blog in latestBlogs.blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
                     <div class="mt-10 text-center" v-if="loadingLatestBlogs">
@@ -66,6 +71,10 @@
 
                     return blog
                 })
+                // get recommended blogs
+                response = await $axios.get(`${process.env.blogApi}/blogs?isRecommended=true`);
+                const recommendedBLogList = response.data.payload.blogList;
+
                 // get top 5 commented blogs
                 response = await $axios.get(`${process.env.commentApi}/comments/blogs/top5`);
                 let top5CommentedBlogs = response.data.payload;
@@ -107,7 +116,7 @@
                 })
 
                 return {
-                    top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs, latestBlogs
+                    recommendedBLogList, top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs, latestBlogs
                 }
             } catch (err) {
                 console.log(err);
@@ -175,6 +184,9 @@
                         blogId
                     }
                 });
+            },
+            handleInputChange(inputChange) {
+                this.search = inputChange;
             },
             async searchBlogs() {
                 this.loadingLatestBlogs = true;

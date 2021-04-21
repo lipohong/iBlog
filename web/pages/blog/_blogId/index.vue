@@ -3,7 +3,7 @@
         <SideBar :author="author" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewBlogContainer" >
             <article :style="`max-width: ${thresholds.sm}px`">
-                <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
                 <div class="coverContainer mb-5" v-if="blog['cover']">
                     <img class="cover" :src="blog['cover']" />
                 </div>
@@ -31,7 +31,7 @@
                     <v-icon class="ml-2">mdi-heart-outline</v-icon>
                     <span>{{ likes }}</span>
                 </footer>
-                <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
                 <v-lazy class="mt-10">
                     <div v-if="commentList.length > 0">
                         <v-timeline align-top dense>
