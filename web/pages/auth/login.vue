@@ -38,7 +38,6 @@
     import * as crypto from 'crypto-js';
     import * as _ from 'lodash';
     import * as Cookies from 'js-cookie';
-    import AppBar from '../../components/appBar';
 
     export default {
         data() {
@@ -58,7 +57,6 @@
                 rememberMe: false,
             }
         },
-        components: { AppBar },
         methods: {
             redirectToHomePage() {
                 this.$router.push({ path: `/${this.$i18n.locale}` });

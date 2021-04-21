@@ -5,8 +5,6 @@
     </div>
 </template>
 <script>
-    import AppBar from '../../../components/appBar';
-    import BlogForm from '../../../components/blogForm';
 
     export default {
         async asyncData({ params, $axios, store, redirect, app }) {
@@ -26,7 +24,6 @@
                 redirect(`/${app.i18n.locale}/auth/login`);
             }
         },
-        components: { AppBar, BlogForm },
         middleware: ['auth'],
         data() {
             return {

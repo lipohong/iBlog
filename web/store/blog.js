@@ -54,5 +54,23 @@ export const actions = {
         } catch(err) {
             throw err;
         }  
-    }
+    },
+    async searchAllBlog({}, postData) {
+        let { page, search } = postData;
+        let queries;
+        if (page) {
+            queries = `page=${page}&perPage=10`;
+        }
+        if (search) {
+            queries = queries + `&search=${search}`;
+        }
+        try {
+            const { data } = await this.$axios.get(`${process.env.blogApi}/blogs?${queries}`);
+            const { blogList, pagination } = data.payload;
+
+            return { blogList, pagination };
+        } catch(err) {
+            throw err;
+        }  
+    },
 }

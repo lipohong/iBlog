@@ -3,14 +3,9 @@
         <SideBar :author="author" :selectedItem="0" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewUserBlogsContainer">
             <main>
-                <div class="searchBarContainer">
-                    <v-sheet class="searchButton" color="primary" @click="getAuthorBlogList">
-                        <v-icon dark>mdi-magnify</v-icon>
-                    </v-sheet>
-                    <input v-model="search" :placeholder="$t('pages.blog.search')">
-                </div>
+                <BlogSearchBar v-model="search" :searchFunction="getAuthorBlogList" />
                 <div class="blogPreviewListContainer">
-                    <BlogPreview v-for="blog in blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
+                    <LazyBlogPreview v-for="blog in blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
                 </div>
                 <v-sheet v-if="blogList.length === 0">
                     <v-container>
@@ -25,8 +20,6 @@
     </div>
 </template>
 <script>
-    import BlogPreview from '../../../../components/blogPreview';
-    import SideBar from '../../../../components/sideBar';
     import * as _ from 'lodash';
     const htmlToText = require('html-to-text');
 
@@ -94,7 +87,6 @@
                 search: ''
             }
         },
-        components: { BlogPreview, SideBar },
         methods: {
             async getAuthorBlogList() {
                 this.$store.dispatch('global/setProgressBar', { progressBar: true });

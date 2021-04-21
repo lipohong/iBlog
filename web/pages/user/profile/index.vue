@@ -44,8 +44,6 @@
     </div>
 </template>
 <script>
-    import AppBar from '../../../components/appBar';
-
     export default {
         async asyncData({ params, $axios, store, redirect, app }) {
             try {
@@ -67,7 +65,6 @@
                 redirect(`/${app.i18n.locale}/auth/login`);
             }
         },
-        components: { AppBar },
         data() {
             return {
                 thresholds: this.$vuetify.breakpoint.thresholds,

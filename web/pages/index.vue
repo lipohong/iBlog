@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <AppBar class="mb-5" />
+        <AppBar />
         <div class="bannerContainer">
             <div class="py-15 px-3">
                 <div class="text-sm-h4 text-h5 text-center">{{ $t('pages.home.shareWithIBlog') }}</div>
@@ -33,39 +33,21 @@
             <div class="mt-5 text-h6">
                 <span>{{ $t('pages.home.top5LatestBlogs') }}</span>
             </div>
-            <div v-if="latestBlogs">
-                <div class="blogListContainer">
-                    <div class="blogContainer mb-4" v-for="(blog, index) in latestBlogs.blogList" :key="index" elevation="1" @click="redirectToBlogViewingPage" :data-blog-id="blog._id">
-                        <v-img class="mx-1 mt-2" v-if="blog.cover" :src="blog.cover" height="250"></v-img>
-                        <div class="mx-4 my-2">
-                            <h2>{{ blog.title }}</h2>
-                            <div>{{ blog.content }}</div>
-                            <v-divider class="mt-4 mb-2"></v-divider>
-                            <div class="body-2">
-                                <v-icon>mdi-eye-outline</v-icon>
-                                <span>{{ blog.viewed || 0 }}</span>
-                                <v-icon class="ml-2">mdi-comment-processing-outline</v-icon>
-                                <span>{{ blog.comments }}</span>
-                                <v-icon class="ml-2">mdi-heart-outline</v-icon>
-                                <span>{{ blog.likes }}</span>
-                                <div class="mt-1 caption text--secondary">
-                                    <v-icon class="mr-1">mdi-update</v-icon> {{ $dayjs(blog.updatedDate).format('YYYY-MM-DD HH:mm') }}
-                                </div>
-                            </div>
-                        </div>
+            <section>
+                <BlogSearchBar v-model="search" :searchFunction="searchBlogs" />
+                <div v-if="latestBlogs && latestBlogs.blogList.length > 0" class="blogListContainer">
+                    <LazyBlogPreview v-for="blog in latestBlogs.blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
+                    <div class="mt-10 text-center" v-if="loadingLatestBlogs">
+                        <v-progress-circular indeterminate :color="primaryColor"></v-progress-circular>
                     </div>
                 </div>
-                <div class="mt-10 text-center" v-if="loadingLatestBlogs">
-                    <v-progress-circular indeterminate :color="primaryColor"></v-progress-circular>
-                </div>
-            </div>
+                <div v-else>{{ $t('pages.blog.noResult') }}</div>
+            </section>
         </v-container>
     </div>
 </template>
 <script>
     import * as _ from 'lodash';
-    import BlogTile from '../components/blogTile';
-    import AppBar from '../components/appBar';
     const htmlToText = require('html-to-text');
 
     export default {
@@ -78,9 +60,9 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
                     // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30 });
+                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
 
                     return blog
                 })
@@ -91,9 +73,9 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
                     // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30 });
+                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
 
                     return blog
                 })
@@ -104,9 +86,9 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
                     // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30 });
+                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
 
                     return blog
                 })
@@ -117,9 +99,9 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50 });
+                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
                     // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 100 });
+                    blog.content = _.truncate(blog.content, { 'length': 200, 'omission': '...' });
 
                     return blog
                 })
@@ -131,9 +113,6 @@
                 console.log(err);
             }
         },
-        components: {
-            AppBar, BlogTile
-        },
         data() {
             return {
                 thresholds: this.$vuetify.breakpoint.thresholds,
@@ -143,7 +122,30 @@
                     this.$t('pages.home.top5CommentedBlogs'),
                     this.$t('pages.home.top5LikedBlogs')
                 ],
+                categoriesOptions: [
+                    'dataStructure',
+                    'algorithm',
+                    'designPattern',
+                    'programming',
+                    'frontend',
+                    'html',
+                    'css',
+                    'js',
+                    'ts',
+                    'jest',
+                    'framework',
+                    'UIlibrary',
+                    'backend',
+                    'devOps',
+                    'networking',
+                    'life',
+                    'other'
+                ].reduce((accumulator, currentValue) => {
+                    accumulator[currentValue] = this.$t(`pages.blog.categories.${currentValue}`);
+                    return accumulator;
+                }, {}),
                 loadingLatestBlogs: false,
+                search: ''
             }
         },
         methods: {
@@ -174,28 +176,20 @@
                     }
                 });
             },
-            async loadMoreBlogs() {
+            async searchBlogs() {
                 this.loadingLatestBlogs = true;
                 try {
-                    let response = await this.$axios.get(`${process.env.blogApi}/blogs?page=${this.latestBlogs.pagination.currentPage + 1}&perPage=10`);
-                    let latestBlogs = response.data.payload;
-                    latestBlogs.blogList = latestBlogs.blogList.map(blog => {
-                        // conver html to plain string
-                        blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
-                        // limit length of title
-                        blog.title = _.truncate(blog.title, { 'length': 50 });
-                        // limit length of content
-                        blog.content = _.truncate(blog.content, { 'length': 100 });
-
-                        return blog
-                    });
-                    // remove onscroll event if all blogs loaded
-                    if (latestBlogs.pagination.currentPage >= latestBlogs.pagination.totalPage) {
-                        window.onscroll = () => {};
+                    let postData = {
+                        search: this.search,
+                        page: 1,
+                        categories: this.categories,
+                        userId: this.$route.params.userId
                     }
+                    let { blogList, pagination } = await this.$store.dispatch('blog/searchAllBlog', postData);
+                    blogList = this.formatBlogList(blogList);
                     this.latestBlogs = {
-                        blogList: [...this.latestBlogs.blogList, ...latestBlogs.blogList],
-                        pagination: latestBlogs.pagination
+                        blogList,
+                        pagination
                     }
                 } catch(err) {
                     // show error message
@@ -209,11 +203,46 @@
                 }
                 this.loadingLatestBlogs = false;
             },
-            scrollListening() {
-                if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
-                    // at the bottom of the page
-                    this.loadMoreBlogs();
+            async loadMoreBlogs() {
+                this.loadingLatestBlogs = true;
+                try {
+                    let postData = {
+                        search: this.search,
+                        page: this.latestBlogs.pagination.currentPage + 1,
+                        categories: this.categories,
+                        userId: this.$route.params.userId
+                    }
+                    let { blogList, pagination } = await this.$store.dispatch('blog/searchAllBlog', postData);
+                    blogList = this.formatBlogList(blogList);
+                    this.latestBlogs = {
+                        blogList: [...this.latestBlogs.blogList, ...blogList],
+                        pagination
+                    }
+                } catch(err) {
+                    // show error message
+                    this.$store.dispatch('global/setSnackBar', {
+                        snackBar:{
+                            open: true,
+                            color: 'error',
+                            message: this.$t(`messages.common.unknownError`)
+                        }
+                    });
                 }
+                this.loadingLatestBlogs = false;
+            },
+            formatBlogList(blogList) {
+                let _blogList = blogList.map(blog => {
+                    // conver html to plain string
+                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false });
+                    // limit length of title
+                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...'  });
+                    // limit length of content
+                    blog.content = _.truncate(blog.content, { 'length': 200, 'omission': '...'  });
+
+                    return blog
+                });
+                
+                return [..._blogList];
             }
         },
         computed: {
@@ -229,14 +258,6 @@
 
                 return this.$store.state.mode.mode === 'light' ? 'secondary' : 'primary';
             },
-        },
-        created() {
-            if (process.client) {
-                window.onscroll = () => this.scrollListening();
-            }
-        },
-        beforeDestroy() {
-            window.onscroll = () => {};
         },
         head() {
             return {

@@ -32,7 +32,7 @@
                     <span>{{ likes }}</span>
                 </footer>
                 <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
-                <div class="mt-10">
+                <v-lazy class="mt-10">
                     <div v-if="commentList.length > 0">
                         <v-timeline align-top dense>
                             <v-timeline-item fill-dot icon="mdi-update" small v-for="comment in commentList" :key="comment._id">
@@ -84,7 +84,7 @@
                             <span class="font-weight-black" style="cursor: pointer" @click="redirectToLogin">{{ $t('pages.blog.commentLogin') }}</span> {{ $t('pages.blog.leaveComment') }}
                         </div>
                     </div>
-                </div>
+                </v-lazy>
                 <v-overlay :value="collectionOverlay">
                     <v-sheet rounded :light="!$vuetify.theme.dark">
                         <v-container>
@@ -139,14 +139,8 @@
     </div>
 </template>
 <script>
-    import AuthorProfile from '../../../components/authorProfile';
-    import FunctionButton from '../../../components/functionButton';
-    import SideBar from '../../../components/sideBar';
-
     export default {
-        components: {
-            AuthorProfile, FunctionButton, SideBar
-        },
+
         async asyncData({ params, $axios, store, redirect, app }) {
             try {
                 // get blog

@@ -5,11 +5,7 @@
     </div>
 </template>
 <script>
-    import AppBar from '../../components/appBar';
-    import BlogForm from '../../components/blogForm';
-
     export default {
-        components: { AppBar, BlogForm },
         middleware: ['auth'],
         data() {
             return {

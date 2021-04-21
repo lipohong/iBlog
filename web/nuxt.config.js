@@ -2,6 +2,7 @@ import I18N from './lang.config';
 require('dotenv').config();
 
 export default {
+    components: true,
     modules: [
         '@nuxtjs/axios',
         '@nuxtjs/dayjs',
