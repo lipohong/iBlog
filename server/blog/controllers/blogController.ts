@@ -255,7 +255,7 @@ export class BlogController {
 
     public setOrResetRecommend = async (req: IERequest, res: IEResponse) => {
       try {   
-        const expression = { _id: req.params.blogId, userId: req.state.jwtPayload.userId, status: BlogStatus.published, isDeleted: false };
+        const expression = { _id: req.params.blogId, status: BlogStatus.published, isDeleted: false };
         const oldBlog = await getBlog(expression);
         const model = { viewed: oldBlog.viewed, isRecommended: !oldBlog.isRecommended };
 
