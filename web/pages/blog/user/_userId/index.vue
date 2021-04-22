@@ -21,6 +21,7 @@
 </template>
 <script>
     import * as _ from 'lodash';
+    import categories from '../../../../assets/enum/categoriesOptions.json';
     const htmlToText = require('html-to-text');
 
     export default {
@@ -62,25 +63,7 @@
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 page: 1,
                 categories: [],
-                categoriesOptions: [
-                    'dataStructure',
-                    'algorithm',
-                    'designPattern',
-                    'programming',
-                    'frontend',
-                    'html',
-                    'css',
-                    'js',
-                    'ts',
-                    'jest',
-                    'framework',
-                    'UIlibrary',
-                    'backend',
-                    'devOps',
-                    'networking',
-                    'life',
-                    'other'
-                ].reduce((accumulator, currentValue) => {
+                categoriesOptions: categories.reduce((accumulator, currentValue) => {
                     accumulator[currentValue] = this.$t(`pages.blog.categories.${currentValue}`);
                     return accumulator;
                 }, {}),

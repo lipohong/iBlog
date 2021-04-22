@@ -38,7 +38,11 @@ export default {
             top5LatestBlogs: "最新發佈",
             top5ViewedBlogs: "最多瀏覽",
             top5CommentedBlogs: "最多評論",
-            top5LikedBlogs: "最多點讚"
+            top5LikedBlogs: "最多點讚",
+            recommendedBlogs: "置頂 blog",
+            popularBlogs: "受歡迎 blog",
+            trendingBlogs: "流行 blog",
+            allRecentBlogs: "所有最新 blog"
         },
         login: {
             iblogLogin: "iBlog 登錄",

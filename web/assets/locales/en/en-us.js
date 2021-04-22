@@ -38,7 +38,11 @@ export default {
             top5LatestBlogs: "Latest",
             top5ViewedBlogs: "Most Viewed",
             top5CommentedBlogs: "Most Commented",
-            top5LikedBlogs: "Most Liked"
+            top5LikedBlogs: "Most Liked",
+            recommendedBlogs: "Recommended Blogs",
+            popularBlogs: "Popular blogs",
+            trendingBlogs: "Trending blogs",
+            allRecentBlogs: "All Recent Blogs"
         },
         login: {
             iblogLogin: "iBlog Login",

@@ -1,30 +1,28 @@
 <template>
     <div class="home">
         <AppBar />
-        <div class="bannerContainer">
-            <div class="py-15 px-3">
-                <div class="text-sm-h4 text-h5 text-center">{{ $t('pages.home.shareWithIBlog') }}</div>
-                <div class="mt-5 text-body-1 text-center">{{ $t('pages.home.description') }}</div>
-                <div class="mt-1 text-body-1 text-center font-weight-bold" v-if="!$store.state.user.user._id">
-                    <span style="cursor: pointer" @click="redirectToLogin">
-                        {{ $t('pages.home.login') }}
-                    </span> | 
-                    <span style="cursor: pointer" @click="redirectToBlogCreate">
-                        {{ $t('pages.home.postBlog') }}
-                    </span> | 
-                    <span style="cursor: pointer" @click="redirectToRegister">
-                        {{ $t('pages.home.register') }}
-                    </span>
-                </div>
-            </div>
-        </div>
+        <section class="bannerContainer" :color="secondaryColor">
+            <header>{{ $t('pages.home.shareWithIBlog') }}</header>
+            <main>{{ $t('pages.home.description') }}</main>
+            <footer v-if="!$store.state.user.user._id">
+                <span @click="redirectToLogin">
+                    {{ $t('pages.home.login') }}
+                </span> | 
+                <span @click="redirectToBlogCreate">
+                    {{ $t('pages.home.postBlog') }}
+                </span> | 
+                <span @click="redirectToRegister">
+                    {{ $t('pages.home.register') }}
+                </span>
+            </footer>
+        </section>
         <v-container :style="`max-width: ${thresholds.md}px`">
             <section>
-                <div class="caption">
-                    <h1>Recommend</h1>
+                <header class="caption">
+                    <h1>{{ $t('pages.home.recommendedBlogs') }}</h1>
                     <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
-                </div>
-                <div class="recommendBlogsContainer">
+                </header>
+                <main class="recommendBlogsContainer">
                     <div class="firstContainer">
                         <BlogRecommendTile :blog="recommendedBLogList[0]" />
                     </div>
@@ -32,13 +30,54 @@
                         <BlogRecommendTile :blog="recommendedBLogList[1]" />
                         <BlogRecommendTile :blog="recommendedBLogList[2]" />
                     </div>
-                </div>
+                </main>
             </section>
             <section>
-                <div class="caption">
-                    <h1>Recent</h1>
+                <header class="caption">
+                    <h1>{{ $t('pages.home.popularBlogs') }}</h1>
                     <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
-                </div>
+                </header>
+                <main class="popularBlogsContainer">
+                    <div class="popularBlogsListContainer">
+                        <BlogPopularAndTrandingTile v-for="blog in top5LikedBlogs" :key="blog._id" :blog="blog" :categoriesOptions="categoriesOptions" />
+                        <div class="adContainer">
+                            <v-sheet class="adImage" :color="secondaryColor">
+                                <p>ad image</p>
+                            </v-sheet>
+                            <div class="adText">
+                                <p>ad</p>
+                            </div>
+                        </div>
+                    </div>
+                    <aside>
+                        <p>ad banner</p>
+                    </aside>
+                </main>
+            </section>
+            <section>
+                <header class="caption">
+                    <h1>{{ $t('pages.home.trendingBlogs') }}</h1>
+                    <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                </header>
+                <main class="trendingBlogsContainer">
+                    <div class="trendingBlogsListContainer">
+                        <BlogPopularAndTrandingTile v-for="blog in top5CommentedBlogs" :key="blog._id" :blog="blog" :categoriesOptions="categoriesOptions" />
+                        <div class="adContainer">
+                            <v-sheet class="adImage" :color="secondaryColor">
+                                <p>ad image</p>
+                            </v-sheet>
+                            <div class="adText">
+                                <p>ad</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </section>
+            <section>
+                <header class="caption">
+                    <h1>{{ $t('pages.home.allRecentBlogs') }}</h1>
+                    <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                </header>
                 <BlogSearchBar @inputChange="handleInputChange" :searchFunction="searchBlogs" />
                 <div v-if="latestBlogs && latestBlogs.blogList.length > 0" class="blogListContainer">
                     <LazyBlogPreview v-for="blog in latestBlogs.blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
@@ -53,26 +92,14 @@
 </template>
 <script>
     import * as _ from 'lodash';
+    import categories from '../assets/enum/categoriesOptions.json';
     const htmlToText = require('html-to-text');
 
     export default {
         async asyncData({ $axios }) {
             try {
-                // get top 5 viewed blogs
-                let response = await $axios.get( `${process.env.blogApi}/blogs/viewedBlogs/top5`);
-                let top5ViewedBlogs = response.data.payload;
-                top5ViewedBlogs = top5ViewedBlogs.map(blog => {
-                    // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
-                    // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
-                    // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
-
-                    return blog
-                })
                 // get recommended blogs
-                response = await $axios.get(`${process.env.blogApi}/blogs?isRecommended=true`);
+                let response = await $axios.get(`${process.env.blogApi}/blogs?isRecommended=true`);
                 const recommendedBLogList = response.data.payload.blogList;
 
                 // get top 5 commented blogs
@@ -82,9 +109,7 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
-                    // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
+                    blog.title = _.truncate(blog.title, { 'length': 25, 'omission': '...' });
 
                     return blog
                 })
@@ -95,9 +120,7 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
-                    // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
+                    blog.title = _.truncate(blog.title, { 'length': 25, 'omission': '...' });
 
                     return blog
                 })
@@ -108,7 +131,7 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
+                    blog.title = _.truncate(blog.title, { 'length': 30, 'omission': '...' });
                     // limit length of content
                     blog.content = _.truncate(blog.content, { 'length': 200, 'omission': '...' });
 
@@ -116,7 +139,7 @@
                 })
 
                 return {
-                    recommendedBLogList, top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs, latestBlogs
+                    recommendedBLogList, top5CommentedBlogs, top5LikedBlogs, latestBlogs
                 }
             } catch (err) {
                 console.log(err);
@@ -125,31 +148,7 @@
         data() {
             return {
                 thresholds: this.$vuetify.breakpoint.thresholds,
-                tab: 0,
-                tabTitles: [
-                    this.$t('pages.home.top5ViewedBlogs'),
-                    this.$t('pages.home.top5CommentedBlogs'),
-                    this.$t('pages.home.top5LikedBlogs')
-                ],
-                categoriesOptions: [
-                    'dataStructure',
-                    'algorithm',
-                    'designPattern',
-                    'programming',
-                    'frontend',
-                    'html',
-                    'css',
-                    'js',
-                    'ts',
-                    'jest',
-                    'framework',
-                    'UIlibrary',
-                    'backend',
-                    'devOps',
-                    'networking',
-                    'life',
-                    'other'
-                ].reduce((accumulator, currentValue) => {
+                categoriesOptions: categories.reduce((accumulator, currentValue) => {
                     accumulator[currentValue] = this.$t(`pages.blog.categories.${currentValue}`);
                     return accumulator;
                 }, {}),
