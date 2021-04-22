@@ -47,7 +47,7 @@ export default class BlogModel {
   public viewed: number;
 
   @Expose({ groups: ['get', 'fetch', 'update', 'put'] })
-  public isRecommended: number;
+  public isRecommended: boolean;
 
   @Expose({ groups: ['get', 'put'] })
   public isDeleted: boolean;

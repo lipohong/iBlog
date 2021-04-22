@@ -3,7 +3,7 @@
         <v-sheet class="searchButton" color="primary" @click="searchFunction">
             <v-icon dark>mdi-magnify</v-icon>
         </v-sheet>
-        <input  @input="updateSearch($event.target.value)" :placeholder="$t('pages.blog.search')">
+        <input @input="updateSearch($event.target.value)" :placeholder="$t('pages.blog.search')">
     </div>
 </template>
 <script>
@@ -11,7 +11,7 @@
         props: ['searchFunction'],
         methods: {
             updateSearch(search) {
-                this.$emit('input', search);
+                this.$emit('inputChange', search);
             }
         }
     }

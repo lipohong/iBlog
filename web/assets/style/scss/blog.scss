@@ -48,7 +48,7 @@
             .updatedDate {
                 color: #999;
             }
-            .sperateBar {
+            .separateBar {
                 height: 0.3rem !important;
                 margin: 3rem 0;
             }
@@ -69,7 +69,7 @@
     }
     .profileViewingContainer {
         max-width: $break-point-xl;
-        padding: 5rem;
+        padding: 2rem;
         article {
             margin: 2rem 0 5rem 0;
         }
@@ -116,7 +116,7 @@
     }
 }
 .blogPreviewContainer {
-    .sperateBar {
+    .separateBar {
         height: 0.3rem !important;
     }
     header {
@@ -170,7 +170,7 @@
     }
 }
 .searchBarContainer {
-    margin: 2rem 0;
+    margin-bottom: 2rem;
     display: flex;
     flex-direction: row-reverse;
     .searchButton {
@@ -184,11 +184,89 @@
     }
     input {
         width: 100%;
+        max-width: 30rem;
         border: 1px solid #aaa;
         padding: 0.5rem;
         outline: none;
         &:focus {
             outline: 2px solid cyan;
+        }
+    }
+}
+.recommendBlogTileContainer {
+    background-color: rgba(0, 0, 0, 0.03);
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 2s;
+        cursor: pointer;
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+    main {
+        width: 100%;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        bottom: 0;
+        header {
+            cursor: pointer;
+        }
+        footer {
+            font-size: 0.9rem;
+        }
+    }
+}
+/* x large screens */
+@media only screen and (min-width: $break-point-xl) {
+    .recommendBlogTileContainer {
+        main {
+            padding: 1rem 1.6rem;
+            header {
+                font-size: 1.6rem;
+            }
+        }
+    }
+}
+/* large screens */
+@media only screen and (max-width: $break-point-xl - 1px) and (min-width: $break-point-lg) {
+    .recommendBlogTileContainer {
+        main {
+            padding: 0.9rem 1.4rem;
+            header {
+                font-size: 1.4rem;
+            }
+        }
+    }
+}
+
+/* medium-sized screens */
+@media only screen and (max-width: $break-point-lg - 1px) and (min-width: $break-point-md) {
+    .recommendBlogTileContainer {
+        main {
+            padding: 0.8rem 1.2rem;
+            header {
+                font-size: 1.2rem;
+            }
+        }
+    }
+}
+
+/* small screens */
+@media only screen and (max-width: $break-point-md - 1px) {
+    .recommendBlogTileContainer {
+        main {
+            padding: 0.7rem 1.2rem;
+            header {
+                font-size: 1rem;
+            }
         }
     }
 }

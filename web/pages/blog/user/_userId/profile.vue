@@ -2,11 +2,11 @@
     <section class="blog">
         <SideBar :author="author" :selectedItem="1" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="profileViewingContainer">
-            <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
+            <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
             <article class="ql-snow">
                 <main class="ql-editor" v-html="author.userInfo.description || `<div>${ $t('pages.blog.noDescriptionMessage') }</div>`"></main>
             </article>
-            <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
+            <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
         </div>
     </section>
 </template>

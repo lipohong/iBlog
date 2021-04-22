@@ -253,13 +253,13 @@ export class BlogController {
     }
   }
 
-    public setOrResetRecommend = async (req: IERequest, res: IEResponse) => {
-      try {   
-        const expression = { _id: req.params.blogId, status: BlogStatus.published, isDeleted: false };
-        const oldBlog = await getBlog(expression);
-        const model = { viewed: oldBlog.viewed, isRecommended: !oldBlog.isRecommended };
+  public setOrResetRecommend = async (req: IERequest, res: IEResponse) => {
+    try {   
+      const expression = { _id: req.params.blogId, status: BlogStatus.published, isDeleted: false };
+      const oldBlog = await getBlog(expression);
+      const model = { viewed: oldBlog.viewed, isRecommended: !oldBlog.isRecommended };
 
-        return res.success("msg_blog_set_or_reset_recommend_success", await updateBlog(expression, model, null));
+      return res.success("msg_blog_set_or_reset_recommend_success", await updateBlog(expression, model, null));
     }
     catch (err) {
       return res.throwErr(err);

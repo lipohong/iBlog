@@ -129,7 +129,21 @@ export class CommentController {
       ];
       const resultObject = await getCommentsUsingAggregate(expresssions);
       const blogIdsList = resultObject.map(item => (item._id));
-      const blogList = await getBlogList(blogIdsList);
+      let blogList = await getBlogList(blogIdsList);
+      const userIdsList = blogList.map(item => (item.userId));
+      const userList = await getUserList(userIdsList);
+      const userListMap = _.keyBy(userList, '_id');      
+      blogList = blogList.map(item => ({
+        ...item,
+        author: {
+          username: _.get(userListMap[item.userId], 'username', ''),
+          email: _.get(userListMap[item.userId], 'email', ''),
+          userInfo: {
+            avatar: _.get(userListMap[item.userId], 'userInfo.avatar', '')
+          }
+        }
+      }));
+
       const blogListMap = _.keyBy(blogList, '_id');
       let returnList = [];
       for (let comment of resultObject) {

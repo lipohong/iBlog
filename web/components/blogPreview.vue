@@ -1,6 +1,6 @@
 <template>
     <article class="blogPreviewContainer">
-        <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
+        <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
         <header @click="redirectToBlogViewingPage">
             <div class="imageContainer">
                 <img :src="blog.cover" alt="Blog Cover">
