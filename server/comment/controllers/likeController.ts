@@ -3,6 +3,7 @@ import { IERequest, IEResponse } from '../models/commonModel';
 import LikeModel  from '../models/like/class/likeModel';
 import { getLike, getLikePagination, saveNewLike, removeLike, getLikeAmount, getLikesUsingAggregate } from '../services/likeService';
 import { getBlogList } from '../services/blogService';
+import { getUserList } from '../services/userService';
 
 export class LikeController {
 
@@ -108,7 +109,20 @@ export class LikeController {
       ];
       const resultObject = await getLikesUsingAggregate(expresssions);
       const blogIdsList = resultObject.map(item => (item._id));      
-      const blogList = await getBlogList(blogIdsList);
+      let blogList = await getBlogList(blogIdsList);
+      const userIdsList = blogList.map(item => (item.userId));
+      const userList = await getUserList(userIdsList);
+      const userListMap = _.keyBy(userList, '_id');      
+      blogList = blogList.map(item => ({
+        ...item,
+        author: {
+          username: _.get(userListMap[item.userId], 'username', ''),
+          email: _.get(userListMap[item.userId], 'email', ''),
+          userInfo: {
+            avatar: _.get(userListMap[item.userId], 'userInfo.avatar', '')
+          }
+        }
+      }));
       const blogListMap = _.keyBy(blogList, '_id');
       let returnList = [];
       for (let like of resultObject) {
