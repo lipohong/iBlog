@@ -42,7 +42,8 @@ export default {
             recommendedBlogs: "置頂 blog",
             popularBlogs: "受歡迎 blog",
             trendingBlogs: "流行 blog",
-            allRecentBlogs: "所有最新 blog"
+            allRecentBlogs: "所有最新 blog",
+            loadMoreBlogs: "加載更多 blog"
         },
         login: {
             iblogLogin: "iBlog 登錄",

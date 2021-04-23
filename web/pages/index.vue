@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <AppBar />
-        <section class="bannerContainer" :color="secondaryColor">
+        <section class="bannerContainer">
             <header>{{ $t('pages.home.shareWithIBlog') }}</header>
             <main>{{ $t('pages.home.description') }}</main>
             <footer v-if="!$store.state.user.user._id">
@@ -80,12 +80,15 @@
                 </header>
                 <BlogSearchBar @inputChange="handleInputChange" :searchFunction="searchBlogs" />
                 <div v-if="latestBlogs && latestBlogs.blogList.length > 0" class="blogListContainer">
-                    <LazyBlogPreview v-for="blog in latestBlogs.blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
+                    <LazyBlogPreview v-for="blog in latestBlogs.blogList" :key="blog._id" :blog="blog" :categoriesOptions="categoriesOptions" />
                     <div class="mt-10 text-center" v-if="loadingLatestBlogs">
                         <v-progress-circular indeterminate :color="primaryColor"></v-progress-circular>
                     </div>
                 </div>
                 <div v-else>{{ $t('pages.blog.noResult') }}</div>
+                <footer class="loadBlogContainer" v-if="latestBlogs.pagination.totalPage > latestBlogs.pagination.currentPage">
+                    <v-sheet class="loadBlogButton" :color="primaryColor" dark @click="loadMoreBlogs">{{ $t('pages.home.loadMoreBlogs') }}</v-sheet>
+                </footer>
             </section>
         </v-container>
     </div>
@@ -219,9 +222,7 @@
                 try {
                     let postData = {
                         search: this.search,
-                        page: this.latestBlogs.pagination.currentPage + 1,
-                        categories: this.categories,
-                        userId: this.$route.params.userId
+                        page: this.latestBlogs.pagination.currentPage + 1
                     }
                     let { blogList, pagination } = await this.$store.dispatch('blog/searchAllBlog', postData);
                     blogList = this.formatBlogList(blogList);

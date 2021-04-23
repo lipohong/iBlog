@@ -42,7 +42,8 @@ export default {
             recommendedBlogs: "Recommended Blogs",
             popularBlogs: "Popular blogs",
             trendingBlogs: "Trending blogs",
-            allRecentBlogs: "All Recent Blogs"
+            allRecentBlogs: "All Recent Blogs",
+            loadMoreBlogs: "Load More Blogs"
         },
         login: {
             iblogLogin: "iBlog Login",

@@ -1,8 +1,13 @@
 .home {
     .bannerContainer {
-        background: linear-gradient(180deg, #ddd, #eee);
         text-align: center;
+        color: black;
         padding: 10rem 0;
+        background-image: url("https://cdn.vuetifyjs.com/images/parallax/material2.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
         header {
             font-size: 3rem;
         }
@@ -147,30 +152,23 @@
             }
         }
     }
-    .top5BlogPostersContainer {
-        display: grid;
-        justify-items: center;
-        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    }
-    .top5BlogsContainer {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        .blogContainer {
-            cursor: pointer;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            margin: 5px;
-            box-shadow: 3px 3px 10px #eee;
-            &:hover {
-                background: #aaa;
-            }
-        }
-    }
     .blogListContainer {
         display: grid;
         grid-template-columns: 1fr;
         column-gap: 2rem;
         row-gap: 2rem;
+    }
+    .loadBlogContainer {
+        margin-top: 1rem;
+        text-align: center;
+        .loadBlogButton {
+            cursor: pointer;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            &:hover {
+                opacity: 0.8;
+            }
+        }
     }
 }
 
