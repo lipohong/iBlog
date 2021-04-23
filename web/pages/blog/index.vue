@@ -65,6 +65,7 @@
 </template>
 <script>
     import * as _ from 'lodash';
+    import categoriesList from '../../assets/enum/categoriesOptions.json';
 
     export default {
         async asyncData({ params, $axios, store, redirect, app }) {
@@ -95,25 +96,7 @@
                 categories: [],
                 page: 1,
                 categories: [],
-                categoriesOptions: [
-                    'dataStructure',
-                    'algorithm',
-                    'designPattern',
-                    'programming',
-                    'frontend',
-                    'html',
-                    'css',
-                    'js',
-                    'ts',
-                    'jest',
-                    'framework',
-                    'UIlibrary',
-                    'backend',
-                    'devOps',
-                    'networking',
-                    'life',
-                    'other'
-                ].map(option => ({
+                categoriesOptions: categoriesList.map(option => ({
                     value: option,
                     text: this.$t(`pages.blog.categories.${option}`)
                 })),

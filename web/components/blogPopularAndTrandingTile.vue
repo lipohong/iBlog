@@ -1,8 +1,11 @@
 <template>
-    <article class="recommendBlogTileContainer">
-        <img :src="blog.cover" alt="Blog Cover" @click="redirectToBlogViewingPage" />
+    <article class="popularAndTrandingBlogTileContainer">
+       <header>
+            <img :src="blog.cover" alt="Blog Cover" @click="redirectToBlogViewingPage" />
+       </header>
         <main>
-            <header @click="redirectToBlogViewingPage">{{ blog.title }}</header>
+            <p>{{ categoriesOptions[blog.categories[0]] }}</p>
+            <header @click="redirectToBlogViewingPage"><a>{{ blog.title }}</a></header>
             <footer>
                 <span>{{ blog.author.username }}</span>
                 <span>•</span>
@@ -12,8 +15,9 @@
     </article>
 </template>
 <script>
+
 export default {
-    props: ['blog'],
+    props: ['blog', 'categoriesOptions'],
     methods: {
         redirectToBlogViewingPage() {
             this.$router.push({
