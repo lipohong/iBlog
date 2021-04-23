@@ -48,7 +48,7 @@
                         <img v-if="author.userInfo.avatar" :src="author.userInfo.avatar">
                         <span class="white--text" v-else>{{ author.username[0] }}</span>
                     </v-avatar>
-                    <p>{{ author.username }}</p>
+                    <main>{{ author.username }}</main>
                     <div class="infosContainer">
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">

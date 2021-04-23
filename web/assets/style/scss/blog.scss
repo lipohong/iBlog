@@ -8,6 +8,10 @@
         }
         .ql-toolbar {
             background-color: #ddd;
+            position: -webkit-sticky; /* Safari */
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         .categoriesActionContainer {
             display: flex;
@@ -139,15 +143,15 @@
                 height: 15rem;
                 transition: 0.5s;
                 object-fit: cover;
-                object-position: calc(50% - 3rem) center;
+                object-position: calc(50% - 1rem) center;
                 max-height: 18rem;
-                width: calc(100% + 3rem);
+                width: calc(100% + 1rem);
             }
         }
         a {
             display: block;
             margin-top: 1rem;
-            font-size: 2rem;
+            font-size: 1.5rem;
         }
     }
     section {

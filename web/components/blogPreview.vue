@@ -7,7 +7,9 @@
             </div>
             <a>{{ blog.title }}</a>
         </header>
-        <section>{{ blog.content }}</section>
+        <main>
+            <p>{{ blog.content }}</p>
+        </main>
         <footer>
             <section>
                 <span>{{ categoriesOptions[blog.categories[0]] }}</span>
