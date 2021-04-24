@@ -2,19 +2,21 @@
     <div class="home">
         <AppBar />
         <section class="bannerContainer">
-            <header>{{ $t('pages.home.shareWithIBlog') }}</header>
-            <main>{{ $t('pages.home.description') }}</main>
-            <footer v-if="!$store.state.user.user._id">
-                <span @click="redirectToLogin">
-                    {{ $t('pages.home.login') }}
-                </span> | 
-                <span @click="redirectToBlogCreate">
-                    {{ $t('pages.home.postBlog') }}
-                </span> | 
-                <span @click="redirectToRegister">
-                    {{ $t('pages.home.register') }}
-                </span>
-            </footer>
+            <v-parallax src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg">
+                <header>{{ $t('pages.home.shareWithIBlog') }}</header>
+                <main>{{ $t('pages.home.description') }}</main>
+                <footer v-if="!$store.state.user.user._id">
+                    <span @click="redirectToLogin">
+                        {{ $t('pages.home.login') }}
+                    </span> | 
+                    <span @click="redirectToBlogCreate">
+                        {{ $t('pages.home.postBlog') }}
+                    </span> | 
+                    <span @click="redirectToRegister">
+                        {{ $t('pages.home.register') }}
+                    </span>
+                </footer>
+            </v-parallax>
         </section>
         <v-container :style="`max-width: ${thresholds.md}px`">
             <section>
