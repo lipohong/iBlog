@@ -1,0 +1,5 @@
+log.txt
+*.gz
+client_id.json
+token.pickle
+tmp
