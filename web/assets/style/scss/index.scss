@@ -18,9 +18,18 @@ body {
     h4,
     h5,
     h6,
+    section,
+    main,
+    aside,
+    header,
+    footer,
+    nav,
     p {
         word-wrap: break-word;
-        word-break: break-all;
+        word-break: break-word;
+    }
+    p {
+        text-align: justify;
     }
     .v-tab {
         text-transform: none;

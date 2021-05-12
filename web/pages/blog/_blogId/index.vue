@@ -3,7 +3,7 @@
         <SideBar :author="author" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewBlogContainer" >
             <article :style="`max-width: ${thresholds.sm}px`">
-                <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
                 <div class="coverContainer mb-5" v-if="blog['cover']">
                     <img class="cover" :src="blog['cover']" />
                 </div>
@@ -31,8 +31,8 @@
                     <v-icon class="ml-2">mdi-heart-outline</v-icon>
                     <span>{{ likes }}</span>
                 </footer>
-                <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
-                <v-lazy class="mt-10">
+                <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                <div class="mt-10">
                     <div v-if="commentList.length > 0">
                         <v-timeline align-top dense>
                             <v-timeline-item fill-dot icon="mdi-update" small v-for="comment in commentList" :key="comment._id">
@@ -84,7 +84,7 @@
                             <span class="font-weight-black" style="cursor: pointer" @click="redirectToLogin">{{ $t('pages.blog.commentLogin') }}</span> {{ $t('pages.blog.leaveComment') }}
                         </div>
                     </div>
-                </v-lazy>
+                </div>
                 <v-overlay :value="collectionOverlay">
                     <v-sheet rounded :light="!$vuetify.theme.dark">
                         <v-container>
@@ -475,7 +475,7 @@
         },
         head() {
             return {
-                title: `${this.$t('headers.viewBlogPage')} - ${this.blog.title}`
+                title: `${this.blog.title} - ${this.$t('headers.viewBlogPage')}`
             }
         },
         watch: {

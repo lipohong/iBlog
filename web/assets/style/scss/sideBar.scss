@@ -70,7 +70,10 @@
             margin-top: 5rem;
             text-align: center;
             color: white;
-            p {
+            img {
+                object-fit: cover;
+            }
+            main {
                 font-size: 1.5rem;
             }
             .infosContainer {

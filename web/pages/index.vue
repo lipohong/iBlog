@@ -1,71 +1,112 @@
 <template>
     <div class="home">
         <AppBar />
-        <div class="bannerContainer">
-            <div class="py-15 px-3">
-                <div class="text-sm-h4 text-h5 text-center">{{ $t('pages.home.shareWithIBlog') }}</div>
-                <div class="mt-5 text-body-1 text-center">{{ $t('pages.home.description') }}</div>
-                <div class="mt-1 text-body-1 text-center font-weight-bold" v-if="!$store.state.user.user._id">
-                    <span style="cursor: pointer" @click="redirectToLogin">
+        <section class="bannerContainer">
+            <v-parallax src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg">
+                <header>{{ $t('pages.home.shareWithIBlog') }}</header>
+                <main>{{ $t('pages.home.description') }}</main>
+                <footer v-if="!$store.state.user.user._id">
+                    <span @click="redirectToLogin">
                         {{ $t('pages.home.login') }}
                     </span> | 
-                    <span style="cursor: pointer" @click="redirectToBlogCreate">
+                    <span @click="redirectToBlogCreate">
                         {{ $t('pages.home.postBlog') }}
                     </span> | 
-                    <span style="cursor: pointer" @click="redirectToRegister">
+                    <span @click="redirectToRegister">
                         {{ $t('pages.home.register') }}
                     </span>
-                </div>
-            </div>
-        </div>
+                </footer>
+            </v-parallax>
+        </section>
         <v-container :style="`max-width: ${thresholds.md}px`">
-            <v-tabs show-arrows right v-model="tab">
-                <v-tab small v-for="(item, index) in tabTitles" :key= index>{{ item }}</v-tab>
-            </v-tabs>
-            <v-tabs-items class="mt-5" v-model="tab">
-                <v-tab-item
-                    v-for="(item, index) in [top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs]"
-                    :key="index"
-                >
-                    <BlogTile :blogList="item" :viewed="index === 0" :comments="index === 1" :likes="index === 2" />
-                </v-tab-item>
-            </v-tabs-items>
-            <div class="mt-5 text-h6">
-                <span>{{ $t('pages.home.top5LatestBlogs') }}</span>
-            </div>
             <section>
-                <BlogSearchBar v-model="search" :searchFunction="searchBlogs" />
+                <header class="caption">
+                    <h1>{{ $t('pages.home.recommendedBlogs') }}</h1>
+                    <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                </header>
+                <main class="recommendBlogsContainer">
+                    <div class="firstContainer">
+                        <BlogRecommendTile :blog="recommendedBLogList[0]" />
+                    </div>
+                    <div class="secondContainer">
+                        <BlogRecommendTile :blog="recommendedBLogList[1]" />
+                        <BlogRecommendTile :blog="recommendedBLogList[2]" />
+                    </div>
+                </main>
+            </section>
+            <section>
+                <header class="caption">
+                    <h1>{{ $t('pages.home.popularBlogs') }}</h1>
+                    <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                </header>
+                <main class="popularBlogsContainer">
+                    <div class="popularBlogsListContainer">
+                        <BlogPopularAndTrandingTile v-for="blog in top5LikedBlogs" :key="blog._id" :blog="blog" :categoriesOptions="categoriesOptions" />
+                        <div class="adContainer">
+                            <v-sheet class="adImage" :color="secondaryColor">
+                                <p>ad image</p>
+                            </v-sheet>
+                            <div class="adText">
+                                <p>ad</p>
+                            </div>
+                        </div>
+                    </div>
+                    <aside>
+                        <p>ad banner</p>
+                    </aside>
+                </main>
+            </section>
+            <section>
+                <header class="caption">
+                    <h1>{{ $t('pages.home.trendingBlogs') }}</h1>
+                    <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                </header>
+                <main class="trendingBlogsContainer">
+                    <div class="trendingBlogsListContainer">
+                        <BlogPopularAndTrandingTile v-for="blog in top5CommentedBlogs" :key="blog._id" :blog="blog" :categoriesOptions="categoriesOptions" />
+                        <div class="adContainer">
+                            <v-sheet class="adImage" :color="secondaryColor">
+                                <p>ad image</p>
+                            </v-sheet>
+                            <div class="adText">
+                                <p>ad</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </section>
+            <section>
+                <header class="caption">
+                    <h1>{{ $t('pages.home.allRecentBlogs') }}</h1>
+                    <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
+                </header>
+                <BlogSearchBar @inputChange="handleInputChange" :searchFunction="searchBlogs" />
                 <div v-if="latestBlogs && latestBlogs.blogList.length > 0" class="blogListContainer">
-                    <LazyBlogPreview v-for="blog in latestBlogs.blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
+                    <LazyBlogPreview v-for="blog in latestBlogs.blogList" :key="blog._id" :blog="blog" :categoriesOptions="categoriesOptions" />
                     <div class="mt-10 text-center" v-if="loadingLatestBlogs">
                         <v-progress-circular indeterminate :color="primaryColor"></v-progress-circular>
                     </div>
                 </div>
                 <div v-else>{{ $t('pages.blog.noResult') }}</div>
+                <footer class="loadBlogContainer" v-if="latestBlogs.pagination.totalPage > latestBlogs.pagination.currentPage">
+                    <v-sheet class="loadBlogButton" :color="primaryColor" dark @click="loadMoreBlogs">{{ $t('pages.home.loadMoreBlogs') }}</v-sheet>
+                </footer>
             </section>
         </v-container>
     </div>
 </template>
 <script>
     import * as _ from 'lodash';
+    import categories from '../assets/enum/categoriesOptions.json';
     const htmlToText = require('html-to-text');
 
     export default {
         async asyncData({ $axios }) {
             try {
-                // get top 5 viewed blogs
-                let response = await $axios.get( `${process.env.blogApi}/blogs/viewedBlogs/top5`);
-                let top5ViewedBlogs = response.data.payload;
-                top5ViewedBlogs = top5ViewedBlogs.map(blog => {
-                    // conver html to plain string
-                    blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
-                    // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
-                    // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
+                // get recommended blogs
+                let response = await $axios.get(`${process.env.blogApi}/blogs?isRecommended=true`);
+                const recommendedBLogList = response.data.payload.blogList;
 
-                    return blog
-                })
                 // get top 5 commented blogs
                 response = await $axios.get(`${process.env.commentApi}/comments/blogs/top5`);
                 let top5CommentedBlogs = response.data.payload;
@@ -73,9 +114,7 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
-                    // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
+                    blog.title = _.truncate(blog.title, { 'length': 100, 'omission': '...' });
 
                     return blog
                 })
@@ -86,9 +125,7 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
-                    // limit length of content
-                    blog.content = _.truncate(blog.content, { 'length': 30, 'omission': '...' });
+                    blog.title = _.truncate(blog.title, { 'length': 100, 'omission': '...' });
 
                     return blog
                 })
@@ -99,7 +136,7 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
+                    blog.title = _.truncate(blog.title, { 'length': 100, 'omission': '...' });
                     // limit length of content
                     blog.content = _.truncate(blog.content, { 'length': 200, 'omission': '...' });
 
@@ -107,7 +144,7 @@
                 })
 
                 return {
-                    top5ViewedBlogs, top5CommentedBlogs, top5LikedBlogs, latestBlogs
+                    recommendedBLogList, top5CommentedBlogs, top5LikedBlogs, latestBlogs
                 }
             } catch (err) {
                 console.log(err);
@@ -116,31 +153,7 @@
         data() {
             return {
                 thresholds: this.$vuetify.breakpoint.thresholds,
-                tab: 0,
-                tabTitles: [
-                    this.$t('pages.home.top5ViewedBlogs'),
-                    this.$t('pages.home.top5CommentedBlogs'),
-                    this.$t('pages.home.top5LikedBlogs')
-                ],
-                categoriesOptions: [
-                    'dataStructure',
-                    'algorithm',
-                    'designPattern',
-                    'programming',
-                    'frontend',
-                    'html',
-                    'css',
-                    'js',
-                    'ts',
-                    'jest',
-                    'framework',
-                    'UIlibrary',
-                    'backend',
-                    'devOps',
-                    'networking',
-                    'life',
-                    'other'
-                ].reduce((accumulator, currentValue) => {
+                categoriesOptions: categories.reduce((accumulator, currentValue) => {
                     accumulator[currentValue] = this.$t(`pages.blog.categories.${currentValue}`);
                     return accumulator;
                 }, {}),
@@ -176,6 +189,9 @@
                     }
                 });
             },
+            handleInputChange(inputChange) {
+                this.search = inputChange;
+            },
             async searchBlogs() {
                 this.loadingLatestBlogs = true;
                 try {
@@ -208,9 +224,7 @@
                 try {
                     let postData = {
                         search: this.search,
-                        page: this.latestBlogs.pagination.currentPage + 1,
-                        categories: this.categories,
-                        userId: this.$route.params.userId
+                        page: this.latestBlogs.pagination.currentPage + 1
                     }
                     let { blogList, pagination } = await this.$store.dispatch('blog/searchAllBlog', postData);
                     blogList = this.formatBlogList(blogList);

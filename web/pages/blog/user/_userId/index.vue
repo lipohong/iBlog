@@ -3,7 +3,7 @@
         <SideBar :author="author" :selectedItem="0" :followList="followList" :blogsAmount="blogsAmount" />
         <div class="viewUserBlogsContainer">
             <main>
-                <BlogSearchBar v-model="search" :searchFunction="getAuthorBlogList" />
+                <BlogSearchBar @inputChange="handleInputChange" :searchFunction="getAuthorBlogList" />
                 <div class="blogPreviewListContainer">
                     <LazyBlogPreview v-for="blog in blogList" :key="blog._id" :blog="blog" :author="author" :categoriesOptions="categoriesOptions" />
                 </div>
@@ -21,6 +21,7 @@
 </template>
 <script>
     import * as _ from 'lodash';
+    import categories from '../../../../assets/enum/categoriesOptions.json';
     const htmlToText = require('html-to-text');
 
     export default {
@@ -39,7 +40,7 @@
                     // conver html to plain string
                     blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
                     // limit length of title
-                    blog.title = _.truncate(blog.title, { 'length': 50, 'omission': '...' });
+                    blog.title = _.truncate(blog.title, { 'length': 100, 'omission': '...' });
                     // limit length of content
                     blog.content = _.truncate(blog.content, { 'length': 200, 'omission': '...'});
 
@@ -62,25 +63,7 @@
                 thresholds: this.$vuetify.breakpoint.thresholds,
                 page: 1,
                 categories: [],
-                categoriesOptions: [
-                    'dataStructure',
-                    'algorithm',
-                    'designPattern',
-                    'programming',
-                    'frontend',
-                    'html',
-                    'css',
-                    'js',
-                    'ts',
-                    'jest',
-                    'framework',
-                    'UIlibrary',
-                    'backend',
-                    'devOps',
-                    'networking',
-                    'life',
-                    'other'
-                ].reduce((accumulator, currentValue) => {
+                categoriesOptions: categories.reduce((accumulator, currentValue) => {
                     accumulator[currentValue] = this.$t(`pages.blog.categories.${currentValue}`);
                     return accumulator;
                 }, {}),
@@ -117,6 +100,9 @@
                     });
                 }
                 this.$store.dispatch('global/setProgressBar', { progressBar: false });
+            },
+            handleInputChange(inputChange) {
+                this.search = inputChange;
             },
             async getAuthorFans() {
                 try {

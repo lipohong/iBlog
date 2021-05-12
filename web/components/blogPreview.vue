@@ -1,13 +1,15 @@
 <template>
     <article class="blogPreviewContainer">
-        <v-progress-linear class="sperateBar" value="100" :color="secondaryColor"></v-progress-linear>
+        <v-progress-linear class="separateBar" value="100" :color="secondaryColor"></v-progress-linear>
         <header @click="redirectToBlogViewingPage">
             <div class="imageContainer">
                 <img :src="blog.cover" alt="Blog Cover">
             </div>
             <a>{{ blog.title }}</a>
         </header>
-        <section>{{ blog.content }}</section>
+        <main>
+            <p>{{ blog.content }}</p>
+        </main>
         <footer>
             <section>
                 <span>{{ categoriesOptions[blog.categories[0]] }}</span>
