@@ -246,6 +246,14 @@
 /* x - small screens */
 @media only screen and (max-width: $break-point-sm - 1px) {
     .home {
+        .bannerContainer {
+            header {
+                font-size: 1.8rem;
+            }
+            main {
+                font-size: 1.3rem;
+            }
+        }
         .recommendBlogsContainer {
             display: block;
             .firstContainer {
