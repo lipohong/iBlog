@@ -60,7 +60,7 @@ def backupDatabase(serviceV3):
         "/" + COMPRESS_DATABASE_FILE_NAME
 
     # output database data to database backup file
-    dumpcmd = "/usr/bin/mongodump --out=" + databaseBackPath + " --host 127.0.0.1 --port 27017 --db iBlog --authenticationDatabase -u" + \
+    dumpcmd = "/usr/bin/mongodump --out=" + databaseBackPath + " --host 127.0.0.1 --port 27017 --db iBlog --authenticationDatabase admin -u" + \
         configs['databaseUsername'] + " -p" + configs['databasePassword']
     os.system(dumpcmd)
 
