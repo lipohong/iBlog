@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetServerSideProps } from 'next';
+import { useSelector } from 'react-redux';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { locale } = context;
@@ -15,13 +16,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function Home() {
   const { t } = useTranslation('common');
+  const state = useSelector((state) => state);
+
 
   return (
     <div>
       <Head>
-        <title>Home Page - iBlog</title>
-        <meta name="description" content="iBlog is a blogging website for stories sharing" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>{t('headers.homePage')} - iBlog</title>
       </Head>
 
       <main>
@@ -32,7 +33,7 @@ export default function Home() {
           </div>
           <div>
             <Link href="/" locale="zh">
-              <a>Change to chinese {}</a>
+              <a>Change to chinese</a>
             </Link>
           </div>
       </main>
