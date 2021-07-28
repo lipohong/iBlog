@@ -14,3 +14,26 @@ a {
 * {
   box-sizing: border-box;
 }
+
+$color-success: "#4CAF50";  // green
+$color-warning: "#FB8C00";  // orange darken-1
+$color-error: "#FF5252";  // red accent-2
+$color-info: "#2196F3";  // blue
+$color-accent: "#82B1FF";  // blue accent-1
+
+$color-primary-0: "#1565C0";  // blue darken-3
+$color-primary-1: "#00695C";  // teal darken-3
+$color-primary-2: "#4E342E";  // brown darken-3
+$color-primary-3: "#EF6C00";  // orange darken-3
+$color-primary-4: "#AD1457";  // pink darken-3
+
+$color-secondary-0: "#1E88E5";  // blue darken-3
+$color-secondary-1: "#00897B";  // teal darken-3
+$color-secondary-2: "#6D4C41";  // brown darken-3
+$color-secondary-3: "#FB8C00";  // orange darken-3
+$color-secondary-4: "#D81B60";  // pink darken-3
+
+$color-primary-dark: "#424242";  // grey darken-3
+$color-secondary-dark: "#757575";  // grey darken-1
+
+@import './components.scss'
