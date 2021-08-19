@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.nuxt
+dist
+docker-compose.yml
+report.*

@@ -1,0 +1,7 @@
+version: "3"
+services:
+  iblog-web:
+    build: .
+    ports:
+      - "80:3005"
+    command: bash -c "npm run start"

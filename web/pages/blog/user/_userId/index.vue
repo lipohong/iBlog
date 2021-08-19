@@ -83,7 +83,11 @@
                     let { blogList, pagination } = await this.$store.dispatch('blog/searchAuthorBlog', postData);
                     blogList = blogList.map(blog => {
                         // conver html to plain string
-                        blog.content = htmlToText.fromString(blog.content, { wordwrap: false });
+                        blog.content = htmlToText.fromString(blog.content, { wordwrap: false, uppercaseHeadings: false, ignoreHref: true, tags: { 'img': { format: 'skip' } } });
+                        // limit length of title
+                        blog.title = _.truncate(blog.title, { 'length': 100, 'omission': '...' });
+                        // limit length of content
+                        blog.content = _.truncate(blog.content, { 'length': 200, 'omission': '...'});
 
                         return blog
                     })
