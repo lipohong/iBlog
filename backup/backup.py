@@ -47,7 +47,8 @@ def insert_file_into_folder(service, compressFileName, compressFileURI, folderId
 
 def backupDatabase(serviceV3):
     # create tmp folder
-    currentPath = os.path.dirname(__file__)
+    #currentPath = os.path.dirname(__file__)
+    currentPath = os.path.dirname(os.path.abspath(__file__))
     tmpFolderPath = currentPath + '/tmp'
     if os.path.exists(tmpFolderPath) and os.path.isdir(tmpFolderPath):
         shutil.rmtree(tmpFolderPath)
