@@ -1,6 +1,7 @@
 version: "3"
 services:
   iblog-comment-server:
+    container_name: ireview-comment-server
     build: .
     ports: 
       - "8013:8013"

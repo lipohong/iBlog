@@ -1,6 +1,7 @@
 version: "3"
 services:
   iblog-blog-server:
+    container_name: ireview-blog-server
     build: .
     ports: 
       - "8012:8012"
