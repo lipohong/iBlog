@@ -39,7 +39,7 @@
     "formidable": "^1.2.2",
     "googleapis": "^39.2.0",
     "lodash": "^4.17.21",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongoose": "^5.9.2",
     "nodemailer": "^6.4.10",
     "passport": "^0.4.1",
